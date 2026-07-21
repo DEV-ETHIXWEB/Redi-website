@@ -1,6 +1,7 @@
 ---
 import Button from '@/components/ui/Button.astro';
 import Badge from '@/components/ui/Badge.astro';
+import HeroMap from '@/components/sections/HeroMap';
 import type { PageCopy } from '@/services/wordpress';
 
 export interface Props {
@@ -24,7 +25,7 @@ const { copy } = Astro.props;
   </div>
 
   <div class="container-page">
-    <div class="grid items-center gap-12 lg:grid-cols-[1fr_470px] lg:gap-16">
+    <div class="grid items-center gap-12 lg:grid-cols-[1fr_611px] lg:gap-16">
       <div>
         <Badge
           variant="outline"
@@ -51,20 +52,17 @@ const { copy } = Astro.props;
       </div>
 
       <div class="w-full">
-        <a
-          href={copy.ctaPrimary.href}
-          class="group shadow-lifted block overflow-hidden rounded-xl transition-transform duration-300 ease-out hover:-translate-y-1"
-          aria-label="Explore the interactive map of available sites"
+        <div
+          class="relative aspect-[800/459] rounded-2xl border border-white/25 bg-white/[0.06] p-2 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.55),0_0_60px_-12px_rgba(44,195,236,0.45)] backdrop-blur-xl"
         >
-          <img
-            src="/images/hero/home-hero-map.webp"
-            alt="Map of the United States showing clusters of available sites across all major markets"
-            width="936"
-            height="537"
-            fetchpriority="high"
-            class="w-full transition-transform duration-500 ease-out group-hover:scale-[1.02]"
-          />
-        </a>
+          <div
+            class="pointer-events-none absolute inset-0 rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.5),inset_0_0_30px_-10px_rgba(255,255,255,0.18)]"
+          >
+          </div>
+          <div class="relative h-full w-full overflow-hidden rounded-xl ring-1 ring-white/15">
+            <HeroMap client:visible />
+          </div>
+        </div>
         <p class="mt-3 text-right text-sm text-white/60">
           {copy.mapCaption} —
           <a

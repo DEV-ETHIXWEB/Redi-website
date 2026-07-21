@@ -1,0 +1,57 @@
+/**
+ * Content for the home hero's interactive map (HeroMap.tsx).
+ *
+ * Positions are percent of the map's width/height, geographically accurate —
+ * each marker is projected from its real city's lat/lon (via a `geoAlbers`
+ * projection fitted to this card's exact aspect ratio) so the pins land
+ * correctly on the real coastline in HeroMap.tsx. See that file's header
+ * comment for how the projection/path were generated.
+ * Counts mirror the regional groupings shown in the original static hero
+ * graphic (design-assets/landing page/hero image of map.png), recast as
+ * named market regions instead of an un-labeled third-party map export.
+ */
+export interface HeroMapMarker {
+  id: string;
+  /** Region label shown in the marker tooltip. */
+  label: string;
+  /** Site count shown in the marker tooltip, e.g. "196" or "200+". */
+  count: string;
+  /** Percent of map width, 0–100. */
+  x: number;
+  /** Percent of map height, 0–100. */
+  y: number;
+}
+
+export const HERO_MAP_MARKERS: HeroMapMarker[] = [
+  { id: 'pacific-nw', label: 'Pacific Northwest', count: '106', x: 12.3, y: 5.6 },
+  { id: 'bay-area', label: 'Bay Area', count: '196', x: 6.5, y: 41.9 },
+  { id: 'socal', label: 'Southern California', count: '200+', x: 11.2, y: 59 },
+  { id: 'mountain-west', label: 'Mountain West', count: '200+', x: 36, y: 44 },
+  { id: 'south-central', label: 'South Central', count: '200+', x: 49.5, y: 72.1 },
+  { id: 'gulf-coast', label: 'Gulf Coast', count: '200+', x: 52.2, y: 83.7 },
+  { id: 'great-lakes', label: 'Great Lakes', count: '200+', x: 64.6, y: 35.9 },
+  { id: 'southeast', label: 'Southeast', count: '200+', x: 67.2, y: 57.7 },
+  { id: 'florida', label: 'Florida', count: '87', x: 82.4, y: 90 },
+  { id: 'mid-atlantic', label: 'Mid-Atlantic', count: '129', x: 82.9, y: 42.9 },
+  { id: 'northeast', label: 'Northeast', count: '103', x: 90.7, y: 26 },
+];
+
+/**
+ * Draw order for the animated coverage route — a single open path visiting
+ * every marker once, kept roughly west-to-east to minimize crossings.
+ */
+export const HERO_MAP_ROUTE: string[] = [
+  'bay-area',
+  'pacific-nw',
+  'mountain-west',
+  'great-lakes',
+  'northeast',
+  'mid-atlantic',
+  'southeast',
+  'florida',
+  'gulf-coast',
+  'south-central',
+  'socal',
+];
+
+export const HERO_MAP_SUMMARY = `${HERO_MAP_MARKERS.length} regions · nationwide coverage`;
