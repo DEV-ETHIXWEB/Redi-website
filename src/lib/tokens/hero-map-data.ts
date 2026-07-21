@@ -57,3 +57,21 @@ export const HERO_MAP_ROUTE: string[] = [
 ];
 
 export const HERO_MAP_SUMMARY = `${HERO_MAP_MARKERS.length} regions · nationwide coverage`;
+
+/**
+ * Small decorative Canada bubbles (matching the Figma reference) — plain map
+ * texture, not REDI's own tracked regions, so they're kept out of
+ * HERO_MAP_MARKERS/HERO_MAP_ROUTE entirely: the "11 regions" badge stays
+ * accurate and the coverage network never draws a connection to them.
+ * y is nudged a few points off the raw projection so each bubble's full
+ * circle clears the frame's top edge instead of clipping.
+ */
+export const HERO_CONTEXT_MARKERS: HeroMapMarker[] = [
+  // y nudged down so the bubble clears the "nationwide coverage" badge, same
+  // reasoning as the pacific-nw nudge above.
+  { id: 'calgary', label: 'Calgary', count: '8', x: 25.64, y: 17 },
+  { id: 'winnipeg', label: 'Winnipeg', count: '5', x: 49.35, y: 8 },
+  // x/y nudged in from the raw projection so the bubble clears the card's
+  // rounded top-right corner instead of clipping against it.
+  { id: 'halifax', label: 'Halifax', count: '3', x: 87, y: 15 },
+];

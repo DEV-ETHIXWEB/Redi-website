@@ -13,12 +13,16 @@ import {
 import { MapPin, Minus, Plus, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
+  HERO_CONTEXT_MARKERS,
   HERO_MAP_MARKERS,
   HERO_MAP_ROUTE,
   HERO_MAP_SUMMARY,
   type HeroMapMarker,
 } from '@/lib/tokens/hero-map-data';
 import {
+  CANADA_CITY_DOTS,
+  CANADA_LABEL,
+  CANADA_LAND_PATH_D,
   CITY_DOTS,
   HIGHWAY_CORRIDORS,
   LAND_PATH_D,
@@ -74,7 +78,7 @@ const MARKER_MAX_SIZE = 54;
 
 /** Bubble diameter (px) per marker, scaled by sqrt(count) so *area* — not just
  *  diameter — reads proportional to site count, matching the Figma's cluster-map sizing. */
-const MARKER_SIZE: Record<string, number> = Object.fromEntries(
+const REDI_MARKER_SIZE: Record<string, number> = Object.fromEntries(
   HERO_MAP_MARKERS.map((marker) => {
     const value = parseCount(marker.count);
     const t =
@@ -84,6 +88,28 @@ const MARKER_SIZE: Record<string, number> = Object.fromEntries(
     return [marker.id, Math.round(MARKER_MIN_SIZE + (MARKER_MAX_SIZE - MARKER_MIN_SIZE) * t)];
   }),
 );
+
+/** Context markers (Calgary/Winnipeg/Halifax) have far smaller counts than any
+ *  REDI region — kept on their own small size scale so they don't distort the
+ *  main 11 regions' size hierarchy. */
+const CONTEXT_MARKER_MIN_SIZE = 20;
+const CONTEXT_MARKER_MAX_SIZE = 28;
+const CONTEXT_MARKER_IDS = new Set(HERO_CONTEXT_MARKERS.map((m) => m.id));
+const CONTEXT_MARKER_SIZE: Record<string, number> = Object.fromEntries(
+  HERO_CONTEXT_MARKERS.map((marker) => {
+    const values = HERO_CONTEXT_MARKERS.map((m) => parseCount(m.count));
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    const value = parseCount(marker.count);
+    const t = max === min ? 1 : Math.sqrt((value - min) / (max - min));
+    return [
+      marker.id,
+      Math.round(CONTEXT_MARKER_MIN_SIZE + (CONTEXT_MARKER_MAX_SIZE - CONTEXT_MARKER_MIN_SIZE) * t),
+    ];
+  }),
+);
+
+const MARKER_SIZE: Record<string, number> = { ...REDI_MARKER_SIZE, ...CONTEXT_MARKER_SIZE };
 
 /** True see-through green glass — low enough alpha that the map underneath is
  *  actually visible through the tint (not just a frosted blur-through), with
@@ -595,7 +621,7 @@ export default function HeroMap() {
       onPointerLeave={handlePointerLeave}
     >
       <ul className="sr-only">
-        {HERO_MAP_MARKERS.map((marker) => (
+        {[...HERO_MAP_MARKERS, ...HERO_CONTEXT_MARKERS].map((marker) => (
           <li key={marker.id}>
             {marker.label}: {marker.count} sites
           </li>
@@ -759,6 +785,40 @@ export default function HeroMap() {
                   }
                   style={{ transformOrigin: '50% 50%' }}
                 >
+                  {/* Southern Canada — a small sliver of context, not part of REDI's own coverage. */}
+                  <path d={CANADA_LAND_PATH_D} fill="#1c3a30" fillOpacity="0.9" />
+                  <path
+                    d={CANADA_LAND_PATH_D}
+                    fill="none"
+                    stroke="#5a8a72"
+                    strokeOpacity="0.35"
+                    strokeWidth="0.4"
+                    vectorEffect="non-scaling-stroke"
+                  />
+                  {CANADA_CITY_DOTS.map((city) => (
+                    <circle
+                      key={city.name}
+                      cx={city.x}
+                      cy={city.y}
+                      r="0.35"
+                      fill="#eaf6fb"
+                      fillOpacity="0.6"
+                    />
+                  ))}
+                  <text
+                    x={CANADA_LABEL.x}
+                    y={CANADA_LABEL.y}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fill="#bae5f1"
+                    fillOpacity="0.3"
+                    fontSize="3.2"
+                    fontWeight="700"
+                    style={{ fontFamily: 'var(--font-heading)', letterSpacing: '0.08em' }}
+                  >
+                    CANADA
+                  </text>
+
                   <path d={LAND_PATH_D} fill="#20415c" />
                   <path d={LAND_PATH_D} fill={`url(#${mapId}-dots-dense)`} />
 
@@ -877,20 +937,24 @@ export default function HeroMap() {
 
             {/* Layer 4: markers — the region pins. */}
             <motion.div style={{ x: markersX, y: markersY }} className="absolute inset-0">
-              {HERO_MAP_MARKERS.map((marker) => {
+              {[...HERO_MAP_MARKERS, ...HERO_CONTEXT_MARKERS].map((marker) => {
                 const isActive = activeId === marker.id;
                 const isHovered = hoveredId === marker.id;
                 const isFocal = focusId === marker.id;
                 const isNeighbor = Boolean(
                   focusId && !isFocal && ROUTE_NEIGHBORS[focusId]?.includes(marker.id),
                 );
-                const emphasis: Emphasis = isFocal
-                  ? 'focal'
-                  : isNeighbor
-                    ? 'neighbor'
-                    : focusId
-                      ? 'dimmed'
-                      : 'neutral';
+                // Context markers (Calgary/Winnipeg/Halifax) are plain map texture, not
+                // part of the coverage network — they never dim/highlight with it.
+                const emphasis: Emphasis = CONTEXT_MARKER_IDS.has(marker.id)
+                  ? 'neutral'
+                  : isFocal
+                    ? 'focal'
+                    : isNeighbor
+                      ? 'neighbor'
+                      : focusId
+                        ? 'dimmed'
+                        : 'neutral';
                 return (
                   <HeroMapMarkerPin
                     key={marker.id}
