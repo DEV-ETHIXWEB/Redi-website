@@ -85,23 +85,22 @@ const MARKER_SIZE: Record<string, number> = Object.fromEntries(
   }),
 );
 
-/** Figma's frosted-glass marker treatment — a translucent, muted-sage fill
- *  (real alpha, so the map softly shows through under backdrop-blur) with a
- *  faint highlight and a wide, low-opacity ambient shadow instead of a hard
- *  drop shadow — reads as acrylic glass, not a glossy button. */
+/** Reference's marker treatment — a deep, fairly opaque forest green (not a
+ *  pale wash) with gentle (not glossy-hard) top-left shading, a clean white
+ *  ring, and a soft ambient shadow. */
 const MARKER_GLASS = {
   restBackground:
-    'radial-gradient(circle at 34% 28%, rgba(255,255,255,0.3), rgba(255,255,255,0) 46%), radial-gradient(circle at 42% 38%, rgba(150,190,168,0.85) 0%, rgba(96,138,114,0.85) 55%, rgba(56,80,66,0.88) 100%)',
+    'radial-gradient(circle at 35% 30%, rgba(255,255,255,0.22), rgba(255,255,255,0) 55%), radial-gradient(circle at 42% 40%, rgba(58,120,98,0.94) 0%, rgba(34,88,70,0.95) 55%, rgba(16,48,38,0.96) 100%)',
   activeBackground:
-    'radial-gradient(circle at 34% 28%, rgba(255,255,255,0.36), rgba(255,255,255,0) 46%), radial-gradient(circle at 42% 38%, rgba(168,205,183,0.88) 0%, rgba(112,155,130,0.88) 55%, rgba(66,92,76,0.9) 100%)',
+    'radial-gradient(circle at 35% 30%, rgba(255,255,255,0.28), rgba(255,255,255,0) 55%), radial-gradient(circle at 42% 40%, rgba(70,140,115,0.95) 0%, rgba(42,105,84,0.96) 55%, rgba(20,58,46,0.97) 100%)',
   restShadow:
-    '0 8px 26px rgba(0,0,0,0.18), inset 0 1px 1px rgba(255,255,255,0.28), inset 0 -2px 4px rgba(0,0,0,0.12)',
+    '0 4px 14px rgba(0,0,0,0.35), inset 0 1px 1px rgba(255,255,255,0.3), inset 0 -2px 4px rgba(0,0,0,0.2)',
   hoverShadow:
-    '0 10px 30px rgba(0,0,0,0.24), inset 0 1px 1px rgba(255,255,255,0.34), inset 0 -2px 4px rgba(0,0,0,0.12)',
-  border: 'rgba(255,255,255,0.5)',
-  ripple1: 'rgba(150,195,170,0.55)',
-  ripple2: 'rgba(175,205,188,0.4)',
-  glow: '#6f9c81',
+    '0 6px 18px rgba(0,0,0,0.42), inset 0 1px 1px rgba(255,255,255,0.36), inset 0 -2px 4px rgba(0,0,0,0.2)',
+  border: 'rgba(255,255,255,0.9)',
+  ripple1: 'rgba(70,140,115,0.6)',
+  ripple2: 'rgba(100,160,135,0.42)',
+  glow: '#2f6b52',
 } as const;
 
 interface RouteSegment {
@@ -310,10 +309,10 @@ function HeroMapMarkerPin({
               width: size,
               height: size,
               background: isActive ? MARKER_GLASS.activeBackground : MARKER_GLASS.restBackground,
-              border: `1.25px solid ${MARKER_GLASS.border}`,
+              border: `2px solid ${MARKER_GLASS.border}`,
               boxShadow: showTooltip ? MARKER_GLASS.hoverShadow : MARKER_GLASS.restShadow,
-              backdropFilter: 'blur(6px)',
-              WebkitBackdropFilter: 'blur(6px)',
+              backdropFilter: 'blur(4px)',
+              WebkitBackdropFilter: 'blur(4px)',
             }}
             className="relative grid cursor-pointer place-items-center rounded-full transition-shadow duration-[250ms] ease-out"
           >
