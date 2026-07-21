@@ -62,6 +62,29 @@ const ROUTE_NEIGHBORS: Record<string, string[]> = Object.fromEntries(
   ]),
 );
 
+function parseCount(count: string): number {
+  return parseInt(count.replace(/\D/g, ''), 10) || 0;
+}
+
+const MARKER_COUNT_VALUES = HERO_MAP_MARKERS.map((m) => parseCount(m.count));
+const MARKER_COUNT_MIN = Math.min(...MARKER_COUNT_VALUES);
+const MARKER_COUNT_MAX = Math.max(...MARKER_COUNT_VALUES);
+const MARKER_MIN_SIZE = 34;
+const MARKER_MAX_SIZE = 54;
+
+/** Bubble diameter (px) per marker, scaled by sqrt(count) so *area* — not just
+ *  diameter — reads proportional to site count, matching the Figma's cluster-map sizing. */
+const MARKER_SIZE: Record<string, number> = Object.fromEntries(
+  HERO_MAP_MARKERS.map((marker) => {
+    const value = parseCount(marker.count);
+    const t =
+      MARKER_COUNT_MAX === MARKER_COUNT_MIN
+        ? 1
+        : Math.sqrt((value - MARKER_COUNT_MIN) / (MARKER_COUNT_MAX - MARKER_COUNT_MIN));
+    return [marker.id, Math.round(MARKER_MIN_SIZE + (MARKER_MAX_SIZE - MARKER_MIN_SIZE) * t)];
+  }),
+);
+
 interface RouteSegment {
   id: string;
   from: string;
@@ -165,6 +188,7 @@ function HeroMapMarkerPin({
   const delay = entranceDone ? 0 : entranceDelay;
   const dimmedOpacity = emphasis === 'dimmed' ? 0.4 : 1;
   const emphasisScale = emphasis === 'focal' ? 1.08 : 1;
+  const size = MARKER_SIZE[marker.id] ?? MARKER_MIN_SIZE;
 
   return (
     <div className="absolute" style={{ left: `${marker.x}%`, top: `${marker.y}%` }}>
@@ -186,7 +210,8 @@ function HeroMapMarkerPin({
         {/* contact shadow — grows on hover/active to simulate the pin lifting */}
         <motion.span
           aria-hidden="true"
-          className="pointer-events-none absolute top-[22px] left-1/2 h-1.5 w-4 -translate-x-1/2 rounded-full bg-black/50 blur-[2px]"
+          className="pointer-events-none absolute left-1/2 -translate-x-1/2 rounded-full bg-black/50 blur-[2px]"
+          style={{ top: size / 2 + 5, width: size * 0.7, height: 5 }}
           animate={{ opacity: showTooltip ? 0.5 : 0.22, scaleX: showTooltip ? 1.15 : 1 }}
           transition={{ duration: reduceMotion ? 0 : 0.25 }}
         />
@@ -209,7 +234,8 @@ function HeroMapMarkerPin({
             <>
               <motion.span
                 aria-hidden="true"
-                className="pointer-events-none absolute h-6 w-6 rounded-full border border-cyan-300/70"
+                className="pointer-events-none absolute rounded-full border border-emerald-300/70"
+                style={{ width: size, height: size }}
                 initial={{ opacity: 0.55, scale: 0.7 }}
                 animate={{ opacity: 0, scale: 2.4 }}
                 transition={{
@@ -221,7 +247,8 @@ function HeroMapMarkerPin({
               />
               <motion.span
                 aria-hidden="true"
-                className="pointer-events-none absolute h-6 w-6 rounded-full border border-cyan-200/50"
+                className="pointer-events-none absolute rounded-full border border-emerald-200/50"
+                style={{ width: size, height: size }}
                 initial={{ opacity: 0.4, scale: 0.7 }}
                 animate={{ opacity: 0, scale: 3.1 }}
                 transition={{
@@ -236,10 +263,11 @@ function HeroMapMarkerPin({
 
           <motion.span
             aria-hidden="true"
-            className="pointer-events-none absolute h-8 w-8 rounded-full bg-cyan-400 blur-md"
+            className="pointer-events-none absolute rounded-full bg-emerald-400 blur-md"
+            style={{ width: size + 10, height: size + 10 }}
             animate={{
               opacity:
-                showTooltip || emphasis === 'focal' ? 0.6 : emphasis === 'neighbor' ? 0.35 : 0.2,
+                showTooltip || emphasis === 'focal' ? 0.55 : emphasis === 'neighbor' ? 0.3 : 0.16,
             }}
             transition={{ duration: reduceMotion ? 0 : 0.25 }}
           />
@@ -257,16 +285,22 @@ function HeroMapMarkerPin({
               event.stopPropagation();
               onSelect(marker);
             }}
-            animate={{ scale: showTooltip ? 1.25 : 1 }}
+            animate={{ scale: showTooltip ? 1.12 : 1 }}
             transition={{ duration: reduceMotion ? 0 : 0.22, ease: EASE_OUT }}
+            style={{ width: size, height: size }}
             className={cn(
-              'relative grid h-6 w-6 place-items-center rounded-full border-2 shadow-[0_0_0_3px_rgba(6,24,47,0.55)]',
+              'relative grid place-items-center rounded-full border-2 shadow-[0_3px_10px_rgba(0,0,0,0.45),0_0_0_3px_rgba(6,24,47,0.55)]',
               isActive
-                ? 'border-cyan-200 bg-cyan-400'
-                : 'border-white/70 bg-gradient-to-br from-cyan-300 to-cyan-600',
+                ? 'border-emerald-100 bg-gradient-to-br from-emerald-500 to-emerald-800'
+                : 'border-white/80 bg-gradient-to-br from-[#2f8f68] to-[#123d2c]',
             )}
           >
-            <span className="bg-navy-950/70 h-1.5 w-1.5 rounded-full" />
+            <span
+              className="font-heading leading-none font-bold whitespace-nowrap text-white"
+              style={{ fontSize: size * (marker.count.length >= 4 ? 0.3 : 0.36) }}
+            >
+              {marker.count}
+            </span>
           </motion.button>
 
           <AnimatePresence>
@@ -285,7 +319,7 @@ function HeroMapMarkerPin({
                   align === 'center' && 'left-1/2 -translate-x-1/2',
                 )}
               >
-                <p className="font-heading text-sm font-bold tracking-wide text-cyan-300">
+                <p className="font-heading text-sm font-bold tracking-wide text-emerald-300">
                   {marker.count}{' '}
                   <span className="text-[10px] font-medium tracking-wider text-white/70 uppercase">
                     Sites

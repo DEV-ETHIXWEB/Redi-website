@@ -23,7 +23,9 @@ export interface HeroMapMarker {
 }
 
 export const HERO_MAP_MARKERS: HeroMapMarker[] = [
-  { id: 'pacific-nw', label: 'Pacific Northwest', count: '106', x: 12.3, y: 5.6 },
+  // y nudged down from the raw Seattle projection (5.6) so the larger count
+  // bubble clears the "nationwide coverage" badge in the map's top-left corner.
+  { id: 'pacific-nw', label: 'Pacific Northwest', count: '106', x: 14, y: 22 },
   { id: 'bay-area', label: 'Bay Area', count: '196', x: 6.5, y: 41.9 },
   { id: 'socal', label: 'Southern California', count: '200+', x: 11.2, y: 59 },
   { id: 'mountain-west', label: 'Mountain West', count: '200+', x: 36, y: 44 },
