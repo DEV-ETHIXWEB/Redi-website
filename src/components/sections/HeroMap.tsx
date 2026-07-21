@@ -91,17 +91,17 @@ const MARKER_SIZE: Record<string, number> = Object.fromEntries(
  *  drop shadow — reads as acrylic glass, not a glossy button. */
 const MARKER_GLASS = {
   restBackground:
-    'radial-gradient(circle at 34% 28%, rgba(255,255,255,0.16), rgba(255,255,255,0) 48%), radial-gradient(circle at 42% 38%, rgba(120,158,136,0.8) 0%, rgba(72,102,86,0.82) 55%, rgba(44,64,54,0.85) 100%)',
+    'radial-gradient(circle at 34% 28%, rgba(255,255,255,0.3), rgba(255,255,255,0) 46%), radial-gradient(circle at 42% 38%, rgba(150,190,168,0.85) 0%, rgba(96,138,114,0.85) 55%, rgba(56,80,66,0.88) 100%)',
   activeBackground:
-    'radial-gradient(circle at 34% 28%, rgba(255,255,255,0.22), rgba(255,255,255,0) 48%), radial-gradient(circle at 42% 38%, rgba(138,175,153,0.84) 0%, rgba(86,118,100,0.86) 55%, rgba(52,74,62,0.88) 100%)',
+    'radial-gradient(circle at 34% 28%, rgba(255,255,255,0.36), rgba(255,255,255,0) 46%), radial-gradient(circle at 42% 38%, rgba(168,205,183,0.88) 0%, rgba(112,155,130,0.88) 55%, rgba(66,92,76,0.9) 100%)',
   restShadow:
-    '0 6px 22px rgba(0,0,0,0.22), inset 0 1px 1px rgba(255,255,255,0.22), inset 0 -2px 4px rgba(0,0,0,0.14)',
+    '0 8px 26px rgba(0,0,0,0.18), inset 0 1px 1px rgba(255,255,255,0.28), inset 0 -2px 4px rgba(0,0,0,0.12)',
   hoverShadow:
-    '0 8px 26px rgba(0,0,0,0.28), inset 0 1px 1px rgba(255,255,255,0.28), inset 0 -2px 4px rgba(0,0,0,0.14)',
-  border: 'rgba(255,255,255,0.45)',
-  ripple1: 'rgba(140,172,153,0.5)',
-  ripple2: 'rgba(165,190,175,0.35)',
-  glow: '#5f8770',
+    '0 10px 30px rgba(0,0,0,0.24), inset 0 1px 1px rgba(255,255,255,0.34), inset 0 -2px 4px rgba(0,0,0,0.12)',
+  border: 'rgba(255,255,255,0.5)',
+  ripple1: 'rgba(150,195,170,0.55)',
+  ripple2: 'rgba(175,205,188,0.4)',
+  glow: '#6f9c81',
 } as const;
 
 interface RouteSegment {
@@ -286,7 +286,7 @@ function HeroMapMarkerPin({
             style={{ width: size + 14, height: size + 14, backgroundColor: MARKER_GLASS.glow }}
             animate={{
               opacity:
-                showTooltip || emphasis === 'focal' ? 0.4 : emphasis === 'neighbor' ? 0.22 : 0.1,
+                showTooltip || emphasis === 'focal' ? 0.42 : emphasis === 'neighbor' ? 0.26 : 0.16,
             }}
             transition={{ duration: reduceMotion ? 0 : 0.25 }}
           />
