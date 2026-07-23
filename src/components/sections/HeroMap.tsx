@@ -124,8 +124,6 @@ const MARKER_GLASS = {
   hoverShadow:
     '0 10px 30px rgba(0,0,0,0.22), inset 0 1px 1px rgba(255,255,255,0.36), inset 0 -2px 4px rgba(0,0,0,0.1)',
   border: 'rgba(255,255,255,0.92)',
-  ripple1: 'rgba(150,195,170,0.55)',
-  ripple2: 'rgba(175,205,188,0.4)',
   glow: '#6f9c81',
 } as const;
 
@@ -274,39 +272,6 @@ function HeroMapMarkerPin({
           }
           className="relative flex items-center justify-center"
         >
-          {/* Ripple rings — per-marker unique delay AND duration so the loops drift apart
-              and never fire in unison across the map. */}
-          {!reduceMotion && entranceDone && (
-            <>
-              <motion.span
-                aria-hidden="true"
-                className="pointer-events-none absolute rounded-full border"
-                style={{ width: size, height: size, borderColor: MARKER_GLASS.ripple1 }}
-                initial={{ opacity: 0.55, scale: 0.7 }}
-                animate={{ opacity: 0, scale: 2.4 }}
-                transition={{
-                  duration: 2.6 + ((ROUTE_INDEX[marker.id] ?? 0) % 7) * 0.21,
-                  ease: 'easeOut',
-                  repeat: Infinity,
-                  delay: (ROUTE_INDEX[marker.id] ?? 0) * 0.47,
-                }}
-              />
-              <motion.span
-                aria-hidden="true"
-                className="pointer-events-none absolute rounded-full border"
-                style={{ width: size, height: size, borderColor: MARKER_GLASS.ripple2 }}
-                initial={{ opacity: 0.4, scale: 0.7 }}
-                animate={{ opacity: 0, scale: 3.1 }}
-                transition={{
-                  duration: 3.2 + ((ROUTE_INDEX[marker.id] ?? 0) % 5) * 0.27,
-                  ease: 'easeOut',
-                  repeat: Infinity,
-                  delay: (ROUTE_INDEX[marker.id] ?? 0) * 0.47 + 1.3,
-                }}
-              />
-            </>
-          )}
-
           <motion.span
             aria-hidden="true"
             className="pointer-events-none absolute rounded-full blur-md"
