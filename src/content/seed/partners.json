@@ -16,6 +16,10 @@
     "name": "Strata Platforms",
     "url": "https://strataplatforms.com",
     "image": { "url": "/images/logos/strata.png", "alt": "Strata Platforms" },
+    "backgroundImage": {
+      "url": "/images/partners/strata-banner.webp",
+      "alt": "Strata Platforms"
+    },
     "headline": "Strata Platforms",
     "variant": "wordmark"
   }
