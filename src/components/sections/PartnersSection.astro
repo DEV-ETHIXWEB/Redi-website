@@ -34,19 +34,18 @@ const { eyebrow, heading, partners } = Astro.props;
                   />
                 </div>
               ) : (
-                <div class="relative flex aspect-[2036/492] items-center justify-center overflow-hidden">
-                  {partner.backgroundImage && (
-                    <img
-                      src={partner.backgroundImage.url}
-                      alt={partner.backgroundImage.alt}
-                      width="1200"
-                      height="290"
-                      loading="lazy"
-                      decoding="async"
-                      class="absolute inset-0 size-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                    />
-                  )}
-                  <div class="from-navy-900/90 to-navy-900/70 absolute inset-0 bg-gradient-to-b" />
+                <div class="from-navy-700 to-navy-900 relative flex aspect-[2036/492] items-center justify-center overflow-hidden bg-gradient-to-b">
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 400 100"
+                    preserveAspectRatio="xMidYMid slice"
+                    class="pointer-events-none absolute inset-0 size-full opacity-[0.14]"
+                  >
+                    <g fill="none" stroke="white" stroke-width="1.5">
+                      <path d="M170 2 L232 34 L170 66 L108 34 Z" />
+                      <path d="M170 34 L232 66 L170 98 L108 66 Z" />
+                    </g>
+                  </svg>
                   <p class="font-body relative text-3xl font-semibold text-white">
                     {partner.headline}
                   </p>

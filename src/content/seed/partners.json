@@ -16,10 +16,6 @@
     "name": "Strata Platforms",
     "url": "https://strataplatforms.com",
     "image": { "url": "/images/logos/strata.png", "alt": "Strata Platforms" },
-    "backgroundImage": {
-      "url": "/images/hero/construction-hero-bg.webp",
-      "alt": "Commercial construction site under a steel structural frame"
-    },
     "headline": "Strata Platforms",
     "variant": "wordmark"
   }

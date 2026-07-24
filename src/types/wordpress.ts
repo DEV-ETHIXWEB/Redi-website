@@ -76,8 +76,6 @@ export interface Partner {
   eyebrow?: string;
   headline?: string;
   variant: 'photo' | 'wordmark';
-  /** Banner background for `wordmark` partners (the plain-logo footer image can't double as a hero photo). */
-  backgroundImage?: WPImage;
 }
 
 export interface ScoreTier {
