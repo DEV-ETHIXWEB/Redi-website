@@ -14,7 +14,7 @@ const { post, loading = 'lazy', wide = false } = Astro.props;
 ---
 
 <article
-  class="group bg-steel-100 shadow-soft hover:shadow-lifted relative overflow-hidden rounded-xl transition-all duration-300 ease-out hover:-translate-y-1.5"
+  class="group bg-steel-200 shadow-soft hover:shadow-lifted relative overflow-hidden rounded-xl transition-all duration-300 ease-out hover:-translate-y-1.5"
 >
   <a href={`/updates/${post.slug}`} class="absolute inset-0 z-10" aria-label={post.title}></a>
   <div class={cn('overflow-hidden', wide ? 'aspect-[1527/655]' : 'aspect-[998/655]')}>
