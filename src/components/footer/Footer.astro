@@ -76,22 +76,7 @@ const { footer, tagline } = settings;
       </div>
     </div>
 
-    <div
-      class="bg-ink-700 mt-14 flex flex-col items-center justify-between gap-4 rounded-xl px-6 py-5 sm:flex-row"
-    >
-      <p class="flex items-center gap-2 text-base text-white/60">
-        <span>{footer.parentCompany.label}</span>
-        <img
-          src={footer.parentCompany.logo.url}
-          alt={footer.parentCompany.logo.alt}
-          width="216"
-          height="60"
-          loading="lazy"
-          decoding="async"
-          class="h-6 w-auto"
-        />
-        <span>Company</span>
-      </p>
+    <div class="bg-ink-700 mt-14 flex items-center justify-center rounded-xl px-6 py-5">
       <p class="text-base text-white/60">{footer.copyright}</p>
     </div>
   </div>

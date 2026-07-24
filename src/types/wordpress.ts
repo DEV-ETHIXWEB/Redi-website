@@ -32,7 +32,6 @@ export interface SiteSettings {
     blurb: string;
     sitemap: WPLink[];
     contact: { email: string; phone: string; address: string };
-    parentCompany: { label: string; name: string; logo: WPImage };
     copyright: string;
   };
   stats: { value: string; label: string }[];
@@ -108,6 +107,8 @@ export interface BlogPost {
   featuredImage: WPImage;
   /** Wider crop shown at the top of the article page; falls back to featuredImage. */
   heroImage?: WPImage;
+  /** External press coverage this post is reporting on; renders an outbound "read the source" link. */
+  source?: { name: string; url: string };
 }
 
 export interface LegalSection {

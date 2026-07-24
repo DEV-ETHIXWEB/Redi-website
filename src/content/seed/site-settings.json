@@ -34,11 +34,6 @@
       "phone": "(555) 123-4567",
       "address": "123 Investment Plaza"
     },
-    "parentCompany": {
-      "label": "A",
-      "name": "Strata Platforms",
-      "logo": { "url": "/images/logos/strata.png", "alt": "Strata Platforms" }
-    },
     "copyright": "© {year} Site Selectors Guild. All rights reserved."
   },
   "stats": [
