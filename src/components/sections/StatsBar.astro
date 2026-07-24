@@ -8,7 +8,9 @@ const { stats } = Astro.props;
 
 <section class="bg-steel-100 pb-14 sm:pb-20 md:pb-24" aria-label="Company statistics">
   <div class="container-page">
-    <dl class="bg-navy-950 reveal grid grid-cols-2 gap-y-10 rounded-2xl px-6 py-9 lg:grid-cols-4">
+    <dl
+      class="bg-navy-950 reveal grid grid-cols-2 gap-x-6 gap-y-10 rounded-2xl px-6 py-9 lg:grid-cols-4"
+    >
       {
         stats.map((stat) => (
           <div class="text-center">
