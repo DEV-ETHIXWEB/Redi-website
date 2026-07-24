@@ -97,6 +97,31 @@ const breadcrumbLd = {
         ]}
         set:html={post.contentHtml}
       />
+
+      {
+        post.source && (
+          <a
+            href={post.source.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="shadow-soft hover:shadow-card group mt-10 flex items-center justify-between gap-4 rounded-xl bg-white px-6 py-5 transition-all hover:-translate-y-0.5"
+          >
+            <span>
+              <span class="font-heading text-ink-600 block text-xs font-semibold tracking-[0.15em] uppercase">
+                Originally published by
+              </span>
+              <span class="font-heading text-navy-950 mt-1 block text-lg font-bold">
+                {post.source.name}
+              </span>
+            </span>
+            <Icon
+              name="arrow-right"
+              size={20}
+              class="text-navy-950 shrink-0 transition-transform group-hover:translate-x-1"
+            />
+          </a>
+        )
+      }
     </div>
   </article>
 </BaseLayout>

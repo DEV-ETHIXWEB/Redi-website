@@ -1,82 +1,98 @@
 [
   {
     "id": "post-1",
-    "slug": "post-1",
-    "title": "Blog Title",
-    "excerpt": "Imagine a world bursting with colorful balloons, dancing cats, and delicious cupcakes.",
-    "date": "2027-01-24",
+    "slug": "louisiana-leads-nation-in-redi-sites",
+    "title": "Louisiana Leads the Nation in REDI Sites",
+    "excerpt": "Louisiana now leads the nation with eight sites on the REDI Sites platform, backed by a $50 million expansion of the state's FastSites Program.",
+    "date": "2026-06-24",
     "author": {
-      "name": "Author Name"
+      "name": "REDI Sites Team"
     },
-    "tags": ["Tag", "Tag", "(cont.)"],
+    "tags": ["Press", "Louisiana"],
     "featuredImage": {
       "url": "/images/blog/newsfeed-card.webp",
       "alt": "Steel frame of an industrial building under construction at sunrise"
     },
-    "contentHtml": "<h2>Heading</h2><p>Imagine a world bursting with colorful balloons, dancing cats, and delicious cupcakes. In this whimsical place, unicorns roam freely, and rainbows lead to treasure chests filled with gold coins.</p><p>Picture a sunny beach day where people build sandcastles and savor ice cream cones. Here, every tree tells a story, and every cloud takes the shape of a different animal.</p><p>Explore this vibrant landscape where laughter echoes and joy is everywhere. Highlights include:</p><p>– Magical creatures like unicorns and playful cats<br>– Treasures hidden at the end of rainbows<br>– Sunny beaches perfect for sandcastles and treats</p><p>Let your imagination run wild in this fantastical realm where anything is possible!</p><h3>Subheading</h3><p>Imagine a world bursting with colorful balloons, dancing cats, and delicious cupcakes. In this whimsical place, unicorns roam freely, and rainbows lead to treasure chests filled with gold coins.</p><p>Picture a sunny beach day where people build sandcastles and savor ice cream cones. Here, every tree tells a story, and every cloud takes the shape of a different animal.</p><p>Explore this vibrant landscape where laughter echoes and joy is everywhere. Highlights include:</p><p>– Magical creatures like unicorns and playful cats<br>– Treasures hidden at the end of rainbows<br>– Sunny beaches perfect for sandcastles and treats</p><p>Let your imagination run wild in this fantastical realm where anything is possible!</p><h3>Subheading</h3><p>Imagine a world bursting with colorful balloons, dancing cats, and delicious cupcakes. In this whimsical place, unicorns roam freely, and rainbows lead to treasure chests filled with gold coins.</p><p>Picture a sunny beach day where people build sandcastles and savor ice cream cones. Here, every tree tells a story, and every cloud takes the shape of a different animal.</p><p>Explore this vibrant landscape where laughter echoes and joy is everywhere. Highlights include:</p><p>– Magical creatures like unicorns and playful cats<br>– Treasures hidden at the end of rainbows<br>– Sunny beaches perfect for sandcastles and treats</p><p>Let your imagination run wild in this fantastical realm where anything is possible!</p>",
+    "contentHtml": "<p>Louisiana has strengthened its economic competitiveness by maintaining 125 active Certified Sites and leading the nation with eight sites on the REDI Sites platform. The state is updating its certified site portfolio with current infrastructure and cost information, while the Legislature has appropriated an additional $50 million to the FastSites Program.</p><p>Recent major projects, including Aclara's $277 million rare earth separation facility and Faith Technologies' $80.5 million manufacturing investment, demonstrate how site readiness accelerates business location decisions in Louisiana.</p>",
     "heroImage": {
       "url": "/images/blog/article-hero.webp",
       "alt": "Wide view of a steel building frame under construction with cranes at sunrise"
+    },
+    "source": {
+      "name": "Louisiana Economic Development",
+      "url": "https://www.opportunitylouisiana.gov/news/louisiana-leads-nation-in-redi-sites-expands-competitive-edge-for-next-generation-investment"
     }
   },
   {
     "id": "post-2",
-    "slug": "post-2",
-    "title": "Blog Title",
-    "excerpt": "Imagine a world bursting with colorful balloons, dancing cats, and delicious cupcakes.",
-    "date": "2027-01-23",
+    "slug": "norfolk-southern-redi-site-pipeline-is-growing",
+    "title": "Our REDI Site Pipeline Is Growing",
+    "excerpt": "Norfolk Southern has expanded its REDI Sites portfolio to 24 development-ready locations across its 22-state rail network.",
+    "date": "2026-05-13",
     "author": {
-      "name": "Author Name"
+      "name": "REDI Sites Team"
     },
-    "tags": ["Tag", "Tag", "(cont.)"],
+    "tags": ["Press", "Norfolk Southern"],
     "featuredImage": {
       "url": "/images/blog/newsfeed-card.webp",
       "alt": "Steel frame of an industrial building under construction at sunrise"
     },
-    "contentHtml": "<h2>Heading</h2><p>Imagine a world bursting with colorful balloons, dancing cats, and delicious cupcakes. In this whimsical place, unicorns roam freely, and rainbows lead to treasure chests filled with gold coins.</p>",
+    "contentHtml": "<p>Norfolk Southern has expanded its REDI Sites portfolio to 24 locations across its 22-state network, with new designations spanning the Midwest and Southeast. These REDI Sites are development-ready industrial locations validated through a national standard created with the Site Selectors Guild that assesses infrastructure, feasibility, ownership, and workforce readiness.</p><p>The program helps companies make rapid location decisions while enabling communities to better compete for investment and job creation opportunities.</p>",
     "heroImage": {
       "url": "/images/blog/article-hero.webp",
       "alt": "Wide view of a steel building frame under construction with cranes at sunrise"
+    },
+    "source": {
+      "name": "Norfolk Southern",
+      "url": "https://norfolksouthern.com/en/newsroom/story-yard/our-redi-site-pipeline-is-growing"
     }
   },
   {
     "id": "post-3",
-    "slug": "post-3",
-    "title": "Blog Title",
-    "excerpt": "Imagine a world bursting with colorful balloons, dancing cats, and delicious cupcakes.",
-    "date": "2027-01-22",
+    "slug": "redi-sites-round-four-designations",
+    "title": "Round Four REDI Sites Designations Bring New States into the Program",
+    "excerpt": "The Site Selectors Guild's fourth round of REDI Sites designations recognizes 17 properties and introduces the program to five new states.",
+    "date": "2026-03-25",
     "author": {
-      "name": "Author Name"
+      "name": "REDI Sites Team"
     },
-    "tags": ["Tag", "Tag", "(cont.)"],
+    "tags": ["Press", "Site Selectors Guild"],
     "featuredImage": {
       "url": "/images/blog/newsfeed-card.webp",
       "alt": "Steel frame of an industrial building under construction at sunrise"
     },
-    "contentHtml": "<h2>Heading</h2><p>Imagine a world bursting with colorful balloons, dancing cats, and delicious cupcakes. In this whimsical place, unicorns roam freely, and rainbows lead to treasure chests filled with gold coins.</p>",
+    "contentHtml": "<p>The Site Selectors Guild announced its fourth round of REDI Sites designations, recognizing 17 industrial properties that meet investment readiness standards. This round is significant because it introduces the program to five new states — Michigan, Mississippi, New Mexico, Ohio, and Oklahoma — while also showcasing one site's advancement from Bronze to Silver certification status.</p><p>The REDI Sites program provides communities with a standardized, consultant-informed approach to evaluating industrial site readiness, strengthening their competitive positioning in site selection decisions.</p>",
     "heroImage": {
       "url": "/images/blog/article-hero.webp",
       "alt": "Wide view of a steel building frame under construction with cranes at sunrise"
+    },
+    "source": {
+      "name": "Site Selectors Guild",
+      "url": "https://siteselectorsguild.com/redi-sites-round-four/"
     }
   },
   {
     "id": "post-4",
-    "slug": "post-4",
-    "title": "Blog Title",
-    "excerpt": "Imagine a world bursting with colorful balloons, dancing cats, and delicious cupcakes.",
-    "date": "2027-01-21",
+    "slug": "site-selection-magazine-certified-sites-meet-their-moment",
+    "title": "Certified Sites: Site Certification Programs Try to Meet Their Moment",
+    "excerpt": "Site Selection Magazine examines how certification programs like REDI Sites help communities market pre-qualified, investment-ready properties.",
+    "date": "2026-02-01",
     "author": {
-      "name": "Author Name"
+      "name": "REDI Sites Team"
     },
-    "tags": ["Tag", "Tag", "(cont.)"],
+    "tags": ["Press", "Site Selection Magazine"],
     "featuredImage": {
       "url": "/images/blog/newsfeed-card.webp",
       "alt": "Steel frame of an industrial building under construction at sunrise"
     },
-    "contentHtml": "<h2>Heading</h2><p>Imagine a world bursting with colorful balloons, dancing cats, and delicious cupcakes. In this whimsical place, unicorns roam freely, and rainbows lead to treasure chests filled with gold coins.</p>",
+    "contentHtml": "<p>Site Selection Magazine examines how site certification programs have become essential tools in competitive business recruitment, helping communities market pre-qualified properties with documented infrastructure and entitlements. The piece traces the evolution of these programs and specifically references the Site Selectors Guild's REDI Sites program, established in June 2024, noting its rapid growth to 75 enrolled sites.</p><p>The authors note that while certifications reduce risk for investors, they remain an imperfect tool — companies still need to pair certified-site status with their own independent due diligence.</p>",
     "heroImage": {
       "url": "/images/blog/article-hero.webp",
       "alt": "Wide view of a steel building frame under construction with cranes at sunrise"
+    },
+    "source": {
+      "name": "Site Selection Magazine",
+      "url": "https://siteselection.com/certified-sites-site-certification-programs-try-to-meet-their-moment/"
     }
   },
   {
@@ -84,7 +100,7 @@
     "slug": "post-5",
     "title": "Blog Title",
     "excerpt": "Imagine a world bursting with colorful balloons, dancing cats, and delicious cupcakes.",
-    "date": "2027-01-20",
+    "date": "2026-01-20",
     "author": {
       "name": "Author Name"
     },
@@ -104,7 +120,7 @@
     "slug": "post-6",
     "title": "Blog Title",
     "excerpt": "Imagine a world bursting with colorful balloons, dancing cats, and delicious cupcakes.",
-    "date": "2027-01-19",
+    "date": "2026-01-19",
     "author": {
       "name": "Author Name"
     },
@@ -124,7 +140,7 @@
     "slug": "post-7",
     "title": "Blog Title",
     "excerpt": "Imagine a world bursting with colorful balloons, dancing cats, and delicious cupcakes.",
-    "date": "2027-01-18",
+    "date": "2026-01-18",
     "author": {
       "name": "Author Name"
     },
@@ -144,7 +160,7 @@
     "slug": "post-8",
     "title": "Blog Title",
     "excerpt": "Imagine a world bursting with colorful balloons, dancing cats, and delicious cupcakes.",
-    "date": "2027-01-17",
+    "date": "2026-01-17",
     "author": {
       "name": "Author Name"
     },
@@ -164,7 +180,7 @@
     "slug": "post-9",
     "title": "Blog Title",
     "excerpt": "Imagine a world bursting with colorful balloons, dancing cats, and delicious cupcakes.",
-    "date": "2027-01-16",
+    "date": "2026-01-16",
     "author": {
       "name": "Author Name"
     },
@@ -184,7 +200,7 @@
     "slug": "post-10",
     "title": "Blog Title",
     "excerpt": "Imagine a world bursting with colorful balloons, dancing cats, and delicious cupcakes.",
-    "date": "2027-01-15",
+    "date": "2026-01-15",
     "author": {
       "name": "Author Name"
     },
@@ -204,7 +220,7 @@
     "slug": "post-11",
     "title": "Blog Title",
     "excerpt": "Imagine a world bursting with colorful balloons, dancing cats, and delicious cupcakes.",
-    "date": "2027-01-14",
+    "date": "2026-01-14",
     "author": {
       "name": "Author Name"
     },
@@ -224,7 +240,7 @@
     "slug": "post-12",
     "title": "Blog Title",
     "excerpt": "Imagine a world bursting with colorful balloons, dancing cats, and delicious cupcakes.",
-    "date": "2027-01-13",
+    "date": "2026-01-13",
     "author": {
       "name": "Author Name"
     },
