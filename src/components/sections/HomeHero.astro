@@ -47,10 +47,21 @@ const { copy } = Astro.props;
           {copy.body}
         </p>
         <div class="mt-9 flex flex-wrap gap-4">
-          <Button href={copy.ctaPrimary.href} variant="primary" size="lg" icon="arrow-right">
+          <Button
+            href={copy.ctaPrimary.href}
+            variant="primary"
+            size="lg"
+            icon="arrow-right"
+            class="w-full sm:w-auto"
+          >
             {copy.ctaPrimary.label}
           </Button>
-          <Button href={copy.ctaSecondary.href} variant="outline" size="lg">
+          <Button
+            href={copy.ctaSecondary.href}
+            variant="outline"
+            size="lg"
+            class="w-full sm:w-auto"
+          >
             {copy.ctaSecondary.label}
           </Button>
         </div>
