@@ -46,7 +46,7 @@ const { copy } = Astro.props;
         <p class="mt-7 max-w-lg text-base leading-relaxed text-white/80 sm:text-lg">
           {copy.body}
         </p>
-        <div class="mt-9 flex flex-wrap gap-4">
+        <div class="mt-9 inline-grid gap-4 sm:flex sm:flex-row sm:flex-wrap">
           <Button
             href={copy.ctaPrimary.href}
             variant="primary"
