@@ -39,7 +39,9 @@
   --color-ink-600: #57565b;
   --color-ink-500: #75747a;
 
-  --color-slate-600: #57697d;
+  /* Darkened from #57697d so small subtitle text clears 4.5:1 on the
+     steel-200 card background (team/blog card meta). */
+  --color-slate-600: #3e4d5c;
   --color-slate-500: #75879a;
   --color-slate-400: #9db0c1;
 

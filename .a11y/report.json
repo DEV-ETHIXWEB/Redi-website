@@ -1,0 +1,299 @@
+{
+  "generatedAt": "2026-07-28T02:02:17.876Z",
+  "baseUrl": "http://localhost:4321",
+  "tags": ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"],
+  "viewports": ["desktop", "mobile"],
+  "totalViolationNodes": 0,
+  "failingScans": 0,
+  "summary": [],
+  "results": [
+    {
+      "route": "/",
+      "viewport": "desktop",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/about",
+      "viewport": "desktop",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/approach",
+      "viewport": "desktop",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/sites",
+      "viewport": "desktop",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/contact",
+      "viewport": "desktop",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/register",
+      "viewport": "desktop",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/sign-in",
+      "viewport": "desktop",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/forgot-password",
+      "viewport": "desktop",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/set-password",
+      "viewport": "desktop",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/legal",
+      "viewport": "desktop",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/updates",
+      "viewport": "desktop",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/updates/louisiana-leads-nation-in-redi-sites",
+      "viewport": "desktop",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/updates/norfolk-southern-redi-site-pipeline-is-growing",
+      "viewport": "desktop",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/updates/redi-sites-round-four-designations",
+      "viewport": "desktop",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/updates/site-selection-magazine-certified-sites-meet-their-moment",
+      "viewport": "desktop",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/updates/post-5",
+      "viewport": "desktop",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/updates/post-6",
+      "viewport": "desktop",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/updates/post-7",
+      "viewport": "desktop",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/updates/post-8",
+      "viewport": "desktop",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/updates/post-9",
+      "viewport": "desktop",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/updates/post-10",
+      "viewport": "desktop",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/updates/post-11",
+      "viewport": "desktop",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/updates/post-12",
+      "viewport": "desktop",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/404",
+      "viewport": "desktop",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/",
+      "viewport": "mobile",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/about",
+      "viewport": "mobile",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/approach",
+      "viewport": "mobile",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/sites",
+      "viewport": "mobile",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/contact",
+      "viewport": "mobile",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/register",
+      "viewport": "mobile",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/sign-in",
+      "viewport": "mobile",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/forgot-password",
+      "viewport": "mobile",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/set-password",
+      "viewport": "mobile",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/legal",
+      "viewport": "mobile",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/updates",
+      "viewport": "mobile",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/updates/louisiana-leads-nation-in-redi-sites",
+      "viewport": "mobile",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/updates/norfolk-southern-redi-site-pipeline-is-growing",
+      "viewport": "mobile",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/updates/redi-sites-round-four-designations",
+      "viewport": "mobile",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/updates/site-selection-magazine-certified-sites-meet-their-moment",
+      "viewport": "mobile",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/updates/post-5",
+      "viewport": "mobile",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/updates/post-6",
+      "viewport": "mobile",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/updates/post-7",
+      "viewport": "mobile",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/updates/post-8",
+      "viewport": "mobile",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/updates/post-9",
+      "viewport": "mobile",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/updates/post-10",
+      "viewport": "mobile",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/updates/post-11",
+      "viewport": "mobile",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/updates/post-12",
+      "viewport": "mobile",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/404",
+      "viewport": "mobile",
+      "error": null,
+      "violations": []
+    }
+  ]
+}

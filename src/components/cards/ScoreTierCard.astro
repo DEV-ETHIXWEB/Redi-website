@@ -1,20 +1,11 @@
 ---
 import type { ScoreTier } from '@/types/wordpress';
-import { cn } from '@/lib/utils';
 
 export interface Props {
   tier: ScoreTier;
 }
 
 const { tier } = Astro.props;
-
-const rangeColor: Record<ScoreTier['tier'], string> = {
-  platinum: 'text-cyan-500',
-  gold: 'text-badge-gold',
-  silver: 'text-badge-silver',
-  bronze: 'text-badge-bronze',
-  emerging: 'text-ink-800',
-};
 ---
 
 <article
@@ -31,11 +22,10 @@ const rangeColor: Record<ScoreTier['tier'], string> = {
     />
   </div>
   {
-    /* Tier-brand colored range — visually part of the badge mark above it
-      (WCAG 1.4.3 logotype exemption); the description below repeats the
-      information with compliant contrast. */
+    /* Score range in high-contrast navy so it is legible on the light card
+      (WCAG 1.4.3); tier identity/color is carried by the badge mark above. */
   }
-  <p class={cn('brand-logotype mt-4 font-display text-xl tracking-wide', rangeColor[tier.tier])}>
+  <p class="font-display text-navy-950 mt-4 text-xl tracking-wide">
     {tier.range}
   </p>
   <p class="text-ink-600 mt-3 text-sm leading-relaxed">{tier.description}</p>
