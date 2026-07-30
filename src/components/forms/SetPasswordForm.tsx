@@ -59,6 +59,55 @@ export default function SetPasswordForm({ copy }: Props) {
     return password === confirmPassword ? 'match' : 'mismatch';
   }, [password, confirmPassword]);
 
+  // TODO(auth): this handler simulates a successful round trip — no request
+  // is ever sent. When the backend exists, replace the body of onSubmit
+  // with something like:
+  //
+  //   const onSubmit = async ({ password }: SetPasswordValues) => {
+  //     setStatus('submitting');
+  //     setServerError(null); // new state — see below
+  //     try {
+  //       const res = await fetch('/api/auth/reset-password', {
+  //         method: 'POST',
+  //         headers: { 'Content-Type': 'application/json' },
+  //         body: JSON.stringify({ token, password }), // `token` = new prop,
+  //                                                     // read from the URL
+  //                                                     // in set-password.astro
+  //                                                     // — see its TODO.
+  //       });
+  //       if (!res.ok) {
+  //         const { error } = await res.json().catch(() => ({ error: 'unknown' }));
+  //         // TODO(auth): map backend error codes to user-facing copy, e.g.
+  //         //   'token_expired'  -> "This link has expired — request a new one."
+  //         //   'token_invalid'  -> "This link is invalid — request a new one."
+  //         //   'weak_password'  -> surface as a field error on `password`,
+  //         //                       not a generic banner (mirror `errors.password`
+  //         //                       below), since the backend may enforce
+  //         //                       stronger rules than the client-side zod
+  //         //                       schema above (e.g. breached-password checks).
+  //         setServerError(error);
+  //         setStatus('idle');
+  //         return;
+  //       }
+  //       // TODO(auth): decide whether a successful reset auto-signs the user
+  //       // in (backend returns a session, this component would need to
+  //       // store/forward it) or just shows the "success — go sign in"
+  //       // state already built below. Either is a reasonable product
+  //       // choice; just make it deliberately.
+  //       setStatus('success');
+  //     } catch {
+  //       setServerError('network_error');
+  //       setStatus('idle');
+  //     }
+  //   };
+  //
+  // Password validation TODO: the zod schema above (min 8 / max 128 chars)
+  // is a reasonable client-side baseline but the backend MUST re-validate
+  // independently — never trust client-side validation alone for a security
+  // boundary. If WordPress enforces different/stronger password rules
+  // (length, complexity, breached-password checks via an API like HIBP),
+  // surface those as field-level errors the same way `errors.password` is
+  // rendered below, not as a silent rejection.
   const onSubmit = async (_values: SetPasswordValues) => {
     // The account backend is not part of this build; simulate the round trip
     // so the UI flow (loading -> success) is complete and testable.

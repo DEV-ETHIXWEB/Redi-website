@@ -26,7 +26,7 @@ found, so it can gate CI.
 
 ## Latest result
 
-**0 violations** across 24 routes × 2 viewports (48 scans).
+**0 violations** across 24 routes × 2 viewports (48 scans). Last verified 2026-07-30.
 
 ## Remediation history — 2026-07-28
 

@@ -35,3 +35,26 @@ export const onRequest = defineMiddleware(async (_context, next) => {
   }
   return response;
 });
+
+// TODO(auth): this middleware currently only sets security headers. Once a
+// real member auth system exists (see docs/WORDPRESS_INTEGRATION.md §
+// Authentication Preparation), this is also the place to add:
+//
+//   1. Session/token validation — read the session cookie (or Authorization
+//      header, depending on the chosen strategy) via `context.cookies` /
+//      `context.request.headers`, and attach the resolved user (or `null`)
+//      to `context.locals` so pages/components can read it without each one
+//      re-implementing the lookup.
+//   2. Protected-route gating — e.g. a future `/dashboard/*` route group
+//      would redirect unauthenticated requests to `/sign-in`. There are NO
+//      protected routes in this build today; every existing page is public.
+//   3. Refresh-token rotation — if using short-lived access tokens, this is
+//      a reasonable place to silently refresh an expiring session before it
+//      reaches a page handler, rather than making every page handle it.
+//   4. Logout is typically just clearing the session cookie / revoking the
+//      token server-side; doesn't need middleware, just an
+//      `src/pages/api/auth/logout.ts` route — see src/pages/api/README.md.
+//
+// Keep this middleware's existing security-header behavior intact when
+// adding any of the above — it runs on every request/route today and
+// should continue to.

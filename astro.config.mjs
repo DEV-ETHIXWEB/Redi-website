@@ -16,7 +16,20 @@ const isVercel = Boolean(process.env.VERCEL);
 export default defineConfig({
   site: 'https://www.redisites.com',
   trailingSlash: 'never',
-  integrations: [react(), sitemap()],
+  integrations: [
+    react(),
+    sitemap({
+      // Exclude the auth-shell routes: each already sets `noindex` in its
+      // <BaseLayout> meta tags (see src/pages/{sign-in,register,forgot-password,set-password}.astro),
+      // so listing them in the sitemap sent a contradictory signal to
+      // search engines. Keep this filter's route list in sync with the
+      // `noindex` prop on those pages if either changes.
+      filter: (page) =>
+        !['sign-in', 'register', 'forgot-password', 'set-password'].some((route) =>
+          page.endsWith(`/${route}`),
+        ),
+    }),
+  ],
 
   vite: {
     plugins: [tailwindcss()],
@@ -28,12 +41,10 @@ export default defineConfig({
 
   env: {
     schema: {
+      // Headless WordPress origin. Unset -> every src/services/wordpress/*
+      // service falls back to src/content/seed/*.json. See .env.example and
+      // docs/WORDPRESS_INTEGRATION.md for the full contract.
       WORDPRESS_API_URL: envField.string({ context: 'server', access: 'secret', optional: true }),
-      PUBLIC_GOOGLE_MAPS_API_KEY: envField.string({
-        context: 'client',
-        access: 'public',
-        optional: true,
-      }),
     },
   },
 

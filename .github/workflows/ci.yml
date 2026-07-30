@@ -1,0 +1,46 @@
+name: CI
+
+# Runs on every push and PR against main. Mirrors what Husky's pre-commit
+# hooks already enforce locally (lint, typecheck) plus a full production
+# build — the one thing local hooks don't cover — so a broken build can no
+# longer reach main just because someone bypassed or never installed hooks.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.12.0'
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Format check
+        run: pnpm format:check
+
+      - name: Typecheck + build
+        # Runs with the Node adapter (astro.config.mjs only switches to the
+        # Vercel adapter when Vercel's own build sets VERCEL=1 — see that
+        # file). This still catches every typecheck/build regression; actual
+        # Vercel-adapter packaging is validated by Vercel's own deploy build.
+        run: pnpm build

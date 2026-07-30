@@ -27,3 +27,9 @@ pnpm-debug.log*
 
 # Raw design source exports (large, not needed in repo — see design-assets/ locally)
 /design-assets/
+
+# Internal PM-facing handoff reports — shared with recipients directly
+# (email/Drive/etc.), not published in the shared repo. The neutral
+# technical guide (docs/WORDPRESS_INTEGRATION.md) stays tracked.
+/HANDOFF.md
+/ENGINEERING_HANDOFF.md

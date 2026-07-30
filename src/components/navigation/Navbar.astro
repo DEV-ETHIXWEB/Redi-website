@@ -51,6 +51,14 @@ const isActive = (href: string) => {
         }
       </ul>
 
+      <!--
+        TODO(auth): both CTAs below always render as logged-out
+        (Sign In / Register) — there is no session state to check yet. Once
+        auth exists (see src/middleware.ts TODO for where a resolved user
+        would land on `context.locals`), this block should branch: signed-in
+        users see an account/logout affordance instead of Sign In, mirrored
+        in the mobile nav panel further down this file.
+      -->
       <div class="hidden items-center gap-2.5 lg:flex">
         <a
           href={ctaNav.signIn.href}

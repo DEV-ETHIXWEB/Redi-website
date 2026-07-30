@@ -48,12 +48,18 @@ REDI Sites (Readiness Evaluation for Development and Investment) is the marketin
 
 ## Environment variables needed
 
-Defined in `.env.example` (copy to `.env`, never commit real values):
+Defined in `.env.example` (copy to `.env`, never commit real values). Full
+detail — including exact fallback/failure behavior and the API contract each
+service expects — is in [`docs/WORDPRESS_INTEGRATION.md`](docs/WORDPRESS_INTEGRATION.md).
 
-| Variable                     | Purpose                                                                                      |
-| ---------------------------- | -------------------------------------------------------------------------------------------- |
-| `WORDPRESS_API_URL`          | Headless WordPress origin. Unset → site renders from seed content.                           |
-| `PUBLIC_GOOGLE_MAPS_API_KEY` | Enables the live Google Map on the Sites page. Unset → a static map capture is used instead. |
+| Variable            | Required? | Purpose                                                                                                                       |
+| ------------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `WORDPRESS_API_URL` | Optional  | Headless WordPress origin. Unset (the default today) → every page renders from the local seed content in `src/content/seed/`. |
+
+There are no other environment variables in this project today. (A previous
+`PUBLIC_GOOGLE_MAPS_API_KEY` variable was removed during the pre-handoff
+cleanup — it was declared but never consumed by any component; the Sites
+page uses a LocationOne iframe embed, not Google Maps.)
 
 ## Deployment notes
 
@@ -76,7 +82,9 @@ Components never import seed JSON directly; they call typed services in `src/ser
 
 ## Design source
 
-The Figma file for this project could not be shared with API access, so the build was produced from full-page design exports (the `*.png` files in the repo root) — colors were pixel-sampled from those exports and the type was matched to the closest Google Fonts (Bevan / Oswald / Nunito). Image assets were extracted from the exports; text, logos, and UI chrome were rebuilt as real HTML/CSS. When Figma access becomes available, tokens in `src/styles/global.css` + `src/lib/tokens/` are the single place to reconcile any drift.
+The Figma file for this project could not be shared with API access, so the build was produced from full-page design exports — colors were pixel-sampled from those exports and the type was matched to the closest Google Fonts (Bevan / Oswald / Nunito). Image assets were extracted from the exports; text, logos, and UI chrome were rebuilt as real HTML/CSS. When Figma access becomes available, tokens in `src/styles/global.css` + `src/lib/tokens/` are the single place to reconcile any drift.
+
+The raw exports themselves (full-page PNGs, plus a larger internal reference set that included unbuilt member-dashboard mockups) live in `design-assets/` locally — that folder is gitignored on purpose, since these are large internal references, not site assets. They are **not** required to build or run the site; nothing in `src/` reads from `design-assets/`.
 
 ## Structure
 
@@ -92,8 +100,8 @@ src/
     ui/           Button, Badge, Icon, Logo, SectionHeading + cva variants
   services/wordpress/   Typed CMS client + per-type services
   content/seed/         WP-shaped fallback content
-  lib/                  tokens, utils, validation schemas
-  pages/                Routes (+ rss.xml)
+  lib/                  tokens, utils, validation/ (reserved — see src/lib/validation/_README.md)
+  pages/                Routes (+ rss.xml), api/ (reserved for future auth endpoints)
   styles/               global.css (Tailwind v4 theme = design tokens)
   types/                wordpress.ts domain types
 ```
