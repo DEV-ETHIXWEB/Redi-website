@@ -53,7 +53,7 @@ export const onRequest = defineMiddleware(async (_context, next) => {
 //      reaches a page handler, rather than making every page handle it.
 //   4. Logout is typically just clearing the session cookie / revoking the
 //      token server-side; doesn't need middleware, just an
-//      `src/pages/api/auth/logout.ts` route — see src/pages/api/README.md.
+//      `src/pages/api/auth/logout.ts` route — see src/pages/api/_README.md.
 //
 // Keep this middleware's existing security-header behavior intact when
 // adding any of the above — it runs on every request/route today and
