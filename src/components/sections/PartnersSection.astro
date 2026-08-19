@@ -10,80 +10,86 @@ export interface Props {
 }
 
 const { eyebrow, heading, partners } = Astro.props;
+
+// WordPress can legitimately return zero partners. Skip the whole section
+// rather than show a heading over an empty grid.
+const hasPartners = partners.length > 0;
 ---
 
-<section class="bg-steel-100 py-14 sm:py-20 md:py-24">
-  <div class="container-page">
-    <SectionHeading eyebrow={eyebrow} heading={heading} align="center" />
+{
+  hasPartners && (
+    <section class="bg-steel-100 py-14 sm:py-20 md:py-24">
+      <div class="container-page">
+        <SectionHeading eyebrow={eyebrow} heading={heading} align="center" />
 
-    <ul class="mt-12 grid gap-7 md:grid-cols-2" role="list">
-      {
-        partners.map((partner, index) => (
-          <li class="reveal" style={`--reveal-delay: ${index * 80}ms`}>
-            <article class="group shadow-soft hover:shadow-lifted overflow-hidden rounded-xl transition-all duration-300 ease-out hover:-translate-y-1.5">
-              {partner.variant === 'photo' ? (
-                <div class="relative aspect-[2036/492] overflow-hidden">
-                  <img
-                    src={partner.image.url}
-                    alt={partner.image.alt}
-                    width="1200"
-                    height="290"
-                    loading="lazy"
-                    decoding="async"
-                    class="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                  />
-                </div>
-              ) : partner.backgroundImage ? (
-                <div class="relative aspect-[2036/492] overflow-hidden">
-                  <img
-                    src={partner.backgroundImage.url}
-                    alt={partner.backgroundImage.alt}
-                    width="1527"
-                    height="368"
-                    loading="lazy"
-                    decoding="async"
-                    class="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                  />
-                </div>
-              ) : (
-                <div class="from-navy-700 to-navy-900 relative flex aspect-[2036/492] items-center justify-center overflow-hidden bg-gradient-to-b">
-                  <p class="font-body relative text-3xl font-semibold text-white">
-                    {partner.headline}
-                  </p>
-                </div>
-              )}
-              <div class="bg-steel-200 flex items-center gap-2 px-5 py-4">
-                {partner.variant === 'wordmark' ? (
-                  <img
-                    src={partner.image.url}
-                    alt={partner.name}
-                    width="216"
-                    height="60"
-                    loading="lazy"
-                    decoding="async"
-                    class="h-6 w-auto brightness-0 [filter:brightness(0)_opacity(0.75)]"
-                  />
+        <ul class="mt-12 grid gap-7 md:grid-cols-2" role="list">
+          {partners.map((partner, index) => (
+            <li class="reveal" style={`--reveal-delay: ${index * 80}ms`}>
+              <article class="group shadow-soft hover:shadow-lifted overflow-hidden rounded-xl transition-all duration-300 ease-out hover:-translate-y-1.5">
+                {partner.variant === 'photo' ? (
+                  <div class="relative aspect-[2036/492] overflow-hidden">
+                    <img
+                      src={partner.image.url}
+                      alt={partner.image.alt}
+                      width="1200"
+                      height="290"
+                      loading="lazy"
+                      decoding="async"
+                      class="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                    />
+                  </div>
+                ) : partner.backgroundImage ? (
+                  <div class="relative aspect-[2036/492] overflow-hidden">
+                    <img
+                      src={partner.backgroundImage.url}
+                      alt={partner.backgroundImage.alt}
+                      width="1527"
+                      height="368"
+                      loading="lazy"
+                      decoding="async"
+                      class="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                    />
+                  </div>
                 ) : (
-                  <span class="font-body text-navy-700 text-xl font-bold">
-                    Location<span class="text-navy-950 font-extrabold">One</span>
-                  </span>
+                  <div class="from-navy-700 to-navy-900 relative flex aspect-[2036/492] items-center justify-center overflow-hidden bg-gradient-to-b">
+                    <p class="font-body relative text-3xl font-semibold text-white">
+                      {partner.headline}
+                    </p>
+                  </div>
                 )}
-              </div>
-              <div class="bg-steel-200 flex items-center gap-1.5 px-5 pb-4">
-                <Icon name="external-link" size={14} class="text-ink-600" />
-                <a
-                  href={partner.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="hover:text-navy-700 text-ink-600 text-sm underline underline-offset-2 transition-colors"
-                >
-                  {new URL(partner.url).hostname.replace('www.', '')}
-                </a>
-              </div>
-            </article>
-          </li>
-        ))
-      }
-    </ul>
-  </div>
-</section>
+                <div class="bg-steel-200 flex items-center gap-2 px-5 py-4">
+                  {partner.variant === 'wordmark' ? (
+                    <img
+                      src={partner.image.url}
+                      alt={partner.name}
+                      width="216"
+                      height="60"
+                      loading="lazy"
+                      decoding="async"
+                      class="h-6 w-auto brightness-0 [filter:brightness(0)_opacity(0.75)]"
+                    />
+                  ) : (
+                    <span class="font-body text-navy-700 text-xl font-bold">
+                      Location<span class="text-navy-950 font-extrabold">One</span>
+                    </span>
+                  )}
+                </div>
+                <div class="bg-steel-200 flex items-center gap-1.5 px-5 pb-4">
+                  <Icon name="external-link" size={14} class="text-ink-600" />
+                  <a
+                    href={partner.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="hover:text-navy-700 text-ink-600 text-sm underline underline-offset-2 transition-colors"
+                  >
+                    {new URL(partner.url).hostname.replace('www.', '')}
+                  </a>
+                </div>
+              </article>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}

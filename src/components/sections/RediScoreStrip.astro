@@ -13,31 +13,40 @@ export interface Props {
 }
 
 const { copy, tiers, ctaHref = '/approach', class: className } = Astro.props;
+
+// WordPress can legitimately return zero score tiers. Skip the whole
+// section rather than show a heading over an empty grid.
+const hasTiers = tiers.length > 0;
 ---
 
-<section class:list={['bg-steel-100 py-14 sm:py-20 md:py-24', className]}>
-  <div class="container-page">
-    <SectionHeading eyebrow={copy.eyebrow} heading={copy.heading} body={copy.body} align="center" />
+{
+  hasTiers && (
+    <section class:list={['bg-steel-100 py-14 sm:py-20 md:py-24', className]}>
+      <div class="container-page">
+        <SectionHeading
+          eyebrow={copy.eyebrow}
+          heading={copy.heading}
+          body={copy.body}
+          align="center"
+        />
 
-    <ul class="mt-12 grid gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5" role="list">
-      {
-        tiers.map((tier, index) => (
-          <li class="reveal h-full" style={`--reveal-delay: ${index * 60}ms`}>
-            <ScoreTierCard tier={tier} />
-          </li>
-        ))
-      }
-    </ul>
+        <ul class="mt-12 grid gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5" role="list">
+          {tiers.map((tier, index) => (
+            <li class="reveal h-full" style={`--reveal-delay: ${index * 60}ms`}>
+              <ScoreTierCard tier={tier} />
+            </li>
+          ))}
+        </ul>
 
-    {
-      copy.ctaLabel && (
-        <div class="mt-12 text-center">
-          <Button href={ctaHref} variant="primary" icon="arrow-right">
-            {copy.ctaLabel}
-            <span class="sr-only"> about the REDI Score methodology</span>
-          </Button>
-        </div>
-      )
-    }
-  </div>
-</section>
+        {copy.ctaLabel && (
+          <div class="mt-12 text-center">
+            <Button href={ctaHref} variant="primary" icon="arrow-right">
+              {copy.ctaLabel}
+              <span class="sr-only"> about the REDI Score methodology</span>
+            </Button>
+          </div>
+        )}
+      </div>
+    </section>
+  )
+}

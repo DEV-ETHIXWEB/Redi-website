@@ -19,7 +19,19 @@ export default function TestimonialCarousel({ testimonials }: Props) {
     [testimonials.length],
   );
 
-  const active = testimonials[index]!;
+  // WordPress can legitimately return zero testimonials (all unpublished, or
+  // none created yet) — wpFetch()'s seed fallback only kicks in on a failed
+  // request, not a valid empty array, so this is a real, reachable state.
+  // Render nothing rather than crash or show fake content; every page that
+  // uses this component (home, about, approach) treats it as an optional
+  // section, so an empty testimonials list simply means the section is
+  // absent for this render.
+  if (testimonials.length === 0) return null;
+
+  // Safe post-guard: `index` is always < testimonials.length here because
+  // `paginate` derives the next index modulo the (now known non-zero) array
+  // length, and it starts at 0.
+  const active = testimonials[index % testimonials.length]!;
 
   const slideVariants = {
     enter: (dir: 1 | -1) => ({

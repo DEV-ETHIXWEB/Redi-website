@@ -11,24 +11,37 @@ export interface Props {
 }
 
 const { copy, advantages } = Astro.props;
+
+// WordPress can legitimately return zero advantages. Skip the whole
+// section rather than show a heading over an empty grid.
+const hasAdvantages = advantages.length > 0;
 ---
 
-<section class="bg-steel-100 py-14 sm:py-20 md:py-24">
-  <div class="container-page">
-    <SectionHeading eyebrow={copy.eyebrow} heading={copy.heading} body={copy.body} align="center" />
+{
+  hasAdvantages && (
+    <section class="bg-steel-100 py-14 sm:py-20 md:py-24">
+      <div class="container-page">
+        <SectionHeading
+          eyebrow={copy.eyebrow}
+          heading={copy.heading}
+          body={copy.body}
+          align="center"
+        />
 
-    <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" role="list">
-      {
-        advantages.map((advantage, index) => (
-          <li class="reveal" style={`--reveal-delay: ${index * 70}ms`}>
-            <AdvantageCard advantage={advantage} />
-          </li>
-        ))
-      }
-    </ul>
+        <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" role="list">
+          {advantages.map((advantage, index) => (
+            <li class="reveal" style={`--reveal-delay: ${index * 70}ms`}>
+              <AdvantageCard advantage={advantage} />
+            </li>
+          ))}
+        </ul>
 
-    <div class="mt-12 text-center">
-      <Button href="/about" variant="primary" icon="arrow-right">{copy.ctaLabel}</Button>
-    </div>
-  </div>
-</section>
+        <div class="mt-12 text-center">
+          <Button href="/about" variant="primary" icon="arrow-right">
+            {copy.ctaLabel}
+          </Button>
+        </div>
+      </div>
+    </section>
+  )
+}
