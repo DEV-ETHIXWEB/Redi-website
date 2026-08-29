@@ -1,8 +1,8 @@
 ---
 import BaseLayout from '@/components/layout/BaseLayout.astro';
-import Button from '@/components/ui/Button.astro';
 import Icon from '@/components/ui/Icon.astro';
 import Logo from '@/components/ui/Logo.astro';
+import MondayContactForm from '@/components/forms/MondayContactForm.astro';
 ---
 
 <BaseLayout
@@ -34,21 +34,16 @@ import Logo from '@/components/ui/Logo.astro';
         <h1 class="mt-1 text-4xl sm:text-[2.75rem]">Sign Up</h1>
         <p class="text-ink-600 mt-1 text-lg">Access REDI SITES tools &amp; value.</p>
 
-        <div class="mt-6 rounded-2xl bg-white p-6 text-center shadow-sm sm:p-8">
-          <p class="text-ink-600 text-base leading-relaxed">
-            Site registration for the REDI readiness program opens through our team. Tell us about
-            your property and we'll start the evaluation process.
-          </p>
-          <div class="mt-6">
-            <Button href="/contact" variant="primary" icon="arrow-right">Contact Us</Button>
-          </div>
+        <div class="mt-6">
+          <MondayContactForm />
         </div>
 
         <!--
-          TODO(auth): this page has no form at all today — registration is
-          fully manual (via Contact). If/when self-serve account registration
-          is built, this is where it goes. Not started; nothing to reuse from
-          SetPasswordForm.tsx besides the general form/validation pattern.
+          TODO(auth): this form is a Monday.com lead-intake embed, not a
+          real account-creation flow — there is still no self-serve account
+          registration anywhere in this build. If/when that's built, this is
+          where it goes. Nothing to reuse from SetPasswordForm.tsx besides
+          the general form/validation pattern.
             1. Expected request:  POST /api/auth/register
                { email, password, name, company?, ...whatever fields the
                client wants collected — none are specified yet, this needs

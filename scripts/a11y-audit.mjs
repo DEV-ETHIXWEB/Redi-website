@@ -13,7 +13,7 @@
 
 import { chromium } from 'playwright';
 import { AxeBuilder } from '@axe-core/playwright';
-import { writeFileSync, mkdirSync } from 'node:fs';
+import { writeFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -35,20 +35,14 @@ const VIEWPORTS = [
 
 // Every URL path on the site. Pages built from a shared template still get
 // scanned individually.
-const BLOG_SLUGS = [
-  'louisiana-leads-nation-in-redi-sites',
-  'norfolk-southern-redi-site-pipeline-is-growing',
-  'redi-sites-round-four-designations',
-  'site-selection-magazine-certified-sites-meet-their-moment',
-  'post-5',
-  'post-6',
-  'post-7',
-  'post-8',
-  'post-9',
-  'post-10',
-  'post-11',
-  'post-12',
-];
+//
+// Blog slugs are read from the seed file rather than hardcoded — a fixed
+// list here silently drifts out of sync whenever posts are added or removed
+// (this previously happened: it kept listing 8 placeholder posts for a
+// while after they were deleted from blog-posts.json, so this script was
+// unknowingly auditing 404 pages instead of real content).
+const BLOG_POSTS_PATH = join(__dirname, '..', 'src', 'content', 'seed', 'blog-posts.json');
+const BLOG_SLUGS = JSON.parse(readFileSync(BLOG_POSTS_PATH, 'utf-8')).map((post) => post.slug);
 
 const ROUTES = [
   '/',

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-30T04:35:45.588Z",
+  "generatedAt": "2026-08-29T09:32:22.213Z",
   "baseUrl": "http://localhost:4321",
   "tags": ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"],
   "viewports": ["desktop", "mobile"],
@@ -98,54 +98,6 @@
       "violations": []
     },
     {
-      "route": "/updates/post-5",
-      "viewport": "desktop",
-      "error": null,
-      "violations": []
-    },
-    {
-      "route": "/updates/post-6",
-      "viewport": "desktop",
-      "error": null,
-      "violations": []
-    },
-    {
-      "route": "/updates/post-7",
-      "viewport": "desktop",
-      "error": null,
-      "violations": []
-    },
-    {
-      "route": "/updates/post-8",
-      "viewport": "desktop",
-      "error": null,
-      "violations": []
-    },
-    {
-      "route": "/updates/post-9",
-      "viewport": "desktop",
-      "error": null,
-      "violations": []
-    },
-    {
-      "route": "/updates/post-10",
-      "viewport": "desktop",
-      "error": null,
-      "violations": []
-    },
-    {
-      "route": "/updates/post-11",
-      "viewport": "desktop",
-      "error": null,
-      "violations": []
-    },
-    {
-      "route": "/updates/post-12",
-      "viewport": "desktop",
-      "error": null,
-      "violations": []
-    },
-    {
       "route": "/404",
       "viewport": "desktop",
       "error": null,
@@ -237,54 +189,6 @@
     },
     {
       "route": "/updates/site-selection-magazine-certified-sites-meet-their-moment",
-      "viewport": "mobile",
-      "error": null,
-      "violations": []
-    },
-    {
-      "route": "/updates/post-5",
-      "viewport": "mobile",
-      "error": null,
-      "violations": []
-    },
-    {
-      "route": "/updates/post-6",
-      "viewport": "mobile",
-      "error": null,
-      "violations": []
-    },
-    {
-      "route": "/updates/post-7",
-      "viewport": "mobile",
-      "error": null,
-      "violations": []
-    },
-    {
-      "route": "/updates/post-8",
-      "viewport": "mobile",
-      "error": null,
-      "violations": []
-    },
-    {
-      "route": "/updates/post-9",
-      "viewport": "mobile",
-      "error": null,
-      "violations": []
-    },
-    {
-      "route": "/updates/post-10",
-      "viewport": "mobile",
-      "error": null,
-      "violations": []
-    },
-    {
-      "route": "/updates/post-11",
-      "viewport": "mobile",
-      "error": null,
-      "violations": []
-    },
-    {
-      "route": "/updates/post-12",
       "viewport": "mobile",
       "error": null,
       "violations": []

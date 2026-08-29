@@ -26,7 +26,14 @@ found, so it can gate CI.
 
 ## Latest result
 
-**0 violations** across 24 routes × 2 viewports (48 scans). Last verified 2026-07-30.
+**0 violations** across 16 routes × 2 viewports (32 scans). Last verified 2026-08-19.
+
+(Route/scan count reflects the site's current 4 real blog posts — the script
+now reads slugs directly from `src/content/seed/blog-posts.json` instead of a
+hardcoded list, so this number will track content changes automatically. An
+earlier hardcoded list had drifted to include 8 posts that had since been
+removed, so a prior run of this script reported 48 scans across 24 routes,
+8 of which were actually auditing 404 pages rather than real content.)
 
 ## Remediation history — 2026-07-28
 
