@@ -101,7 +101,14 @@ export interface BlogPost {
   title: string;
   excerpt: string;
   contentHtml: string;
-  date: string; // ISO 8601
+  /**
+   * ISO 8601. Optional because a post that only links out to a third-party
+   * page (see `externalUrl`) may have no genuinely known publish date — in
+   * that case, leave this unset rather than guessing one. Consumers must
+   * not assume this is always present; sort/RSS/display logic all treat a
+   * missing date as "unknown", never as "today" or an invented value.
+   */
+  date?: string;
   author: { name: string };
   tags: string[];
   featuredImage: WPImage;
@@ -109,6 +116,13 @@ export interface BlogPost {
   heroImage?: WPImage;
   /** External press coverage this post is reporting on; renders an outbound "read the source" link. */
   source?: { name: string; url: string };
+  /**
+   * When set, this post has no REDI-authored article — the card links
+   * straight to this external URL (new tab) instead of the internal
+   * `/updates/[slug]` page, and no static detail page is generated for it
+   * (see `getAllBlogSlugs()` in src/services/wordpress/blog.ts).
+   */
+  externalUrl?: string;
 }
 
 export interface LegalSection {

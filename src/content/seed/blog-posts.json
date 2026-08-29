@@ -94,5 +94,87 @@
       "name": "Site Selection Magazine",
       "url": "https://siteselection.com/certified-sites-site-certification-programs-try-to-meet-their-moment/"
     }
+  },
+  {
+    "id": "libsyn-dt-662",
+    "slug": "libsyn-dt-662-why-trust-talent-and-infrastructure",
+    "title": "DT #662 Why Trust, Talent, and Infrastructure Drive Site Selection Success",
+    "excerpt": "DT #662 Why Trust, Talent, and Infrastructure Drive Site Selection Success",
+    "date": "2026-07-15",
+    "author": {
+      "name": "Libsyn"
+    },
+    "tags": ["Press", "Libsyn"],
+    "featuredImage": {
+      "url": "/images/blog/newsfeed-card.webp",
+      "alt": "Steel frame of an industrial building under construction at sunrise"
+    },
+    "contentHtml": "",
+    "externalUrl": "https://developthis.libsyn.com/dt-662-why-trust-talent-and-infrastructure-drive-site-selection-success"
+  },
+  {
+    "id": "libsyn-dt-623",
+    "slug": "libsyn-dt-623-proof-not-potential",
+    "title": "DT #623 Proof, Not Potential: What Site Selectors Really Look For",
+    "excerpt": "DT #623 Proof, Not Potential: What Site Selectors Really Look For",
+    "date": "2026-03-04",
+    "author": {
+      "name": "Libsyn"
+    },
+    "tags": ["Press", "Libsyn"],
+    "featuredImage": {
+      "url": "/images/blog/newsfeed-card.webp",
+      "alt": "Steel frame of an industrial building under construction at sunrise"
+    },
+    "contentHtml": "",
+    "externalUrl": "https://developthis.libsyn.com/dt-623-proof-not-potential-what-site-selectors-really-look-for"
+  },
+  {
+    "id": "anyflip-fdi-alliance-spring-2026",
+    "slug": "anyflip-fdi-alliance-spring-2026",
+    "title": "FDI Alliance International Magazine. Spring 2026 Digital Interactive Issue.",
+    "excerpt": "FDI Alliance International Magazine. Spring 2026 Digital Interactive Issue.",
+    "author": {
+      "name": "Anyflip"
+    },
+    "tags": ["Press", "Anyflip"],
+    "featuredImage": {
+      "url": "/images/blog/newsfeed-card.webp",
+      "alt": "Steel frame of an industrial building under construction at sunrise"
+    },
+    "contentHtml": "",
+    "externalUrl": "https://online.anyflip.com/bnxu/ywhw/mobile/#p=26"
+  },
+  {
+    "id": "partner-tulsa-fair-oaks-industrial-park",
+    "slug": "partner-tulsa-fair-oaks-industrial-park",
+    "title": "Fair Oaks Industrial Park - Partner Tulsa",
+    "excerpt": "Fair Oaks Industrial Park - Partner Tulsa",
+    "author": {
+      "name": "Partner Tulsa"
+    },
+    "tags": ["Press", "Partner Tulsa"],
+    "featuredImage": {
+      "url": "/images/blog/newsfeed-card.webp",
+      "alt": "Steel frame of an industrial building under construction at sunrise"
+    },
+    "contentHtml": "",
+    "externalUrl": "https://partnertulsa.org/doing-business/industrial-parks/fair-oaks-industrial-park/"
+  },
+  {
+    "id": "youtube-why-hire-a-consultant",
+    "slug": "youtube-why-hire-a-consultant",
+    "title": "Why Hire a Consultant",
+    "excerpt": "Why Hire a Consultant",
+    "author": {
+      "name": "YouTube"
+    },
+    "tags": ["Press", "YouTube"],
+    "featuredImage": {
+      "url": "/images/blog/newsfeed-card.webp",
+      "alt": "Steel frame of an industrial building under construction at sunrise"
+    },
+    "contentHtml": "",
+    "externalUrl": "https://www.youtube.com/watch?v=2eGGn0v-OjU"
   }
 ]

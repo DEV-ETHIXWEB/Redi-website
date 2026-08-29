@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import type { BlogPost } from '@/types/wordpress';
 import { getBlogPosts } from '@/services/wordpress';
 
 function escapeXml(value: string): string {
@@ -14,7 +15,13 @@ export const GET: APIRoute = async ({ site }) => {
   const { items } = await getBlogPosts({ perPage: 50 });
   const base = site?.toString().replace(/\/$/, '') ?? '';
 
+  // External-link posts (see BlogPost.externalUrl) have no internal detail
+  // page to link to and, in practice, often no verified publish date either
+  // — both of which this feed's <link>/<pubDate> require. They're excluded
+  // rather than pointed at a route that doesn't exist or given a fabricated
+  // date.
   const entries = items
+    .filter((post): post is BlogPost & { date: string } => Boolean(post.date) && !post.externalUrl)
     .map(
       (post) => `
     <item>

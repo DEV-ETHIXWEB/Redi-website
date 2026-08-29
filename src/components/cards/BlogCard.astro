@@ -11,12 +11,23 @@ export interface Props {
 }
 
 const { post, loading = 'lazy', wide = false } = Astro.props;
+
+// A post with no REDI-authored article (externalUrl set) links straight to
+// that URL in a new tab instead of the internal /updates/[slug] page — see
+// BlogPost.externalUrl and getAllBlogSlugs() in src/services/wordpress/blog.ts.
+const isExternal = Boolean(post.externalUrl);
+const href = post.externalUrl ?? `/updates/${post.slug}`;
 ---
 
 <article
   class="group bg-steel-200 shadow-soft hover:shadow-lifted relative overflow-hidden rounded-xl transition-all duration-300 ease-out hover:-translate-y-1.5"
 >
-  <a href={`/updates/${post.slug}`} class="absolute inset-0 z-10" aria-label={post.title}></a>
+  <a
+    href={href}
+    class="absolute inset-0 z-10"
+    aria-label={post.title}
+    target={isExternal ? '_blank' : undefined}
+    rel={isExternal ? 'noopener noreferrer' : undefined}></a>
   <div class={cn('overflow-hidden', wide ? 'aspect-[1527/655]' : 'aspect-[998/655]')}>
     <img
       src={post.featuredImage.url}
@@ -31,8 +42,14 @@ const { post, loading = 'lazy', wide = false } = Astro.props;
   <div class="px-4 pt-3.5 pb-4">
     <p class="text-navy-700 text-sm font-semibold">{post.tags.join(', ')}</p>
     <p class="mt-0.5 flex items-center gap-2 text-sm text-slate-600">
-      <time datetime={post.date}>{formatDate(post.date)}</time>
-      <span aria-hidden="true">·</span>
+      {
+        post.date && (
+          <>
+            <time datetime={post.date}>{formatDate(post.date)}</time>
+            <span aria-hidden="true">·</span>
+          </>
+        )
+      }
       <span>{post.author.name}</span>
     </p>
     <h3

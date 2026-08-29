@@ -72,8 +72,14 @@ const breadcrumbLd = {
       </p>
       <h1 class="kicker !text-navy-950 mt-3 sm:!text-5xl">{post.title}</h1>
       <p class="text-ink-600 mt-5 flex items-center gap-2.5 text-base">
-        <time datetime={post.date}>{formatDate(post.date)}</time>
-        <span aria-hidden="true">•</span>
+        {
+          post.date && (
+            <>
+              <time datetime={post.date}>{formatDate(post.date)}</time>
+              <span aria-hidden="true">•</span>
+            </>
+          )
+        }
         <span>{post.author.name}</span>
       </p>
 

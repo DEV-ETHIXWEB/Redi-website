@@ -41,8 +41,14 @@ const VIEWPORTS = [
 // (this previously happened: it kept listing 8 placeholder posts for a
 // while after they were deleted from blog-posts.json, so this script was
 // unknowingly auditing 404 pages instead of real content).
+// Posts with `externalUrl` set (see BlogPost.externalUrl) have no internal
+// detail page — mirrors the same filter getAllBlogSlugs() applies for
+// getStaticPaths(), so this script never tries to audit a route that was
+// never generated.
 const BLOG_POSTS_PATH = join(__dirname, '..', 'src', 'content', 'seed', 'blog-posts.json');
-const BLOG_SLUGS = JSON.parse(readFileSync(BLOG_POSTS_PATH, 'utf-8')).map((post) => post.slug);
+const BLOG_SLUGS = JSON.parse(readFileSync(BLOG_POSTS_PATH, 'utf-8'))
+  .filter((post) => !post.externalUrl)
+  .map((post) => post.slug);
 
 const ROUTES = [
   '/',

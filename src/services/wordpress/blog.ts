@@ -37,13 +37,21 @@ export interface BlogQuery {
  * Response:  `BlogPost[]`.
  * Required fields per item: `id`, `slug`, `title`, `excerpt`, `contentHtml`
  *   (raw HTML — see the sanitization note in `./legal.ts`, same caveat
- *   applies here), `date` (ISO 8601 string), `author.name`, `tags`
- *   (`string[]`), `featuredImage` (`WPImage`).
- * Optional fields: `heroImage` (`WPImage` — wider crop for the article-page
- *   banner; falls back to `featuredImage` if omitted — that fallback is the
- *   CONSUMING component's job, not this service's), `source` (`{ name, url
- *   }` — renders an outbound "originally published by…" link; only present
- *   on posts that are summaries of external press coverage).
+ *   applies here), `author.name`, `tags` (`string[]`), `featuredImage`
+ *   (`WPImage`).
+ * Optional fields: `date` (ISO 8601 string — omit if there's no genuinely
+ *   known publish date, e.g. a bare external link with no verifiable date
+ *   on the source page; never invent one, see `BlogPost.date`), `heroImage`
+ *   (`WPImage` — wider crop for the article-page banner; falls back to
+ *   `featuredImage` if omitted — that fallback is the CONSUMING component's
+ *   job, not this service's), `source` (`{ name, url }` — renders an
+ *   outbound "originally published by…" link; only present on posts that
+ *   are REDI-authored summaries of external press coverage), `externalUrl`
+ *   (a post with no REDI-authored article at all — the card links straight
+ *   to this URL and no internal detail page is generated for it; mutually
+ *   exclusive with `source` in practice, since a post either has REDI's own
+ *   write-up about external coverage, or IS just a link to something
+ *   external with no write-up).
  * Fallback:  `src/content/seed/blog-posts.json`.
  * Failure:   handled inside `wpFetch()` — never throws.
  *
@@ -93,7 +101,14 @@ export async function getBlogPosts(query: BlogQuery = {}) {
     posts = posts.filter((p) => p.tags.includes(tag));
   }
 
+  // Posts with no known date (external links with no verifiable publish
+  // date — see BlogPost.date) always sort after every dated post,
+  // regardless of sort direction, rather than being coerced to `Date(undefined)`
+  // (which is `Invalid Date` / NaN and would produce an unstable sort order).
   posts = [...posts].sort((a, b) => {
+    if (!a.date && !b.date) return 0;
+    if (!a.date) return 1;
+    if (!b.date) return -1;
     const diff = new Date(a.date).getTime() - new Date(b.date).getTime();
     return sort === 'recent' ? -diff : diff;
   });
@@ -120,8 +135,13 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | undefi
   return posts.find((p) => p.slug === slug);
 }
 
-/** Every post slug, for `getStaticPaths()` in the `[slug].astro` route (build-time SSG). */
+/**
+ * Every post slug, for `getStaticPaths()` in the `[slug].astro` route
+ * (build-time SSG). Excludes posts with `externalUrl` set — those have no
+ * real article content, so no internal detail page is ever generated for
+ * them (their card links straight to the external URL instead).
+ */
 export async function getAllBlogSlugs(): Promise<string[]> {
   const posts = await getAllPosts();
-  return posts.map((p) => p.slug);
+  return posts.filter((p) => !p.externalUrl).map((p) => p.slug);
 }
