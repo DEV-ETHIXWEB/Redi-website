@@ -4,20 +4,16 @@ import AboutHero from '@/components/sections/AboutHero.astro';
 import ProseSection from '@/components/sections/ProseSection.astro';
 import GuildMission from '@/components/sections/GuildMission.astro';
 import TeamGrid from '@/components/sections/TeamGrid.astro';
-import TestimonialCarousel from '@/components/sections/TestimonialCarousel';
 import PartnersSection from '@/components/sections/PartnersSection.astro';
 import CtaBanner from '@/components/sections/CtaBanner.astro';
-import { getPageCopy, getTeamMembers, getTestimonials, getPartners } from '@/services/wordpress';
+import { getPageCopy, getTeamMembers, getPartners } from '@/services/wordpress';
 
-const [copy, team, testimonials, partners] = await Promise.all([
-  getPageCopy(),
-  getTeamMembers(),
-  getTestimonials(),
-  getPartners(),
-]);
+const [copy, team, partners] = await Promise.all([getPageCopy(), getTeamMembers(), getPartners()]);
 
 const about = copy.about;
 const home = copy.home;
+const staff = team.filter((member) => member.group === 'staff');
+const board = team.filter((member) => member.group === 'board');
 
 const breadcrumbLd = {
   '@context': 'https://schema.org',
@@ -51,7 +47,6 @@ const breadcrumbLd = {
     heading={about.mission.heading}
     paragraphs={about.mission.paragraphs}
   />
-  <GuildMission copy={about.guildMission} />
   <ProseSection
     eyebrow={about.businessModel.eyebrow}
     heading={about.businessModel.heading}
@@ -61,8 +56,14 @@ const breadcrumbLd = {
       alt: 'High-rise construction site at sunset with tower cranes',
     }}
   />
-  <TeamGrid eyebrow={about.team.eyebrow} heading={about.team.heading} members={team} />
-  <TestimonialCarousel client:visible testimonials={testimonials} />
+  <GuildMission copy={about.guildMission} />
+  <ProseSection
+    eyebrow={about.whyGuild.eyebrow}
+    heading={about.whyGuild.heading}
+    paragraphs={about.whyGuild.paragraphs}
+  />
+  <TeamGrid eyebrow={about.team.eyebrow} heading={about.team.heading} members={staff} />
+  <TeamGrid eyebrow={about.board.eyebrow} heading={about.board.heading} members={board} />
   <PartnersSection
     eyebrow={about.partners.eyebrow}
     heading={about.partners.heading}

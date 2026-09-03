@@ -176,5 +176,21 @@
     },
     "contentHtml": "",
     "externalUrl": "https://www.youtube.com/watch?v=2eGGn0v-OjU"
+  },
+  {
+    "id": "missouri-partnership-platinum-designation",
+    "slug": "missouri-partnership-platinum-designation",
+    "title": "Missouri Industrial Site Earns Platinum Designation from Site Selectors Guild",
+    "excerpt": "Missouri Industrial Site Earns Platinum Designation from Site Selectors Guild",
+    "author": {
+      "name": "Missouri Partnership"
+    },
+    "tags": ["Press", "Missouri Partnership"],
+    "featuredImage": {
+      "url": "/images/blog/newsfeed-card.webp",
+      "alt": "Steel frame of an industrial building under construction at sunrise"
+    },
+    "contentHtml": "",
+    "externalUrl": "https://missouripartnership.com/missouri-industrial-site-earns-platinum-designation-from-site-selectors-guild/"
   }
 ]

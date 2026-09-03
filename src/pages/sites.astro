@@ -1,13 +1,62 @@
 ---
+export const prerender = false;
+
 import BaseLayout from '@/components/layout/BaseLayout.astro';
 import PageHero from '@/components/sections/PageHero.astro';
 import SitesBrowser from '@/components/sections/SitesBrowser.astro';
 import CtaBanner from '@/components/sections/CtaBanner.astro';
+import Icon from '@/components/ui/Icon.astro';
 import { getPageCopy } from '@/services/wordpress';
+import { SITES_GATE_PASSWORD } from 'astro:env/server';
 
 const copy = await getPageCopy();
 const sites = copy.sites;
-const SSG_URL = 'https://siteselectorsguild.com';
+const FIND_A_SITE_SELECTOR_URL =
+  'https://siteselectorsguild.com/site-selection/find-a-site-selector/';
+
+/**
+ * Lightweight shared-password gate for the site listing/property view.
+ * No accounts, no backend — one password stored server-side
+ * (`SITES_GATE_PASSWORD`), verified here, and remembered via an httpOnly
+ * cookie holding a hash of the password (never the password itself).
+ *
+ * If `SITES_GATE_PASSWORD` isn't set, the gate is a no-op — this keeps
+ * every environment that hasn't configured it (local dev, previews) working
+ * exactly as before rather than silently locking everyone out.
+ */
+const COOKIE_NAME = 'redi_sites_access';
+const gatePassword = SITES_GATE_PASSWORD;
+const gateEnabled = Boolean(gatePassword);
+
+async function sha256Hex(input: string): Promise<string> {
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input));
+  return Array.from(new Uint8Array(digest))
+    .map((byte) => byte.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+let gateError: string | null = null;
+
+if (gateEnabled && Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  const submitted = String(form.get('password') ?? '');
+
+  if (submitted && submitted === gatePassword) {
+    Astro.cookies.set(COOKIE_NAME, await sha256Hex(gatePassword), {
+      path: '/',
+      httpOnly: true,
+      secure: import.meta.env.PROD,
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 30, // 30 days
+    });
+    return Astro.redirect('/sites');
+  }
+
+  gateError = 'Incorrect password. Please try again.';
+}
+
+const unlocked =
+  !gateEnabled || Astro.cookies.get(COOKIE_NAME)?.value === (await sha256Hex(gatePassword ?? ''));
 
 const breadcrumbLd = {
   '@context': 'https://schema.org',
@@ -35,12 +84,72 @@ const breadcrumbLd = {
     heading={sites.hero.heading}
     backgroundImage="/images/hero/locations-hero-bg.webp"
   />
-  <SitesBrowser />
-  <CtaBanner
-    heading={sites.guidanceCta.heading}
-    body={sites.guidanceCta.body}
-    ctaLabel={sites.guidanceCta.ctaLabel}
-    ctaHref={SSG_URL}
-    backgroundImage="/images/hero/cta-guidance-bg.webp"
-  />
+  {
+    unlocked ? (
+      <>
+        <SitesBrowser />
+        <CtaBanner
+          heading={sites.guidanceCta.heading}
+          body={sites.guidanceCta.body}
+          ctaLabel={sites.guidanceCta.ctaLabel}
+          ctaHref={FIND_A_SITE_SELECTOR_URL}
+          backgroundImage="/images/hero/cta-guidance-bg.webp"
+        />
+      </>
+    ) : (
+      <section class="bg-steel-100 py-16 md:py-20">
+        <div class="container-page">
+          <div class="shadow-card mx-auto max-w-[440px] rounded-2xl bg-white p-8 sm:p-10">
+            <div class="bg-navy-950 mx-auto flex size-12 items-center justify-center rounded-full">
+              <Icon name="lock" size={22} class="text-cyan-400" />
+            </div>
+            <h2 class="font-heading text-navy-950 mt-5 text-center text-2xl font-bold tracking-tight uppercase">
+              Password Required
+            </h2>
+            <p class="text-ink-600 mt-2 text-center text-sm leading-relaxed">
+              This site listing is password-protected. Enter the password to continue.
+            </p>
+            {/*
+                data-astro-reload: BaseLayout's site-wide <ClientRouter />
+                (View Transitions) intercepts same-origin form submissions
+                and sends them as a client-side fetch instead of a full page
+                navigation. This form's POST response sets an httpOnly
+                cookie and issues a redirect — both need a real full-page
+                navigation to take effect the way the browser (and this
+                page's cookie-based unlock check on next load) expects.
+              */}
+            <form method="POST" class="mt-6 space-y-4" data-astro-reload>
+              <div>
+                <label
+                  for="sites-gate-password"
+                  class="font-heading text-ink-700 mb-1.5 block text-xs font-semibold tracking-wide uppercase"
+                >
+                  Password
+                </label>
+                <input
+                  id="sites-gate-password"
+                  name="password"
+                  type="password"
+                  required
+                  autofocus
+                  class="border-steel-300 w-full rounded-lg border bg-white px-4 py-2.5 text-base outline-none focus:border-cyan-500 focus:ring-[3px] focus:ring-cyan-400/30"
+                />
+              </div>
+              {gateError && (
+                <p class="text-sm font-medium text-red-600" role="alert">
+                  {gateError}
+                </p>
+              )}
+              <button
+                type="submit"
+                class="font-heading text-navy-950 shadow-soft hover:shadow-card flex h-[48px] w-full items-center justify-center rounded-lg bg-cyan-400 text-sm font-semibold tracking-wide uppercase transition-all duration-200 hover:bg-cyan-300"
+              >
+                Unlock
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+    )
+  }
 </BaseLayout>

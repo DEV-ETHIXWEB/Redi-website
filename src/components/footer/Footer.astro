@@ -1,6 +1,7 @@
 ---
 import type { SiteSettings } from '@/types/wordpress';
 import Logo from '@/components/ui/Logo.astro';
+import LinkedInIcon from '@/components/ui/LinkedInIcon.astro';
 
 export interface Props {
   settings: SiteSettings;
@@ -73,6 +74,19 @@ const { footer, tagline } = settings;
           </li>
           <li>{footer.contact.address}</li>
         </ul>
+        {
+          footer.social?.linkedin && (
+            <a
+              href={footer.social.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="REDI Sites on LinkedIn"
+              class="mt-5 inline-flex size-9 items-center justify-center rounded-full bg-white/10 text-white/70 transition-colors duration-200 hover:bg-white/15 hover:text-cyan-300 md:mx-auto"
+            >
+              <LinkedInIcon size={18} />
+            </a>
+          )
+        }
       </div>
     </div>
 

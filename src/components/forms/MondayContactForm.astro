@@ -6,9 +6,18 @@ import Icon from '@/components/ui/Icon.astro';
  * 650x500 iframe with its own inline box-shadow — dropped in favor of a
  * fluid, centered container sized in REDI's own shadow/radius tokens so it
  * reads as part of the site rather than a foreign widget.
+ *
+ * `formId` is required (no default) so every caller must be explicit about
+ * which Monday.com form it wants — register.astro and contact.astro use two
+ * different forms, and a shared default previously caused both pages to
+ * silently render the same (Register) form.
  */
-const MONDAY_FORM_SRC =
-  'https://forms.monday.com/forms/embed/474841603e14828e7b565d097a98ad89?r=use1';
+export interface Props {
+  formId: string;
+}
+
+const { formId } = Astro.props;
+const MONDAY_FORM_SRC = `https://forms.monday.com/forms/embed/${formId}?r=use1`;
 ---
 
 <div class="mx-auto w-full max-w-[650px]">

@@ -1,10 +1,55 @@
 [
   {
+    "id": "schuyler-county",
+    "quote": "The REDI process was thorough and helped us evaluate Schuyler County Business Park property through the same lens that site selectors and prospects use. It provided us an opportunity to update critical information that can create speedbumps in the site development process. We are receiving inquiries that may never have considered Schuyler County before.",
+    "personName": "Judy McKinney Cherry, CEcD FM",
+    "personTitle": "Executive Director, Schuyler County Partnership for Economic Development",
+    "companyName": "Schuyler County Partnership for Economic Development",
+    "companyLogo": {
+      "url": "/images/logos/schuyler-county.png",
+      "alt": "Schuyler County Partnership for Economic Development"
+    },
+    "backgroundImage": {
+      "url": "/images/hero/testimonial-bg.webp",
+      "alt": "Norfolk Southern locomotive inside a rail maintenance facility"
+    }
+  },
+  {
+    "id": "grow-cedar-valley",
+    "quote": "Receiving REDI's Platinum designations will elevate two Industrial Parks in Waterloo/Cedar Falls Iowa, even further by driving additional opportunities for business attraction domestically and internationally. The REDI designation strengthens both Parks' ability to compete for projects seeking locations capable of supporting today's accelerated development schedule.",
+    "personName": "Lisa Skubal, CEcD",
+    "personTitle": "Vice President of Economic Development, Grow Cedar Valley",
+    "companyName": "Grow Cedar Valley",
+    "companyLogo": {
+      "url": "/images/logos/grow-cedar-valley.png",
+      "alt": "Grow Cedar Valley"
+    },
+    "backgroundImage": {
+      "url": "/images/hero/testimonial-bg.webp",
+      "alt": "Norfolk Southern locomotive inside a rail maintenance facility"
+    }
+  },
+  {
+    "id": "partner-tulsa",
+    "quote": "We see the designation as more than a recognition of the work already completed. It is a platform to generate greater exposure for Fair Oaks, continue advancing the site's readiness, and position Tulsa to compete for more transformational projects that can create lasting economic impact.",
+    "personName": "Jonathan Sanders",
+    "personTitle": "Senior Economic Development Manager, Partner Tulsa",
+    "companyName": "Partner Tulsa",
+    "companyLogo": {
+      "url": "/images/logos/partner-tulsa.png",
+      "alt": "Partner Tulsa"
+    },
+    "backgroundImage": {
+      "url": "/images/hero/testimonial-bg.webp",
+      "alt": "Norfolk Southern locomotive inside a rail maintenance facility"
+    }
+  },
+  {
     "id": "norfolk-southern",
-    "quote": "An example testimonial of a quote from the company.",
-    "personName": "Person Name",
-    "personTitle": "Director of Real Estate",
-    "companyName": "Norfolk Southern Railways",
+    "quote": "When Norfolk Southern set out to build a verified sites program to promote prime rail-ready sites across our network, the Site Selectors Guild's REDI Sites Program stood out as the platinum standard. Partnering with REDI Sites not only elevates the quality and visibility of our site portfolio, it also reinforces our commitment to delivering rail-served locations that are development-ready and vetted by the very consultants who advise our target customers. This collaboration sharpens our competitive edge and strengthens our messaging to the global business community.",
+    "personName": "MaryBeth Flournoy",
+    "personTitle": "Director Industrial Development, Norfolk Southern",
+    "companyName": "Norfolk Southern",
     "companyLogo": {
       "url": "/images/logos/norfolk-southern.png",
       "alt": "Norfolk Southern Railways"

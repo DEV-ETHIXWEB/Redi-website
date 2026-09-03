@@ -45,6 +45,14 @@ export default defineConfig({
       // service falls back to src/content/seed/*.json. See .env.example and
       // docs/WORDPRESS_INTEGRATION.md for the full contract.
       WORDPRESS_API_URL: envField.string({ context: 'server', access: 'secret', optional: true }),
+      // Shared password gating /sites (see src/pages/sites.astro). Unset ->
+      // the gate is a no-op and /sites stays public, so every environment
+      // that hasn't configured this keeps working exactly as before.
+      SITES_GATE_PASSWORD: envField.string({
+        context: 'server',
+        access: 'secret',
+        optional: true,
+      }),
     },
   },
 

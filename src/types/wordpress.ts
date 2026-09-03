@@ -32,6 +32,7 @@ export interface SiteSettings {
     blurb: string;
     sitemap: WPLink[];
     contact: { email: string; phone: string; address: string };
+    social?: { linkedin?: string };
     copyright: string;
   };
   stats: { value: string; label: string }[];
@@ -55,6 +56,17 @@ export interface TeamMember {
   jobTitle: string;
   photo: WPImage;
   order: number;
+  /** Which roster this member renders in — the About page shows Staff and Board as separate grids. */
+  group: 'staff' | 'board';
+  /** Board members often supply a pull-quote about REDI Sites; staff typically don't. */
+  quote?: string;
+  linkedIn?: string;
+  /**
+   * CSS `object-position` for the card photo (e.g. `"50% 10%"`), for the rare
+   * photo whose default top-aligned crop (see TeamCard.astro) needs a small
+   * per-photo nudge. Omit unless a specific photo actually needs it.
+   */
+  photoPosition?: string;
 }
 
 export interface Testimonial {

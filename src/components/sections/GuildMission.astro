@@ -29,18 +29,26 @@ const SSG_URL = 'https://siteselectorsguild.com';
   <div class="container-page">
     <div class="reveal mx-auto max-w-xl">
       <h2 class="text-center text-3xl leading-tight text-white sm:text-4xl md:text-[3.25rem]">
-        Site Selector's Guild<br />Mission &amp; Vision
+        Site Selectors Guild<br />Mission &amp; Vision
       </h2>
-      <ul class="mt-9 space-y-1">
-        {
-          copy.bullets.map((bullet) => (
-            <li class="flex gap-3 text-base leading-relaxed text-white/85">
-              <span class="mt-2.5 size-1.5 shrink-0 rounded-full bg-white/60" aria-hidden="true" />
-              {bullet}
-            </li>
-          ))
-        }
-      </ul>
+      <div class="mt-9 space-y-7">
+        <div class="text-center">
+          <p
+            class="font-heading mb-2 text-xs font-semibold tracking-[0.2em] text-cyan-300 uppercase"
+          >
+            Mission
+          </p>
+          <p class="text-base leading-relaxed text-white/85">{copy.mission}</p>
+        </div>
+        <div class="text-center">
+          <p
+            class="font-heading mb-2 text-xs font-semibold tracking-[0.2em] text-cyan-300 uppercase"
+          >
+            Vision
+          </p>
+          <p class="text-base leading-relaxed text-white/85">{copy.vision}</p>
+        </div>
+      </div>
       <div class="mt-9 text-center">
         <Button href={SSG_URL} variant="primary" class="px-9 text-lg" external>
           {copy.ctaLabel}

@@ -13,8 +13,10 @@ import { wpFetch } from './client';
  * Response:  `TeamMember[]`.
  * Required fields per item: `id`, `name`, `jobTitle`, `photo` (`WPImage`),
  *   `order` (number — display sort order, ascending; does not have to be
- *   contiguous, just comparable).
- * Optional fields: none.
+ *   contiguous, just comparable), `group` (`'staff' | 'board'` — the About
+ *   page renders these as two separate grids).
+ * Optional fields: `quote` (board members often supply a pull-quote about
+ *   REDI Sites), `linkedIn` (profile URL).
  * Fallback:  `src/content/seed/team.json`.
  * Failure:   handled inside `wpFetch()` — never throws.
  *

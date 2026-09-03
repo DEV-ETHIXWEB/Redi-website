@@ -2,51 +2,104 @@
   {
     "id": "nicki-dallison",
     "name": "Nicki Dallison",
-    "jobTitle": "Program Director",
+    "jobTitle": "Managing Director",
     "photo": {
-      "url": "/images/team/team-nicki.webp",
-      "alt": "Portrait of Nicki Dallison, Program Director"
+      "url": "/images/team/nicki-dallison.jpg",
+      "alt": "Portrait of Nicki Dallison, Managing Director"
     },
-    "order": 1
+    "order": 1,
+    "group": "staff",
+    "linkedIn": "https://www.linkedin.com/in/nickidallison/"
   },
   {
-    "id": "team-member-2",
-    "name": "Name",
-    "jobTitle": "Job Role",
+    "id": "stevie-chavez",
+    "name": "Stevie Chavez",
+    "jobTitle": "Director of Sales and Business Development",
+    "photo": {
+      "url": "/images/team/stevie-chavez.jpg",
+      "alt": "Portrait of Stevie Chavez, Director of Sales and Business Development"
+    },
+    "order": 2,
+    "group": "staff",
+    "linkedIn": "https://www.linkedin.com/in/thestevieproject/"
+  },
+  {
+    "id": "didi-caldwell",
+    "name": "Didi Caldwell",
+    "jobTitle": "Board Chair — Founder & President, Global Location Strategies; Founder & Board Chair, Strata Platforms",
+    "photo": {
+      "url": "/images/team/didi-caldwell.jpg",
+      "alt": "Portrait of Didi Caldwell, Board Chair"
+    },
+    "order": 3,
+    "group": "board",
+    "linkedIn": "https://www.linkedin.com/in/didicaldwell/"
+  },
+  {
+    "id": "gregg-wassmansdorf",
+    "name": "Gregg Wassmansdorf",
+    "jobTitle": "Treasurer — Senior Managing Director, Global Strategy, Newmark",
+    "photo": {
+      "url": "/images/team/gregg-wassmansdorf.jpg",
+      "alt": "Portrait of Gregg Wassmansdorf, Treasurer"
+    },
+    "order": 4,
+    "group": "board",
+    "linkedIn": "https://www.linkedin.com/in/greggwassmansdorf/",
+    "quote": "The REDI Sites program addresses the following two common problems, among others. First, for landowners and project proponents, they don't typically have a clear set of guidelines to begin the process of evaluating their own site and taking steps to make it more investment ready. Second, for companies, investors, and site selectors, the site readiness programs that exist across the country have wildly different requirements to earn a stamp, receive a credential, or be added to a site database, which makes site comparisons across jurisdictions very difficult. The REDI Sites program provides a clear path toward improved site readiness and provides a consistent methodology to evaluate site opportunities."
+  },
+  {
+    "id": "jeannette-goldsmith",
+    "name": "Jeannette Goldsmith",
+    "jobTitle": "Board Member — President, Strategic Development Group",
     "photo": {
       "url": "/images/team/team-jane.webp",
       "alt": "Portrait of a REDI Sites team member"
     },
-    "order": 2
+    "order": 5,
+    "group": "board",
+    "linkedIn": "https://www.linkedin.com/in/jeannettegoldsmith/",
+    "quote": "What sets REDI Sites apart is that it was developed by site selection professionals to provide a consistent, national perspective on site readiness. That consistency is particularly valuable because the evaluation reflects the perspective of the professionals who work with companies every day to identify and evaluate locations for significant projects. Another important differentiator is that REDI is industry- and use-agnostic. That makes the evaluation relevant across a broad range of potential projects and allows site selectors to quickly understand a property's strengths, limitations, and remaining risks."
   },
   {
-    "id": "team-member-3",
-    "name": "Name",
-    "jobTitle": "Job Role",
+    "id": "taylor-gravois",
+    "name": "Taylor Gravois",
+    "jobTitle": "Board Member — Sr. Director, Economic Development & Industrial, Westwood",
     "photo": {
-      "url": "/images/team/team-jane.webp",
-      "alt": "Portrait of a REDI Sites team member"
+      "url": "/images/team/taylor-gravois.jpg",
+      "alt": "Portrait of Taylor Gravois, Board Member"
     },
-    "order": 3
+    "order": 6,
+    "group": "board",
+    "linkedIn": "https://www.linkedin.com/in/taylor-gravois-pe-pls-pmp-8aa96b19/",
+    "quote": "Speed to market is an overused cliché, but it still rings true – site readiness is a ticket to enter the economic development game. We have clients who have consistently invested in site prep for 10+ years until finally getting a win. Economic development is a game of persistence and endurance, and success favors those who put in the work over the long term.",
+    "photoPosition": "50% 22%"
   },
   {
-    "id": "team-member-4",
-    "name": "Name",
-    "jobTitle": "Job Role",
+    "id": "denise-mullis",
+    "name": "Denise Mullis",
+    "jobTitle": "Board Member — Vice President, J.M. Mullis, Inc.",
     "photo": {
-      "url": "/images/team/team-jane.webp",
-      "alt": "Portrait of a REDI Sites team member"
+      "url": "/images/team/denise-mullis.jpg",
+      "alt": "Portrait of Denise Mullis, Board Member"
     },
-    "order": 4
+    "order": 7,
+    "group": "board",
+    "linkedIn": "https://www.linkedin.com/in/denise-e-mullis-74434936/",
+    "quote": "What inspires me most about the REDI Sites program is the opportunity to help states and communities put their best foot forward. I'm excited to see the program continue to grow because every community that becomes more prepared, becomes more competitive with a stronger chance to create jobs, attract investment, and improve quality of life for its residents.",
+    "photoPosition": "50% 22%"
   },
   {
-    "id": "team-member-5",
-    "name": "Name",
-    "jobTitle": "Job Role",
+    "id": "darin-buelow",
+    "name": "Darin Buelow",
+    "jobTitle": "Board Advisor — Principal, Deloitte Consulting LLP",
     "photo": {
-      "url": "/images/team/team-jane.webp",
-      "alt": "Portrait of a REDI Sites team member"
+      "url": "/images/team/darin-buelow.jpg",
+      "alt": "Portrait of Darin Buelow, Board Advisor"
     },
-    "order": 5
+    "order": 8,
+    "group": "board",
+    "linkedIn": "https://www.linkedin.com/in/darinbuelow/",
+    "quote": "I am excited to see REDI Sites continue to gain momentum as a national standard for site readiness and see site owners and economic development entities strive to achieve higher scores in the evaluation framework."
   }
 ]

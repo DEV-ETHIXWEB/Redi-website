@@ -79,41 +79,50 @@
   },
   "about": {
     "hero": {
-      "heading": "About Us",
-      "body": "Partner with the Site Selectors Guild to unlock premium commercial development opportunities. We identify high-value properties and connect investors with transformative projects across key markets.",
+      "heading": "Who We Are",
+      "body": "REDI Sites is an initiative of the Site Selectors Guild dedicated to improving investment readiness through consistent standards, independent evaluation, and education that better aligns community preparedness with corporate site selection requirements.",
       "image": {
         "url": "/images/hero/about-hero-inset.webp",
         "alt": "Urbanscape leadership team reviewing a development model on a rooftop terrace"
       }
     },
     "mission": {
-      "eyebrow": "What We Do",
-      "heading": "Mission Statement & Goals",
+      "eyebrow": "About REDI Sites",
+      "heading": "Bringing Greater Confidence to Site Selection",
       "paragraphs": [
-        "At REDI Sites, we are dedicated to providing comprehensive evaluations of commercial properties to assess their readiness for development. Our seasoned team conducts in-depth analyses of critical factors including infrastructure quality, zoning regulations, environmental considerations, and current market demand. We combine data-driven insights with local market expertise to deliver thorough reports that empower investors and developers to make informed decisions.",
-        "Our process begins with a detailed site assessment, examining utilities, transportation access, and compliance with local zoning laws. We then evaluate economic trends and demographic shifts to gauge market potential. By integrating these elements, we identify properties that offer the best opportunities for successful development projects.",
-        "Partnering with REDI Sites means gaining access to exclusive information and expert guidance that reduces risk and accelerates project timelines. We strive to connect our clients with prime commercial sites that align with their strategic goals, ensuring smarter investments and sustainable growth. Trust REDI Sites to be your partner in unlocking the full potential of commercial real estate development."
+        "Every community wants to demonstrate that its sites are \"ready\" for investment. But across the United States, there is no universal definition of what \"site ready\" actually means.",
+        "REDI Sites was created to establish a more consistent, transparent, and investment-focused standard for evaluating industrial properties. Rather than serving as another marketing designation, REDI Sites provides an objective framework that helps communities better prepare sites while giving companies greater confidence in the locations they evaluate.",
+        "Each designation combines engineering analysis with independent review by experienced site selection consultants, ensuring sites are evaluated through both technical and real-world corporate investment perspectives. The result is a more disciplined evaluation process that helps reduce uncertainty, identify potential risks earlier, and accelerate investment decisions.",
+        "Developed as an initiative of the Site Selectors Guild, REDI Sites reflects decades of experience advising corporations on major location decisions and translating those lessons into practical standards that benefit both communities and investors."
+      ]
+    },
+    "businessModel": {
+      "eyebrow": "The Site Selectors Guild",
+      "heading": "The Experts Behind REDI Sites",
+      "paragraphs": [
+        "REDI Sites was developed by the Site Selectors Guild, the world's foremost association of professional site selection consultants.",
+        "Guild Members are independent advisors who help companies identify, evaluate, and select locations for major business investments around the world. Every Guild Member has earned the Certified Site Selection Consultant (CSSC) credential and is bound by a Code of Ethics emphasizing objectivity, confidentiality, and professional judgment.",
+        "Unlike organizations that promote communities, Guild Members represent the interests of corporate investors. Their collective experience evaluating hundreds of projects each year ensures REDI Sites reflects how companies actually assess investment readiness, not simply how sites are marketed."
       ]
     },
     "guildMission": {
-      "heading": "Site Selector's Guild Mission & Vision",
-      "bullets": [
-        "Raising the awareness of the value that professional location strategy and business site selection services create for corporations",
-        "Sharing thought leadership and best practices",
-        "Developing and nurturing relations between Site Selectors Guild members, economic development organizations and corporate stakeholders",
-        "Contributing to policy discussions that affect location strategy and the future of our profession."
-      ],
-      "ctaLabel": "Find A Site Selector | Site Selectors Guild"
+      "heading": "Site Selectors Guild Mission & Vision",
+      "mission": "To advance the practice of site selection while helping companies make smarter location decisions and supporting communities in creating environments where investment can succeed.",
+      "vision": "A world where communities and corporate investors share a common understanding of investment readiness, resulting in faster decisions, reduced risk, and stronger economic outcomes.",
+      "ctaLabel": "Visit Site Selectors Guild"
     },
-    "businessModel": {
-      "eyebrow": "What A Site Selector Is",
-      "heading": "Our Business Model",
+    "whyGuild": {
+      "eyebrow": "Why REDI Sites Exists",
+      "heading": "Why the Site Selectors Guild Created REDI Sites",
       "paragraphs": [
-        "We help businesses find the perfect location for their operations by analyzing factors like infrastructure, labor availability, market access, and regulatory environment.",
-        "Our expert guidance ensures companies choose sites that align with their strategic goals, optimizing costs and operational efficiency. We work closely with stakeholders to evaluate potential locations, providing insights that support informed decisions and successful project outcomes."
+        "Communities have invested heavily in preparing industrial sites for development, but over time, \"site readiness\" has come to mean different things to different organizations.",
+        "Some programs emphasize environmental due diligence. Others focus on utilities, transportation, permitting, or marketing. While each provides value, the lack of a common standard can create uncertainty for companies evaluating locations.",
+        "The Site Selectors Guild recognized this growing disconnect between corporate expectations and community definitions of readiness. REDI Sites was developed to establish a consistent, credible framework rooted in real-world corporate site selection experience. Rather than replacing existing site readiness efforts, REDI Sites complements them by introducing an independent, investment-oriented perspective based on the criteria companies and their advisors evaluate every day.",
+        "The result is greater confidence for investors, greater clarity for communities, and a more efficient site selection process for everyone involved."
       ]
     },
     "team": { "eyebrow": "Who We Are", "heading": "Our Team" },
+    "board": { "eyebrow": "Who We Are", "heading": "Our Board" },
     "partners": { "eyebrow": "Who We Are With", "heading": "Our Partners" }
   },
   "approach": {
