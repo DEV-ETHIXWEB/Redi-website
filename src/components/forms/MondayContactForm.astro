@@ -11,6 +11,24 @@ import Icon from '@/components/ui/Icon.astro';
  * which Monday.com form it wants — register.astro and contact.astro use two
  * different forms, and a shared default previously caused both pages to
  * silently render the same (Register) form.
+ *
+ * Monday's own form markup isn't responsive below ~650px — embedded at any
+ * narrower width it clips (fixed size) rather than reflowing. Since the form
+ * must stay inline (no horizontal scroll, no "open elsewhere" redirect), the
+ * iframe renders at Monday's native 650xNATIVE_HEIGHT and is scaled down as
+ * a whole (`transform: scale()`, computed client-side from the actual
+ * available width) to fit narrower screens — shrinking uniformly rather than
+ * clipping. Text gets smaller on narrow phones as a result; that's the
+ * accepted trade-off for keeping the whole form visible in place. Desktop/
+ * tablet (>=650px available) computes a scale of 1, i.e. renders at native
+ * size, unchanged from before.
+ *
+ * NATIVE_HEIGHT has to be a guess, not a measurement: forms.monday.com is a
+ * different origin, so same-origin policy blocks reading the iframe's real
+ * content height from here. Deliberately overshoot — the failure mode of
+ * guessing too tall is empty space at the bottom of a short form; guessing
+ * too short silently crops off whatever's below the cutoff (fields, even the
+ * submit button) with no way to reach it, which is much worse.
  */
 export interface Props {
   formId: string;
@@ -18,14 +36,18 @@ export interface Props {
 
 const { formId } = Astro.props;
 const MONDAY_FORM_SRC = `https://forms.monday.com/forms/embed/${formId}?r=use1`;
+const NATIVE_WIDTH = 650;
+const NATIVE_HEIGHT = 1500;
 ---
 
 <div class="mx-auto w-full max-w-[650px]">
   <div
-    class="shadow-lifted bg-steel-100 relative h-[560px] overflow-hidden rounded-xl sm:h-[600px]"
+    class="shadow-lifted bg-steel-100 relative w-full overflow-hidden rounded-xl"
+    style={`height: ${NATIVE_HEIGHT}px;`}
+    data-monday-wrapper
   >
     <div
-      class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-3 bg-inherit transition-opacity duration-300 ease-out"
+      class="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-inherit transition-opacity duration-300 ease-out"
       data-monday-loader
     >
       <Icon name="loader-circle" size={32} class="animate-spin text-cyan-500" />
@@ -37,7 +59,9 @@ const MONDAY_FORM_SRC = `https://forms.monday.com/forms/embed/${formId}?r=use1`;
       src={MONDAY_FORM_SRC}
       title="REDI Sites contact form"
       loading="lazy"
-      class="relative block size-full border-0"
+      width={NATIVE_WIDTH}
+      height={NATIVE_HEIGHT}
+      class="absolute top-0 left-0 origin-top-left border-0"
       data-monday-frame
     >
     </iframe>
@@ -52,12 +76,22 @@ const MONDAY_FORM_SRC = `https://forms.monday.com/forms/embed/${formId}?r=use1`;
   </style>
 </noscript>
 
-<script>
+<script is:inline define:vars={{ NATIVE_WIDTH, NATIVE_HEIGHT }}>
   function initMondayForm() {
-    const frame = document.querySelector<HTMLIFrameElement>('[data-monday-frame]');
-    const loader = document.querySelector<HTMLElement>('[data-monday-loader]');
-    if (!frame || !loader || frame.dataset.bound === 'true') return;
+    const wrapper = document.querySelector('[data-monday-wrapper]');
+    const frame = document.querySelector('[data-monday-frame]');
+    const loader = document.querySelector('[data-monday-loader]');
+    if (!wrapper || !frame || !loader || frame.dataset.bound === 'true') return;
     frame.dataset.bound = 'true';
+
+    const applyScale = () => {
+      const scale = Math.min(1, wrapper.clientWidth / NATIVE_WIDTH);
+      frame.style.transform = `scale(${scale})`;
+      wrapper.style.height = `${NATIVE_HEIGHT * scale}px`;
+    };
+
+    applyScale();
+    window.addEventListener('resize', applyScale);
 
     const hide = () => {
       loader.classList.add('opacity-0');

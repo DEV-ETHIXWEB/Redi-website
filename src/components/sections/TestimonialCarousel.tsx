@@ -74,7 +74,7 @@ export default function TestimonialCarousel({ testimonials }: Props) {
         </motion.div>
       </AnimatePresence>
 
-      <div className="container-page relative flex min-h-[540px] items-center justify-center py-16 sm:min-h-[730px] sm:py-20 lg:justify-end">
+      <div className="container-page relative flex min-h-[540px] flex-col items-center justify-center gap-10 py-16 sm:min-h-[730px] sm:py-20 lg:items-end">
         <AnimatePresence initial={false} custom={direction} mode="wait">
           <motion.figure
             key={active.id}
@@ -120,22 +120,35 @@ export default function TestimonialCarousel({ testimonials }: Props) {
           </motion.figure>
         </AnimatePresence>
 
-        <button
-          type="button"
-          onClick={() => paginate(-1)}
-          aria-label="Previous testimonial"
-          className="bg-steel-100/90 text-navy-950 shadow-card absolute bottom-10 left-6 flex size-10 items-center justify-center rounded-full transition-all duration-200 hover:scale-110 hover:bg-white focus-visible:ring-[3px] focus-visible:ring-cyan-400 sm:left-8 lg:left-12"
-        >
-          <ArrowLeft size={20} aria-hidden="true" />
-        </button>
-        <button
-          type="button"
-          onClick={() => paginate(1)}
-          aria-label="Next testimonial"
-          className="bg-steel-100/90 text-navy-950 shadow-card absolute right-6 bottom-10 flex size-10 items-center justify-center rounded-full transition-all duration-200 hover:scale-110 hover:bg-white focus-visible:ring-[3px] focus-visible:ring-cyan-400 sm:right-8 lg:right-12"
-        >
-          <ArrowRight size={20} aria-hidden="true" />
-        </button>
+        {/*
+          Nav buttons render in normal flow directly below the card (not
+          absolutely positioned over it) so they can never overlap — a
+          longer real quote grows the card's height, and an absolutely
+          positioned button anchored to the section's bottom edge would
+          collide with it. This guarantees a fixed gap regardless of quote
+          length, language, or viewport. `self-stretch` + `justify-between`
+          spreads the pair to the row's own left/right edges (matching
+          container-page's width, so they land near the section's edges on
+          every breakpoint) instead of sitting as a tight centered pair.
+        */}
+        <div className="flex w-full items-center justify-between self-stretch">
+          <button
+            type="button"
+            onClick={() => paginate(-1)}
+            aria-label="Previous testimonial"
+            className="bg-steel-100/90 text-navy-950 shadow-card flex size-10 items-center justify-center rounded-full transition-all duration-200 hover:scale-110 hover:bg-white focus-visible:ring-[3px] focus-visible:ring-cyan-400"
+          >
+            <ArrowLeft size={20} aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            onClick={() => paginate(1)}
+            aria-label="Next testimonial"
+            className="bg-steel-100/90 text-navy-950 shadow-card flex size-10 items-center justify-center rounded-full transition-all duration-200 hover:scale-110 hover:bg-white focus-visible:ring-[3px] focus-visible:ring-cyan-400"
+          >
+            <ArrowRight size={20} aria-hidden="true" />
+          </button>
+        </div>
       </div>
     </section>
   );
