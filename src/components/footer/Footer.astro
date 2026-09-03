@@ -64,14 +64,6 @@ const { footer, tagline } = settings;
               {footer.contact.email}
             </a>
           </li>
-          <li>
-            <a
-              href={`tel:${footer.contact.phone.replace(/[^\d+]/g, '')}`}
-              class="transition-colors duration-200 hover:text-cyan-300"
-            >
-              {footer.contact.phone}
-            </a>
-          </li>
           <li>{footer.contact.address}</li>
         </ul>
         {

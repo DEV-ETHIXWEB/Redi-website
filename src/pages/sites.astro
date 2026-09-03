@@ -103,7 +103,6 @@ const breadcrumbLd = {
   {
     unlocked ? (
       <>
-        <SitesBrowser />
         <CtaBanner
           heading={sites.guidanceCta.heading}
           body={sites.guidanceCta.body}
@@ -111,6 +110,7 @@ const breadcrumbLd = {
           ctaHref={FIND_A_SITE_SELECTOR_URL}
           backgroundImage="/images/hero/cta-guidance-bg.webp"
         />
+        <SitesBrowser />
       </>
     ) : (
       <section class="bg-steel-100 py-16 md:py-20">

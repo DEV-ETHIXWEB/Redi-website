@@ -14,13 +14,21 @@
   {
     "id": "strata-platforms",
     "name": "Strata Platforms",
-    "url": "https://strataplatforms.com",
+    "url": "https://strataplatforms.com/",
     "image": { "url": "/images/logos/strata.png", "alt": "Strata Platforms" },
     "backgroundImage": {
       "url": "/images/partners/strata-banner.webp",
       "alt": "Strata Platforms"
     },
-    "headline": "Strata Platforms",
+    "headline": "Enhance Site Selection with Strata Platforms",
+    "variant": "wordmark"
+  },
+  {
+    "id": "terracon",
+    "name": "Terracon",
+    "url": "https://www.terracon.com/",
+    "image": { "url": "/images/logos/terracon.png", "alt": "Terracon" },
+    "headline": "Consulting Engineers and Scientists",
     "variant": "wordmark"
   }
 ]

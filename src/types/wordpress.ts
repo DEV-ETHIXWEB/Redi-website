@@ -31,7 +31,8 @@ export interface SiteSettings {
   footer: {
     blurb: string;
     sitemap: WPLink[];
-    contact: { email: string; phone: string; address: string };
+    /** No phone line — the client asked for it removed; contact is email + mailing address only. */
+    contact: { email: string; phone?: string; address: string };
     social?: { linkedin?: string };
     copyright: string;
   };
