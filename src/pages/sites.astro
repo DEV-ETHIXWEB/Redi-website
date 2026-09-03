@@ -8,6 +8,7 @@ import CtaBanner from '@/components/sections/CtaBanner.astro';
 import Icon from '@/components/ui/Icon.astro';
 import { getPageCopy } from '@/services/wordpress';
 import { SITES_GATE_PASSWORD } from 'astro:env/server';
+import { isRateLimited } from '@/lib/rate-limit';
 
 const copy = await getPageCopy();
 const sites = copy.sites;
@@ -38,21 +39,36 @@ async function sha256Hex(input: string): Promise<string> {
 let gateError: string | null = null;
 
 if (gateEnabled && Astro.request.method === 'POST') {
-  const form = await Astro.request.formData();
-  const submitted = String(form.get('password') ?? '');
+  // CSRF mitigation: reject a cross-origin POST outright. The Origin header
+  // is reliably sent by browsers on cross-site form submissions (which is
+  // exactly what CSRF relies on) and isn't spoofable by an attacker's page —
+  // only same-origin submissions (Origin absent or matching) proceed.
+  const origin = Astro.request.headers.get('origin');
+  const isCrossOrigin = origin !== null && origin !== Astro.url.origin;
 
-  if (submitted && submitted === gatePassword) {
-    Astro.cookies.set(COOKIE_NAME, await sha256Hex(gatePassword), {
-      path: '/',
-      httpOnly: true,
-      secure: import.meta.env.PROD,
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 30, // 30 days
-    });
-    return Astro.redirect('/sites');
+  // 5 attempts/minute per IP — slows down scripted brute-forcing of the
+  // shared password without needing a database. See src/lib/rate-limit.ts.
+  if (isCrossOrigin || isRateLimited(Astro.clientAddress ?? 'unknown')) {
+    gateError = isCrossOrigin
+      ? 'Request could not be verified. Please try again.'
+      : 'Too many attempts. Please wait a minute and try again.';
+  } else {
+    const form = await Astro.request.formData();
+    const submitted = String(form.get('password') ?? '');
+
+    if (submitted && submitted === gatePassword) {
+      Astro.cookies.set(COOKIE_NAME, await sha256Hex(gatePassword), {
+        path: '/',
+        httpOnly: true,
+        secure: import.meta.env.PROD,
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24 * 30, // 30 days
+      });
+      return Astro.redirect('/sites');
+    }
+
+    gateError = 'Incorrect password. Please try again.';
   }
-
-  gateError = 'Incorrect password. Please try again.';
 }
 
 const unlocked =

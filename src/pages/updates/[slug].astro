@@ -4,6 +4,7 @@ import Icon from '@/components/ui/Icon.astro';
 import { getAllBlogSlugs, getBlogPostBySlug } from '@/services/wordpress';
 import { formatDate } from '@/utils/format';
 import { heroSrcSet } from '@/utils/responsive-image';
+import { sanitizeRichText } from '@/lib/sanitize-html';
 
 export async function getStaticPaths() {
   const slugs = await getAllBlogSlugs();
@@ -101,7 +102,7 @@ const breadcrumbLd = {
           '[&_h3]:font-heading [&_h3]:text-ink-900 [&_h3]:mt-12 [&_h3]:text-lg [&_h3]:font-bold [&_h3]:uppercase',
           '[&_p]:text-ink-600 [&_p]:mt-6 [&_p]:text-[15px] [&_p]:leading-relaxed sm:[&_p]:text-base',
         ]}
-        set:html={post.contentHtml}
+        set:html={sanitizeRichText(post.contentHtml)}
       />
 
       {

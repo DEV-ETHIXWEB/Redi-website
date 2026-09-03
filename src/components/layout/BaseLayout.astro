@@ -51,6 +51,10 @@ const allLd = [organizationLd, ...structuredData];
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#06182f" />
     <link
       rel="alternate"
       type="application/rss+xml"
@@ -79,7 +83,14 @@ const allLd = [organizationLd, ...structuredData];
     <Seo {...seoProps} />
     {
       allLd.map((ld) => (
-        <script is:inline type="application/ld+json" set:html={JSON.stringify(ld)} />
+        // `<` is escaped so a stray "</script>" inside any string value
+        // (e.g. a future CMS-editable title/description) can't prematurely
+        // close this tag and inject markup after it.
+        <script
+          is:inline
+          type="application/ld+json"
+          set:html={JSON.stringify(ld).replace(/</g, '\\u003c')}
+        />
       ))
     }
     <noscript>
