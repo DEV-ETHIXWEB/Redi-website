@@ -47,13 +47,27 @@ const NATIVE_HEIGHT = 1500;
     data-monday-wrapper
   >
     <div
-      class="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-inherit transition-opacity duration-300 ease-out"
+      class="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-inherit transition-opacity duration-300 ease-out"
       data-monday-loader
     >
-      <Icon name="loader-circle" size={32} class="animate-spin text-cyan-500" />
-      <p class="font-heading text-ink-600 text-xs font-semibold tracking-wide uppercase">
+      <span data-monday-spinner>
+        <Icon name="loader-circle" size={32} class="animate-spin text-cyan-500" />
+      </span>
+      <p
+        class="font-heading text-ink-600 px-6 text-center text-xs font-semibold tracking-wide uppercase"
+        data-monday-status
+      >
         Loading contact form…
       </p>
+      <a
+        href={MONDAY_FORM_SRC}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="font-heading shadow-soft hover:shadow-card text-navy-950 hidden h-[40px] items-center justify-center rounded-lg bg-cyan-400 px-5 text-xs font-semibold tracking-wide uppercase transition-all duration-200 hover:bg-cyan-300"
+        data-monday-fallback-link
+      >
+        Open form in a new tab
+      </a>
     </div>
     <iframe
       src={MONDAY_FORM_SRC}
@@ -81,6 +95,9 @@ const NATIVE_HEIGHT = 1500;
     const wrapper = document.querySelector('[data-monday-wrapper]');
     const frame = document.querySelector('[data-monday-frame]');
     const loader = document.querySelector('[data-monday-loader]');
+    const spinner = document.querySelector('[data-monday-spinner]');
+    const status = document.querySelector('[data-monday-status]');
+    const fallbackLink = document.querySelector('[data-monday-fallback-link]');
     if (!wrapper || !frame || !loader || frame.dataset.bound === 'true') return;
     frame.dataset.bound = 'true';
 
@@ -93,10 +110,44 @@ const NATIVE_HEIGHT = 1500;
     applyScale();
     window.addEventListener('resize', applyScale);
 
+    // Vendor form is a cross-origin SPA — `load` fires once the iframe's
+    // document has parsed, which is the best signal available (Monday.com
+    // has no postMessage API telling us when the form itself has painted).
+    let settled = false;
+    let stuck = false;
+
     const hide = () => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(stuckTimer);
+      if (stuck) {
+        // Late success after the fallback already showed — undo the
+        // collapse and restore the real form instead of leaving the
+        // visitor looking at an empty box under a "loading" message.
+        frame.style.display = '';
+        window.addEventListener('resize', applyScale);
+        applyScale();
+      }
       loader.classList.add('opacity-0');
       loader.addEventListener('transitionend', () => loader.remove(), { once: true });
     };
+
+    // If the embed hasn't loaded after a generous window (blocked by a
+    // firewall/ad-blocker, vendor outage, slow network), stop spinning
+    // forever and hand the visitor a working way out instead. Also collapse
+    // the wrapper from its tall NATIVE_HEIGHT guess down to a compact card —
+    // otherwise the fallback message sits stranded in the middle of a mostly
+    // empty 1500px box the visitor has to scroll through to find.
+    const stuckTimer = setTimeout(() => {
+      if (settled) return;
+      stuck = true;
+      spinner?.remove();
+      if (status) status.textContent = 'This is taking longer than expected.';
+      fallbackLink?.classList.remove('hidden');
+      window.removeEventListener('resize', applyScale);
+      frame.style.display = 'none';
+      wrapper.style.height = '220px';
+    }, 12000);
 
     frame.addEventListener('load', hide, { once: true });
   }

@@ -17,13 +17,27 @@ const LOCATIONONE_URL = 'https://locationone.com';
   <div class="container-page">
     <div class="shadow-card reveal relative overflow-hidden rounded-xl bg-white">
       <div
-        class="bg-steel-100 pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-3 transition-opacity duration-300 ease-out"
+        class="bg-steel-100 absolute inset-0 flex flex-col items-center justify-center gap-3 transition-opacity duration-300 ease-out"
         data-locationone-loader
       >
-        <Icon name="loader-circle" size={32} class="animate-spin text-cyan-500" />
-        <p class="font-heading text-ink-600 text-xs font-semibold tracking-wide uppercase">
+        <span data-locationone-spinner>
+          <Icon name="loader-circle" size={32} class="animate-spin text-cyan-500" />
+        </span>
+        <p
+          class="font-heading text-ink-600 px-6 text-center text-xs font-semibold tracking-wide uppercase"
+          data-locationone-status
+        >
           Loading LocationOne search…
         </p>
+        <a
+          href={LOCATIONONE_SRC}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-heading shadow-soft hover:shadow-card text-navy-950 hidden h-[40px] items-center justify-center rounded-lg bg-cyan-400 px-5 text-xs font-semibold tracking-wide uppercase transition-all duration-200 hover:bg-cyan-300"
+          data-locationone-fallback-link
+        >
+          Open in a new tab
+        </a>
       </div>
       <iframe
         src={LOCATIONONE_SRC}
@@ -68,13 +82,34 @@ const LOCATIONONE_URL = 'https://locationone.com';
   function initLocationOne() {
     const frame = document.querySelector<HTMLIFrameElement>('[data-locationone-frame]');
     const loader = document.querySelector<HTMLElement>('[data-locationone-loader]');
+    const spinner = document.querySelector<HTMLElement>('[data-locationone-spinner]');
+    const status = document.querySelector<HTMLElement>('[data-locationone-status]');
+    const fallbackLink = document.querySelector<HTMLElement>('[data-locationone-fallback-link]');
     if (!frame || !loader || frame.dataset.bound === 'true') return;
     frame.dataset.bound = 'true';
 
+    // Vendor widget is a cross-origin SPA — `load` fires once the iframe's
+    // document has parsed, which is the best signal available (no postMessage
+    // API from LocationOne to know when the map itself has actually painted).
+    let settled = false;
+
     const hide = () => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(stuckTimer);
       loader.classList.add('opacity-0');
       loader.addEventListener('transitionend', () => loader.remove(), { once: true });
     };
+
+    // If the embed hasn't loaded after a generous window (blocked by a
+    // firewall/ad-blocker, vendor outage, slow network), stop spinning
+    // forever and hand the visitor a working way out instead.
+    const stuckTimer = setTimeout(() => {
+      if (settled) return;
+      spinner?.remove();
+      if (status) status.textContent = 'This is taking longer than expected.';
+      fallbackLink?.classList.remove('hidden');
+    }, 12000);
 
     frame.addEventListener('load', hide, { once: true });
   }
