@@ -1,7 +1,7 @@
 {
   "name": "REDI Sites",
   "short_name": "REDI Sites",
-  "description": "Readiness Evaluation for Development and Investment — the national standard for site readiness, administered by the Site Selectors Guild.",
+  "description": "Readiness Evaluation for Development and Investment - the national standard for site readiness, administered by the Site Selectors Guild.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#06182f",

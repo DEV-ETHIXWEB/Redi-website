@@ -6,7 +6,7 @@ import MondayContactForm from '@/components/forms/MondayContactForm.astro';
 ---
 
 <BaseLayout
-  title="Register Your Site — REDI Sites"
+  title="Register Your Site - REDI Sites"
   description="Register your commercial property for a REDI readiness evaluation by the Site Selectors Guild."
   noindex
 >
@@ -40,30 +40,30 @@ import MondayContactForm from '@/components/forms/MondayContactForm.astro';
 
         <!--
           TODO(auth): this form is a Monday.com lead-intake embed, not a
-          real account-creation flow — there is still no self-serve account
+          real account-creation flow - there is still no self-serve account
           registration anywhere in this build. If/when that's built, this is
           where it goes. Nothing to reuse from SetPasswordForm.tsx besides
           the general form/validation pattern.
             1. Expected request:  POST /api/auth/register
                { email, password, name, company?, ...whatever fields the
-               client wants collected — none are specified yet, this needs
+               client wants collected - none are specified yet, this needs
                product input, not just engineering }.
             2. Role assignment: decide what WordPress user role a self-
                registered account gets by default (e.g. a restricted
-               "member" role, not "subscriber"/"administrator") — must be
+               "member" role, not "subscriber"/"administrator") - must be
                enforced server-side; nothing here should let a client-
                supplied field set its own role.
             3. Expected response (success): 201 + either an auto-login
                session (see sign-in.astro TODO) or an "check your email to
-               verify" flow — decide before building, this changes the UX
+               verify" flow - decide before building, this changes the UX
                significantly.
             4. Expected response (failure): 409 for "email already
-               registered" (again, consider enumeration implications — see
+               registered" (again, consider enumeration implications - see
                forgot-password.astro TODO), 422 for validation errors with
                field-level error detail.
             5. Add the same password-strength validation used in
                SetPasswordForm.tsx (`setPasswordSchema`, currently defined
-               only in that file — consider extracting it to a shared
+               only in that file - consider extracting it to a shared
                `src/lib/validation/` module, which exists but is currently
                empty, once more than one form needs the same rules).
         -->

@@ -25,7 +25,7 @@ const isActive = (href: string) => {
       aria-label="Primary"
       class="bg-steel-100/95 shadow-card mt-5 flex h-[75px] items-center justify-between gap-4 rounded-xl pr-3 pl-5 backdrop-blur-md"
     >
-      <a href="/" class="flex shrink-0 items-center" aria-label={`${settings.siteName} — home`}>
+      <a href="/" class="flex shrink-0 items-center" aria-label={`${settings.siteName} - home`}>
         <Logo variant="nav" />
       </a>
 
@@ -53,7 +53,7 @@ const isActive = (href: string) => {
 
       <!--
         TODO(auth): both CTAs below always render as logged-out
-        (Sign In / Register) — there is no session state to check yet. Once
+        (Sign In / Register) - there is no session state to check yet. Once
         auth exists (see src/middleware.ts TODO for where a resolved user
         would land on `context.locals`), this block should branch: signed-in
         users see an account/logout affordance instead of Sign In, mirrored

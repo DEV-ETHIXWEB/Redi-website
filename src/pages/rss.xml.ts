@@ -38,7 +38,7 @@ export const GET: APIRoute = async ({ site }) => {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
-    <title>REDI Sites — Latest Updates</title>
+    <title>REDI Sites - Latest Updates</title>
     <link>${base}/updates</link>
     <description>News, insights, and announcements from REDI Sites and the Site Selectors Guild.</description>
     <language>en-us</language>${entries}

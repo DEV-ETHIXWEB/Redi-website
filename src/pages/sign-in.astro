@@ -4,7 +4,7 @@ import Icon from '@/components/ui/Icon.astro';
 import Logo from '@/components/ui/Logo.astro';
 ---
 
-<BaseLayout title="Sign In — REDI Sites" description="Sign in to your REDI Sites account." noindex>
+<BaseLayout title="Sign In - REDI Sites" description="Sign in to your REDI Sites account." noindex>
   <section class="bg-steel-100 pt-32 pb-24">
     <div class="container-page">
       <div
@@ -30,25 +30,25 @@ import Logo from '@/components/ui/Logo.astro';
             1. Change method="get" action="/contact" to a real submit handler
                (either a client-side fetch to POST /api/auth/login, or an
                Astro API route at src/pages/api/auth/login.ts that proxies to
-               WordPress — see docs/WORDPRESS_INTEGRATION.md § Authentication
+               WordPress - see docs/WORDPRESS_INTEGRATION.md § Authentication
                Preparation for the recommended shape).
             2. Expected request:  POST /api/auth/login  { email, password, stay }
-               (`stay` = the "Stay Logged In" checkbox below — maps to a
+               (`stay` = the "Stay Logged In" checkbox below - maps to a
                longer-lived session/refresh token vs. a session-only cookie).
             3. Expected response (success): 200 + Set-Cookie (httpOnly session
-               cookie) or { token, refreshToken } if using bearer-token auth —
+               cookie) or { token, refreshToken } if using bearer-token auth -
                decide session-cookie vs. token strategy before implementing,
                see docs/WORDPRESS_INTEGRATION.md.
             4. Expected response (failure): 401 with a machine-readable error
                code (e.g. { error: "invalid_credentials" }) so the UI can show
                a specific message rather than a generic "something went wrong".
             5. On success: redirect to the member dashboard (does not exist in
-               this build yet — see HANDOFF.md § "not required" / dashboard
+               this build yet - see HANDOFF.md § "not required" / dashboard
                scope) or back to the originating page.
             6. Add a loading state + inline error message UI (see
                SetPasswordForm.tsx for the pattern already used elsewhere in
                this codebase: status state machine + aria-live error region).
-            7. Password field currently has no client-side validation at all —
+            7. Password field currently has no client-side validation at all -
                add the same validation rules used in SetPasswordForm.tsx once
                this becomes a real submit (min length, etc.) for consistent
                UX, though the backend must be the source of truth for auth
@@ -115,7 +115,7 @@ import Logo from '@/components/ui/Logo.astro';
         </form>
 
         <p class="text-ink-600 mt-6 text-right text-base">
-          No Account? —{' '}
+          No Account? -{' '}
           <a
             href="/register"
             class="hover:text-navy-950 text-cyan-600 transition-colors hover:underline"
