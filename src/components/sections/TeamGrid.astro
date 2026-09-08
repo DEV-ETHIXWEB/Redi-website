@@ -10,8 +10,6 @@ export interface Props {
 }
 
 const { eyebrow, heading, members } = Astro.props;
-const firstRow = members.slice(0, 3);
-const secondRow = members.slice(3);
 
 // WordPress can legitimately return zero team members. Skip the whole
 // section rather than show a heading over an empty grid.
@@ -25,21 +23,12 @@ const hasMembers = members.length > 0;
         <SectionHeading eyebrow={eyebrow} heading={heading} align="center" />
 
         <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" role="list">
-          {firstRow.map((member, index) => (
+          {members.map((member, index) => (
             <li class="reveal" style={`--reveal-delay: ${index * 70}ms`}>
               <TeamCard member={member} />
             </li>
           ))}
         </ul>
-        {secondRow.length > 0 && (
-          <ul class="mt-6 grid gap-6 sm:grid-cols-2" role="list">
-            {secondRow.map((member, index) => (
-              <li class="reveal" style={`--reveal-delay: ${index * 70}ms`}>
-                <TeamCard member={member} />
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
     </section>
   )
