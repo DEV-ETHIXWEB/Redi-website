@@ -45,6 +45,21 @@
     }
   },
   {
+    "id": "sunflower-electric",
+    "quote": "The designation enhances our credibility with site selectors, supports business attraction efforts, and reinforces our joint commitment to long-term economic growth in rural Kansas. REDI Sites is more than a designation; it's a strategic investment that helps communities and utilities prepare for growth and attract quality development projects. Recognizing the strength of partnerships, Dodge City/Ford County Economic Development, Victory Electric Cooperative, and Sunflower Electric Power Corporation collaborated to promote the Dodge City Business Park through the REDI sites program.",
+    "personName": "Dodge City Business Park Partnership",
+    "personTitle": "Sunflower Electric Power Corporation",
+    "companyName": "Sunflower Electric Power Corporation",
+    "companyLogo": {
+      "url": "/images/logos/sunflower-electric.png",
+      "alt": "Sunflower Electric Power Corp"
+    },
+    "backgroundImage": {
+      "url": "/images/hero/testimonial-bg.webp",
+      "alt": "Norfolk Southern locomotive inside a rail maintenance facility"
+    }
+  },
+  {
     "id": "norfolk-southern",
     "quote": "When Norfolk Southern set out to build a verified sites program to promote prime rail-ready sites across our network, the Site Selectors Guild's REDI Sites Program stood out as the platinum standard. Partnering with REDI Sites not only elevates the quality and visibility of our site portfolio, it also reinforces our commitment to delivering rail-served locations that are development-ready and vetted by the very consultants who advise our target customers. This collaboration sharpens our competitive edge and strengthens our messaging to the global business community.",
     "personName": "MaryBeth Flournoy",
