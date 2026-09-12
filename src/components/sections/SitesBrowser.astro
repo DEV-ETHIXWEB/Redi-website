@@ -15,7 +15,10 @@ const LOCATIONONE_URL = 'https://locationone.com';
 <section class="bg-steel-100 py-12 sm:py-16 md:py-20" aria-label="Certified sites search">
   <h2 class="sr-only">Certified sites search</h2>
   <div class="container-page">
-    <div class="shadow-card reveal relative overflow-hidden rounded-xl bg-white">
+    <div
+      class="shadow-card reveal relative overflow-hidden rounded-xl bg-white"
+      data-locationone-card
+    >
       <div
         class="bg-steel-100 absolute inset-0 flex flex-col items-center justify-center gap-3 transition-opacity duration-300 ease-out"
         data-locationone-loader
@@ -39,11 +42,25 @@ const LOCATIONONE_URL = 'https://locationone.com';
           Open in a new tab
         </a>
       </div>
+      <button
+        type="button"
+        aria-label="View map fullscreen"
+        aria-pressed="false"
+        class="shadow-soft text-navy-700 absolute top-3 right-3 z-10 flex size-10 items-center justify-center rounded-lg bg-white/90 backdrop-blur transition-colors hover:bg-white hover:text-cyan-600"
+        data-locationone-fullscreen-toggle
+      >
+        <span data-locationone-icon-maximize>
+          <Icon name="maximize" size={18} />
+        </span>
+        <span data-locationone-icon-minimize class="hidden">
+          <Icon name="minimize" size={18} />
+        </span>
+      </button>
       <iframe
         src={LOCATIONONE_SRC}
         title="LocationOne certified sites search"
         loading="lazy"
-        class="relative block h-[560px] w-full border-0 sm:h-[640px] md:h-[720px] lg:h-[820px]"
+        class="relative block h-[680px] w-full border-0 sm:h-[760px] md:h-[860px] lg:h-[75vh] lg:min-h-[820px] xl:h-[80vh] xl:min-h-[900px]"
         data-locationone-frame
       >
       </iframe>
@@ -70,9 +87,33 @@ const LOCATIONONE_URL = 'https://locationone.com';
   </div>
 </section>
 
+<style>
+  /* Native Fullscreen API sizes the fullscreened element to the viewport
+     but doesn't touch its children — the iframe's own fixed/breakpoint
+     heights need an explicit override so it actually fills that space
+     instead of staying pinned to its in-page height inside a full-viewport
+     box. Higher specificity than the Tailwind height utilities (which are
+     single classes) beats them without needing !important. */
+  [data-locationone-card]:fullscreen,
+  [data-locationone-card]:-webkit-full-screen {
+    display: flex;
+    flex-direction: column;
+    border-radius: 0;
+  }
+  [data-locationone-card]:fullscreen [data-locationone-frame],
+  [data-locationone-card]:-webkit-full-screen [data-locationone-frame] {
+    flex: 1 1 auto;
+    height: 100%;
+    min-height: 0;
+  }
+</style>
+
 <noscript>
   <style>
     [data-locationone-loader] {
+      display: none;
+    }
+    [data-locationone-fullscreen-toggle] {
       display: none;
     }
   </style>
@@ -114,6 +155,57 @@ const LOCATIONONE_URL = 'https://locationone.com';
     frame.addEventListener('load', hide, { once: true });
   }
 
+  // Cross-origin iframe content can't be made to fill a browser's real
+  // fullscreen mode from the outside (no access to trigger it from inside
+  // LocationOne's own document), so this fullscreens REDI's own card —
+  // iframe included — via the Fullscreen API on the wrapping element.
+  function initLocationOneFullscreen() {
+    const card = document.querySelector<HTMLElement>('[data-locationone-card]');
+    const toggle = document.querySelector<HTMLButtonElement>(
+      '[data-locationone-fullscreen-toggle]',
+    );
+    const maximizeIcon = document.querySelector<HTMLElement>('[data-locationone-icon-maximize]');
+    const minimizeIcon = document.querySelector<HTMLElement>('[data-locationone-icon-minimize]');
+    if (!card || !toggle || toggle.dataset.bound === 'true') return;
+    toggle.dataset.bound = 'true';
+
+    // Safari (pre-16.4) only exposes the webkit-prefixed API; feature-detect
+    // rather than branch on browser so this keeps working as vendors
+    // unprefix it.
+    const doc = document as Document & {
+      webkitFullscreenElement?: Element;
+      webkitExitFullscreen?: () => Promise<void>;
+    };
+    const el = card as HTMLElement & { webkitRequestFullscreen?: () => Promise<void> };
+
+    const isFullscreen = () => Boolean(document.fullscreenElement ?? doc.webkitFullscreenElement);
+
+    const syncState = () => {
+      const active =
+        isFullscreen() && (document.fullscreenElement ?? doc.webkitFullscreenElement) === card;
+      toggle.setAttribute('aria-pressed', String(active));
+      toggle.setAttribute(
+        'aria-label',
+        active ? 'Exit fullscreen map view' : 'View map fullscreen',
+      );
+      maximizeIcon?.classList.toggle('hidden', active);
+      minimizeIcon?.classList.toggle('hidden', !active);
+    };
+
+    toggle.addEventListener('click', () => {
+      if (isFullscreen()) {
+        (document.exitFullscreen ?? doc.webkitExitFullscreen)?.call(document);
+      } else {
+        (el.requestFullscreen ?? el.webkitRequestFullscreen)?.call(el);
+      }
+    });
+
+    document.addEventListener('fullscreenchange', syncState);
+    document.addEventListener('webkitfullscreenchange', syncState);
+  }
+
   initLocationOne();
+  initLocationOneFullscreen();
   document.addEventListener('astro:page-load', initLocationOne);
+  document.addEventListener('astro:page-load', initLocationOneFullscreen);
 </script>
