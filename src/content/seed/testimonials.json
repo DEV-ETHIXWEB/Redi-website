@@ -47,8 +47,8 @@
   {
     "id": "sunflower-electric",
     "quote": "The designation enhances our credibility with site selectors, supports business attraction efforts, and reinforces our joint commitment to long-term economic growth in rural Kansas. REDI Sites is more than a designation; it's a strategic investment that helps communities and utilities prepare for growth and attract quality development projects. Recognizing the strength of partnerships, Dodge City/Ford County Economic Development, Victory Electric Cooperative, and Sunflower Electric Power Corporation collaborated to promote the Dodge City Business Park through the REDI sites program.",
-    "personName": "Dodge City Business Park Partnership",
-    "personTitle": "Sunflower Electric Power Corporation",
+    "personName": "Mollea Lightner",
+    "personTitle": "Assistant Director of Economic Development, Dodge City/Ford County Development Corporation",
     "companyName": "Sunflower Electric Power Corporation",
     "companyLogo": {
       "url": "/images/logos/sunflower-electric.png",
@@ -68,6 +68,21 @@
     "companyLogo": {
       "url": "/images/logos/norfolk-southern.png",
       "alt": "Norfolk Southern Railways"
+    },
+    "backgroundImage": {
+      "url": "/images/hero/testimonial-bg.webp",
+      "alt": "Norfolk Southern locomotive inside a rail maintenance facility"
+    }
+  },
+  {
+    "id": "kentucky-touchstone-energy",
+    "quote": "We believe that preparing local sites for growth is one of the best investments we can make. That is why we are proud to help fund participation in the REDI Sites program. This initiative gives Kentucky's Touchstone Energy Cooperatives communities an independent, national benchmark for readiness, along with a clear roadmap of what due diligence is complete and what work lies ahead. It is a practical way we help our communities stand out and win future investments.",
+    "personName": "Ron McMahan",
+    "personTitle": "Associate Economic Development Manager, Kentucky's Touchstone Energy Cooperatives",
+    "companyName": "Kentucky's Touchstone Energy Cooperatives",
+    "companyLogo": {
+      "url": "/images/logos/kentucky-touchstone-energy.png",
+      "alt": "Kentucky's Touchstone Energy Cooperatives"
     },
     "backgroundImage": {
       "url": "/images/hero/testimonial-bg.webp",

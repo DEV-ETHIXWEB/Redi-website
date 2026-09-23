@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-09-12T08:30:09.327Z",
-  "baseUrl": "http://localhost:4321",
+  "generatedAt": "2026-09-23T09:26:22.385Z",
+  "baseUrl": "http://localhost:4400",
   "tags": ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"],
   "viewports": ["desktop", "mobile"],
   "totalViolationNodes": 0,
