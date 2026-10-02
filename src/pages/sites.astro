@@ -7,7 +7,6 @@ import SitesBrowser from '@/components/sections/SitesBrowser.astro';
 import CtaBanner from '@/components/sections/CtaBanner.astro';
 import Icon from '@/components/ui/Icon.astro';
 import { getPageCopy } from '@/services/wordpress';
-import { SITES_GATE_PASSWORD } from 'astro:env/server';
 import { isRateLimited } from '@/lib/rate-limit';
 
 const copy = await getPageCopy();
@@ -16,29 +15,26 @@ const FIND_A_SITE_SELECTOR_URL =
   'https://siteselectorsguild.com/site-selection/find-a-site-selector/';
 
 /**
- * Lightweight shared-password gate for the site listing/property view.
- * No accounts, no backend — one password stored server-side
- * (`SITES_GATE_PASSWORD`), verified here, and remembered via an httpOnly
- * cookie holding a hash of the password (never the password itself).
- *
- * If `SITES_GATE_PASSWORD` isn't set, the gate is a no-op — this keeps
- * every environment that hasn't configured it (local dev, previews) working
- * exactly as before rather than silently locking everyone out.
+ * Basic-info gate for the site listing/property view — not a password, not
+ * an account. Visitors give their name, email, and reason for browsing;
+ * submitting sets a cookie that remembers they've already done so. No
+ * secret, nothing to configure per environment.
  */
-const COOKIE_NAME = 'redi_sites_access';
-const gatePassword = SITES_GATE_PASSWORD;
-const gateEnabled = Boolean(gatePassword);
+const COOKIE_NAME = 'redi_sites_info_access';
 
-async function sha256Hex(input: string): Promise<string> {
-  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input));
-  return Array.from(new Uint8Array(digest))
-    .map((byte) => byte.toString(16).padStart(2, '0'))
-    .join('');
+interface FieldErrors {
+  name?: string;
+  email?: string;
+  reason?: string;
 }
 
 let gateError: string | null = null;
+let fieldErrors: FieldErrors = {};
+let submittedValues = { name: '', email: '', reason: '' };
 
-if (gateEnabled && Astro.request.method === 'POST') {
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+if (Astro.request.method === 'POST') {
   // CSRF mitigation: reject a cross-origin POST outright. The Origin header
   // is reliably sent by browsers on cross-site form submissions (which is
   // exactly what CSRF relies on) and isn't spoofable by an attacker's page —
@@ -46,18 +42,26 @@ if (gateEnabled && Astro.request.method === 'POST') {
   const origin = Astro.request.headers.get('origin');
   const isCrossOrigin = origin !== null && origin !== Astro.url.origin;
 
-  // 5 attempts/minute per IP — slows down scripted brute-forcing of the
-  // shared password without needing a database. See src/lib/rate-limit.ts.
+  // 5 submissions/minute per IP — keeps the form from being spammed by a
+  // script without needing a database. See src/lib/rate-limit.ts.
   if (isCrossOrigin || isRateLimited(Astro.clientAddress ?? 'unknown')) {
     gateError = isCrossOrigin
       ? 'Request could not be verified. Please try again.'
       : 'Too many attempts. Please wait a minute and try again.';
   } else {
     const form = await Astro.request.formData();
-    const submitted = String(form.get('password') ?? '');
+    const name = String(form.get('name') ?? '').trim();
+    const email = String(form.get('email') ?? '').trim();
+    const reason = String(form.get('reason') ?? '').trim();
+    submittedValues = { name, email, reason };
 
-    if (submitted && submitted === gatePassword) {
-      Astro.cookies.set(COOKIE_NAME, await sha256Hex(gatePassword), {
+    if (!name) fieldErrors.name = 'Enter your name.';
+    if (!email) fieldErrors.email = 'Enter your email.';
+    else if (!EMAIL_RE.test(email)) fieldErrors.email = 'Enter a valid email.';
+    if (!reason) fieldErrors.reason = 'Let us know why you’re browsing.';
+
+    if (Object.keys(fieldErrors).length === 0) {
+      Astro.cookies.set(COOKIE_NAME, '1', {
         path: '/',
         httpOnly: true,
         secure: import.meta.env.PROD,
@@ -66,13 +70,10 @@ if (gateEnabled && Astro.request.method === 'POST') {
       });
       return Astro.redirect('/sites');
     }
-
-    gateError = 'Incorrect password. Please try again.';
   }
 }
 
-const unlocked =
-  !gateEnabled || Astro.cookies.get(COOKIE_NAME)?.value === (await sha256Hex(gatePassword ?? ''));
+const unlocked = Astro.cookies.get(COOKIE_NAME)?.value === '1';
 
 const breadcrumbLd = {
   '@context': 'https://schema.org',
@@ -115,15 +116,16 @@ const breadcrumbLd = {
     ) : (
       <section class="bg-steel-100 py-16 md:py-20">
         <div class="container-page">
-          <div class="shadow-card mx-auto max-w-[440px] rounded-2xl bg-white p-8 sm:p-10">
+          <div class="shadow-card mx-auto max-w-[480px] rounded-2xl bg-white p-8 sm:p-10">
             <div class="bg-navy-950 mx-auto flex size-12 items-center justify-center rounded-full">
-              <Icon name="lock" size={22} class="text-cyan-400" />
+              <Icon name="id-card" size={22} class="text-cyan-400" />
             </div>
             <h2 class="font-heading text-navy-950 mt-5 text-center text-2xl font-bold tracking-tight uppercase">
-              Password Required
+              Before You Browse
             </h2>
             <p class="text-ink-600 mt-2 text-center text-sm leading-relaxed">
-              This site listing is password-protected. Enter the password to continue.
+              Tell us a little about yourself to view the site listings. No account, just a quick
+              intro.
             </p>
             {/*
                 data-astro-reload: BaseLayout's site-wide <ClientRouter />
@@ -137,19 +139,72 @@ const breadcrumbLd = {
             <form method="POST" class="mt-6 space-y-4" data-astro-reload>
               <div>
                 <label
-                  for="sites-gate-password"
+                  for="sites-gate-name"
                   class="font-heading text-ink-700 mb-1.5 block text-xs font-semibold tracking-wide uppercase"
                 >
-                  Password
+                  Name
                 </label>
                 <input
-                  id="sites-gate-password"
-                  name="password"
-                  type="password"
+                  id="sites-gate-name"
+                  name="name"
+                  type="text"
+                  autocomplete="name"
                   required
                   autofocus
+                  value={submittedValues.name}
+                  aria-invalid={Boolean(fieldErrors.name)}
                   class="border-steel-300 w-full rounded-lg border bg-white px-4 py-2.5 text-base outline-none focus:border-cyan-500 focus:ring-[3px] focus:ring-cyan-400/30"
                 />
+                {fieldErrors.name && (
+                  <p class="mt-1.5 text-xs font-medium text-red-600" role="alert">
+                    {fieldErrors.name}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label
+                  for="sites-gate-email"
+                  class="font-heading text-ink-700 mb-1.5 block text-xs font-semibold tracking-wide uppercase"
+                >
+                  Email
+                </label>
+                <input
+                  id="sites-gate-email"
+                  name="email"
+                  type="email"
+                  autocomplete="email"
+                  required
+                  value={submittedValues.email}
+                  aria-invalid={Boolean(fieldErrors.email)}
+                  class="border-steel-300 w-full rounded-lg border bg-white px-4 py-2.5 text-base outline-none focus:border-cyan-500 focus:ring-[3px] focus:ring-cyan-400/30"
+                />
+                {fieldErrors.email && (
+                  <p class="mt-1.5 text-xs font-medium text-red-600" role="alert">
+                    {fieldErrors.email}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label
+                  for="sites-gate-reason"
+                  class="font-heading text-ink-700 mb-1.5 block text-xs font-semibold tracking-wide uppercase"
+                >
+                  Reason for Browsing
+                </label>
+                <input
+                  id="sites-gate-reason"
+                  name="reason"
+                  type="text"
+                  required
+                  value={submittedValues.reason}
+                  aria-invalid={Boolean(fieldErrors.reason)}
+                  class="border-steel-300 w-full rounded-lg border bg-white px-4 py-2.5 text-base outline-none focus:border-cyan-500 focus:ring-[3px] focus:ring-cyan-400/30"
+                />
+                {fieldErrors.reason && (
+                  <p class="mt-1.5 text-xs font-medium text-red-600" role="alert">
+                    {fieldErrors.reason}
+                  </p>
+                )}
               </div>
               {gateError && (
                 <p class="text-sm font-medium text-red-600" role="alert">
@@ -160,7 +215,7 @@ const breadcrumbLd = {
                 type="submit"
                 class="font-heading text-navy-950 shadow-soft hover:shadow-card flex h-[48px] w-full items-center justify-center rounded-lg bg-cyan-400 text-sm font-semibold tracking-wide uppercase transition-all duration-200 hover:bg-cyan-300"
               >
-                Unlock
+                View Sites
               </button>
             </form>
           </div>

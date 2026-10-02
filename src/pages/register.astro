@@ -13,7 +13,7 @@ import MondayContactForm from '@/components/forms/MondayContactForm.astro';
   <section class="bg-steel-100 pt-32 pb-24">
     <div class="container-page">
       <div
-        class="bg-steel-200/70 shadow-lifted relative mx-auto max-w-[580px] rounded-3xl px-6 py-8 sm:px-12 sm:py-10"
+        class="bg-steel-200/70 shadow-lifted relative mx-auto max-w-[900px] rounded-3xl px-6 py-8 sm:px-12 sm:py-10"
       >
         <a
           href="/"
@@ -34,7 +34,89 @@ import MondayContactForm from '@/components/forms/MondayContactForm.astro';
         <h1 class="mt-1 text-4xl sm:text-[2.75rem]">Sign Up</h1>
         <p class="text-ink-600 mt-1 text-lg">Access REDI SITES tools &amp; value.</p>
 
-        <div class="mt-6">
+        <div class="shadow-soft mt-8 rounded-2xl bg-white p-6 sm:p-10">
+          <h2 class="font-heading text-navy-950 text-2xl font-bold tracking-tight sm:text-3xl">
+            Begin Your Site's Readiness Journey
+          </h2>
+          <p class="text-ink-600 mt-4 leading-relaxed">
+            REDI Sites is the first national site readiness designation program in the United
+            States, developed in affiliation with the Site Selectors Guild — the only association of
+            the world's foremost professional site selection consultants.
+          </p>
+          <p class="text-ink-600 mt-4 leading-relaxed">
+            Every site that completes the process earns a designation reflecting its current level
+            of readiness: Emerging, Bronze, Silver, Gold or Platinum. There's no pass or fail.
+            You'll come away with a clear, independent picture of where your site stands today and
+            exactly what it takes to reach the next level.
+          </p>
+
+          <p class="font-heading text-ink-800 mt-6 text-sm font-bold tracking-wide uppercase">
+            Here's How It Works
+          </p>
+          <ol class="mt-3 space-y-3">
+            <li class="text-ink-600 flex gap-3 leading-relaxed">
+              <span
+                class="bg-navy-950 font-heading mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
+              >
+                1
+              </span>
+              <span>
+                <strong class="text-ink-800">Register your site</strong> using this form, it takes about
+                two minutes. The registration fee is $450 per site.
+              </span>
+            </li>
+            <li class="text-ink-600 flex gap-3 leading-relaxed">
+              <span
+                class="bg-navy-950 font-heading mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
+              >
+                2
+              </span>
+              <span
+                ><strong class="text-ink-800">Pay securely</strong> through QuickBooks or by check.</span
+              >
+            </li>
+            <li class="text-ink-600 flex gap-3 leading-relaxed">
+              <span
+                class="bg-navy-950 font-heading mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
+              >
+                3
+              </span>
+              <span>
+                <strong class="text-ink-800">Get access to Lasso</strong>, where your team completes
+                the site's RFI and uploads supporting documentation.
+              </span>
+            </li>
+          </ol>
+
+          <p class="text-ink-600 mt-6 leading-relaxed">
+            From there, your submission is evaluated by Terracon, an independent engineering firm,
+            and reviewed by a committee of Site Selectors Guild members — the same consultants who
+            advise companies on where to invest.
+          </p>
+          <p class="text-ink-600 mt-4 leading-relaxed">
+            Before you begin, please confirm your site meets the three program minimums: located in
+            the United States, at least 5 acres and available for sale or lease.
+          </p>
+          <p class="text-ink-600 mt-4 leading-relaxed">
+            Registering multiple sites or a portfolio? Email{' '}
+            <a
+              href="mailto:Nicki@REDISites.com"
+              class="text-navy-700 font-semibold underline underline-offset-2 transition-colors hover:text-cyan-600"
+            >
+              Nicki@REDISites.com
+            </a>{' '}
+            and we'll set everything up for you.
+          </p>
+
+          <a
+            href="#register-form"
+            class="font-heading text-navy-950 shadow-soft hover:shadow-card mt-8 flex h-[48px] w-full items-center justify-center rounded-lg bg-cyan-400 text-sm font-semibold tracking-wide uppercase transition-all duration-200 hover:bg-cyan-300 sm:w-auto sm:px-8"
+          >
+            Register My Site
+          </a>
+        </div>
+
+        <div id="register-form" class="mt-10 scroll-mt-10">
           <MondayContactForm formId="474841603e14828e7b565d097a98ad89" />
         </div>
 
