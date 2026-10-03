@@ -1,0 +1,21 @@
+name: Sync to thedemskigroup
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Push to thedemskigroup/Redi-website
+        env:
+          TOKEN: ${{ secrets.DEMSKI_SYNC_TOKEN }}
+        run: |
+          git remote add demski "https://x-access-token:${TOKEN}@github.com/thedemskigroup/Redi-website.git"
+          git push demski HEAD:main
