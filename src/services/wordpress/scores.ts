@@ -1,6 +1,7 @@
-import type { ScoreTier } from '@/types/wordpress';
+import type { ScoreTier, CoreDocument } from '@/types/wordpress';
 import tiersSeed from '@/content/seed/score-tiers.json';
 import criteriaSeed from '@/content/seed/scoring-criteria.json';
+import coreDocumentsSeed from '@/content/seed/core-documents.json';
 import { wpFetch } from './client';
 
 /**
@@ -43,9 +44,9 @@ export async function getScoreTiers(): Promise<ScoreTier[]> {
 
 /**
  * Scoring methodology breakdown (weighted criteria + eligibility list) shown
- * on the Approach page, alongside the "download scoring scale PDF" link
- * (`public/downloads/redi-scoring-scale.pdf` — currently a placeholder stub,
- * see docs/WORDPRESS_INTEGRATION.md known-limitations section).
+ * on the Approach page, alongside the gated "download scoring scale PDF"
+ * form (`public/downloads/redi-scoring-scale.pdf`, revealed via the Monday
+ * form in `CriteriaSection.astro`).
  *
  * Endpoint:  `GET /wp-json/redi/v1/scoring-criteria`
  * Method:    GET
@@ -67,4 +68,26 @@ export async function getScoreTiers(): Promise<ScoreTier[]> {
 export async function getScoringCriteria(): Promise<ScoringCriteriaData> {
   const remote = await wpFetch<ScoringCriteriaData>('/wp-json/redi/v1/scoring-criteria');
   return remote ?? (criteriaSeed as ScoringCriteriaData);
+}
+
+/**
+ * The "core documents" checklist shown on the Approach page — the specific
+ * exhibits (survey, zoning map, utility will-serve letters, etc.) that most
+ * affect a site's designation.
+ *
+ * Endpoint:  `GET /wp-json/redi/v1/core-documents`
+ * Method:    GET
+ * Auth:      none (public)
+ * Namespace: **custom** — see docs/WORDPRESS_INTEGRATION.md.
+ * Response:  `CoreDocument[]`.
+ * Required fields per item: `area` (readiness category name), `submit`
+ *   (what to submit for that category — plain text, may itself contain
+ *   commas/semicolons, no markup).
+ * Optional fields: none.
+ * Fallback:  `src/content/seed/core-documents.json`.
+ * Failure:   handled inside `wpFetch()` — never throws.
+ */
+export async function getCoreDocuments(): Promise<CoreDocument[]> {
+  const remote = await wpFetch<CoreDocument[]>('/wp-json/redi/v1/core-documents');
+  return remote ?? (coreDocumentsSeed as CoreDocument[]);
 }

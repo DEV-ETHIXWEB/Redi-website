@@ -1,20 +1,44 @@
 [
   {
-    "id": "prime-locations",
-    "icon": "map-pin",
-    "title": "Prime Locations",
-    "description": "Access to exclusive commercial sites in high-growth markets identified through rigorous analysis and market intelligence."
+    "id": "seen-by-site-selectors",
+    "icon": "eye",
+    "title": "Seen by Site Selectors",
+    "description": "Your site and its full supporting documentation sit in the REDI Sites database, where Guild members and their teams evaluate locations."
   },
   {
-    "id": "expert-analysis",
-    "icon": "trending-up",
-    "title": "Expert Analysis",
-    "description": "Comprehensive due diligence and market research backed by decades of experience in commercial real estate development."
+    "id": "found-by-everyone-else",
+    "icon": "globe",
+    "title": "Found by Everyone Else",
+    "description": "The public viewer shows your site's basics and designation level to companies, developers, and brokers. Full documentation stays with Guild members."
   },
   {
-    "id": "proven-returns",
+    "id": "independent-validation",
     "icon": "shield-check",
-    "title": "Proven Returns",
-    "description": "Track record of successful developments delivering consistent returns and long-term value appreciation for investors."
+    "title": "Independent Validation",
+    "description": "The standard was built by site selectors and is reviewed annually. Terracon reviews your documentation, then practicing site selectors confirm the score. This is not a self-reported checklist."
+  },
+  {
+    "id": "one-national-standard",
+    "icon": "badge-check",
+    "title": "One National Standard",
+    "description": "The same criteria in every state, so a Gold site in one market means what a Gold site means in another."
+  },
+  {
+    "id": "a-clear-roadmap",
+    "icon": "route",
+    "title": "A Clear Roadmap",
+    "description": "Every site gets a feedback report showing where it's strong and where gaps remain. That report is a practical plan for your next investment."
+  },
+  {
+    "id": "marketing-you-can-use",
+    "icon": "megaphone",
+    "title": "Marketing You Can Use",
+    "description": "Designated sites receive marketing materials and the right to display the REDI Sites logo and their designation-level logo."
+  },
+  {
+    "id": "ready-when-a-project-calls",
+    "icon": "zap",
+    "title": "Ready When a Project Calls",
+    "description": "Assemble your exhibits once, in a standard format, and answer fast when a prospect asks."
   }
 ]

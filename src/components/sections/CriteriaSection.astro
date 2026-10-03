@@ -1,15 +1,21 @@
 ---
 import SectionHeading from '@/components/ui/SectionHeading.astro';
 import Button from '@/components/ui/Button.astro';
-import { getScoringCriteria, getPageCopy } from '@/services/wordpress';
+import MondayContactForm from '@/components/forms/MondayContactForm.astro';
+import { getScoringCriteria, getCoreDocuments, getPageCopy } from '@/services/wordpress';
 
-const [criteria, copy] = await Promise.all([getScoringCriteria(), getPageCopy()]);
+const [criteria, documents, copy] = await Promise.all([
+  getScoringCriteria(),
+  getCoreDocuments(),
+  getPageCopy(),
+]);
 const c = copy.approach.criteria;
+const SCORING_SCALE_PDF = '/downloads/redi-scoring-scale.pdf';
 ---
 
 <section class="bg-steel-100 py-14 sm:py-20 md:py-24">
   <div class="container-page">
-    <SectionHeading eyebrow={c.eyebrow} heading={c.heading} />
+    <SectionHeading eyebrow={c.eyebrow} heading={c.heading} body={c.body} />
 
     <div class="mt-10 grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
       <div class="text-ink-600 text-[15px] leading-relaxed sm:text-base">
@@ -17,7 +23,9 @@ const c = copy.approach.criteria;
         <ul class="mt-2 list-disc space-y-1 pl-6">
           {criteria.primaryCriteria.map((item) => <li>{item}</li>)}
         </ul>
-        <p class="mt-8">{c.eligibleLabel}</p>
+        <p class="font-heading text-ink-800 mt-8 text-sm font-bold tracking-wide uppercase">
+          {c.eligibleLabel}
+        </p>
         <ul class="mt-2 list-disc space-y-1 pl-6">
           {criteria.eligibility.map((item) => <li>{item}</li>)}
         </ul>
@@ -36,10 +44,107 @@ const c = copy.approach.criteria;
       </figure>
     </div>
 
-    <div class="mt-12 text-center">
-      <Button href="/downloads/redi-scoring-scale.pdf" variant="primary" icon="download">
+    <div class="mt-16">
+      <p class="font-heading text-ink-900 text-xl font-bold tracking-tight sm:text-2xl">
+        {c.documentsLabel}
+      </p>
+      <p class="text-ink-600 mt-2 max-w-[760px] text-[15px] leading-relaxed sm:text-base">
+        {c.documentsIntro}
+      </p>
+      <div
+        class="shadow-card mt-6 overflow-x-auto rounded-xl bg-white"
+        tabindex="0"
+        role="region"
+        aria-label={c.documentsLabel}
+      >
+        <table class="w-full min-w-[640px] text-left text-sm">
+          <thead>
+            <tr class="border-steel-300 border-b">
+              <th
+                class="font-heading text-ink-700 px-5 py-3 text-xs font-bold tracking-wide uppercase"
+                >Readiness Area</th
+              >
+              <th
+                class="font-heading text-ink-700 px-5 py-3 text-xs font-bold tracking-wide uppercase"
+                >What to Submit</th
+              >
+            </tr>
+          </thead>
+          <tbody>
+            {
+              documents.map((doc, index) => (
+                <tr class={index < documents.length - 1 ? 'border-steel-200 border-b' : ''}>
+                  <td class="text-ink-900 px-5 py-3.5 align-top font-semibold whitespace-nowrap">
+                    {doc.area}
+                  </td>
+                  <td class="text-ink-600 px-5 py-3.5 align-top leading-relaxed">{doc.submit}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+      <p class="text-ink-600 mt-4 max-w-[760px] text-sm leading-relaxed">{c.documentsFootnote}</p>
+    </div>
+
+    <div class="shadow-card mt-16 rounded-2xl bg-white p-8 text-center sm:p-10" data-scoring-scale>
+      <p class="font-heading text-ink-900 text-xl font-bold tracking-tight sm:text-2xl">
+        {c.downloadFormHeading}
+      </p>
+      <p class="text-ink-600 mx-auto mt-2 max-w-[520px] text-[15px] leading-relaxed">
+        {c.downloadFormBody}
+      </p>
+      <Button
+        variant="primary"
+        icon="download"
+        class="mt-6"
+        data-scoring-scale-toggle
+        aria-expanded="false"
+      >
         {c.downloadLabel}
       </Button>
+      <div class="mt-8 hidden text-left" data-scoring-scale-form>
+        <MondayContactForm formId="f3ace5421a5775b7ed278a146becd8c6" />
+        <p class="text-ink-600 mt-4 text-center text-sm">
+          Already filled this out?{' '}
+          <a
+            href={SCORING_SCALE_PDF}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-navy-700 font-semibold underline underline-offset-2 transition-colors hover:text-cyan-600"
+          >
+            Open the Scoring Scale PDF
+          </a>
+          .
+        </p>
+      </div>
     </div>
   </div>
 </section>
+
+<script>
+  function initScoringScaleToggle() {
+    const toggle = document.querySelector<HTMLButtonElement>('[data-scoring-scale-toggle]');
+    const form = document.querySelector<HTMLElement>('[data-scoring-scale-form]');
+    if (!toggle || !form || toggle.dataset.bound === 'true') return;
+    toggle.dataset.bound = 'true';
+
+    toggle.addEventListener('click', () => {
+      const expanded = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!expanded));
+      form.classList.toggle('hidden', expanded);
+      if (!expanded) {
+        form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        // MondayContactForm sizes itself from its wrapper's clientWidth on
+        // mount, which is 0 while this container is still `hidden` —
+        // without this, the embed permanently collapses to 0 height.
+        // Re-fire the resize listener it's already bound to, after layout
+        // from un-hiding has actually happened.
+        requestAnimationFrame(() => window.dispatchEvent(new Event('resize')));
+      }
+    });
+  }
+
+  initScoringScaleToggle();
+  document.addEventListener('astro:page-load', initScoringScaleToggle);
+</script>

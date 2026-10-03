@@ -2,10 +2,13 @@
   "home": {
     "hero": {
       "eyebrowBadge": "Site Selectors Guild",
-      "kicker": "Prime Sites",
-      "headline": "Strategic Investments",
-      "body": "Partner with the Site Selectors Guild to unlock premium commercial development opportunities. We identify high-value properties and connect investors with transformative projects across key markets.",
-      "ctaPrimary": { "label": "Search Sites", "href": "/sites" },
+      "kicker": "",
+      "headline": "The National Standard for Site Readiness",
+      "paragraphs": [
+        "Companies making location decisions move fast and eliminate sites early. Most sites are not ruled out because they are bad sites. They are ruled out because key information is missing, unclear or unverified when a site selector needs it.",
+        "REDI Sites is the first national site readiness designation program in the United States, developed in affiliation with the Site Selectors Guild. Every site that completes the process receives a designation reflecting its current level of investment readiness, telling site selectors exactly where it stands, and telling you what to do next."
+      ],
+      "ctaPrimary": { "label": "Explore Sites", "href": "/sites" },
       "ctaSecondary": { "label": "Register Your Site", "href": "/register" },
       "mapCaption": "Powered by LocationOne",
       "mapCtaLabel": "View all sites"
@@ -60,15 +63,15 @@
       }
     },
     "whyChoose": {
-      "eyebrow": "Our Advantage",
-      "heading": "Why Choose REDI Sites",
-      "body": "Our comprehensive approach to site selection ensures maximum returns for our investment partners.",
+      "eyebrow": "The Value",
+      "heading": "Why Designate a Site?",
+      "body": "A REDI Sites designation puts your site in front of the people who move projects forward, and gives you a clear plan for what comes next.",
       "ctaLabel": "About Us"
     },
     "rediScore": {
       "eyebrow": "Site Rating System",
       "heading": "The REDI Score",
-      "body": "Every site is rated on a 10-point readiness index measuring infrastructure, zoning, market demand, and development potential.",
+      "body": "Every site is scored on a 10-point readiness scale built from five weighted categories: utilities, ownership and entitlements, environmental, ease of development, and logistics. The score reflects documented, verified readiness.",
       "ctaLabel": "See More"
     },
     "ctaInvest": {
@@ -127,9 +130,9 @@
   },
   "approach": {
     "hero": {
-      "kicker": "REDI Scores",
-      "heading": "Our Approach",
-      "body": "REDI (Readiness Evaluation for Development and Investment) Sites is the new national standard in assessing site readiness for U.S. office and industrial projects. Administered by the Site Selectors Guild, REDI Sites provides a searchable database of available sites that have undergone rigorous assessment set by the world's foremost group of site selection consultants.",
+      "kicker": "",
+      "heading": "The Standard",
+      "body": "A site is rarely eliminated for being a bad site. It is eliminated when the information a site selector needs is missing, unclear, or unverified. Here is how REDI Sites evaluates that and what your site needs to participate. REDI Sites is industry- and use-agnostic. The evaluation focuses on the foundational factors that influence whether a site can advance with greater speed, certainty, and fewer surprises, regardless of the project ultimately considering it.",
       "image": {
         "url": "/images/hero/approach-hero-inset.webp",
         "alt": "Historic rail depot along active tracks, badged with a REDI Sites Platinum rating"
@@ -137,26 +140,71 @@
     },
     "methodology": {
       "eyebrow": "How It Works",
-      "heading": "REDI Scores Methodology",
+      "heading": "Every Site, Reviewed Twice",
       "paragraphs": [
-        "Businesses and economic development organizations can register for the site readiness program. Applicants will submit various documents and information to be assessed and given a score and designation level (bronze, silver, gold or platinum) based on the site's level of readiness as determined by the Site Selectors Guild. Sites that don't meet the bronze level will receive a designation as an emerging site.",
-        "The designation is valid for one calendar year, and if further actions are taken to increase the site's readiness for development, the site can be resubmitted and redesignated."
+        "Your documentation is reviewed first by Terracon, an independent engineering firm, and then by REDI Reviewers, practicing site selectors who confirm the final score and designation.",
+        "There is no pass or fail. Every site that completes the process receives a designation on a 10-point readiness index, along with a report showing where it is strong and where gaps remain."
       ],
-      "benefitsLabel": "Designation benefits:",
+      "benefitsLabel": "Who Benefits?",
       "benefits": [
-        "Listing of your site in a national database, instantly searchable by any SSG member",
-        "Nationally recognized designation for site readiness and include in your marketing materials",
-        "Know how to level up site designation and reapply when more due diligence is completed",
-        "Benefit from the Guild's own marketing of the program to corporations"
+        {
+          "label": "Economic development organizations",
+          "description": "a credible, third-party way to show site readiness to prospects, boards, and funders."
+        },
+        {
+          "label": "Landowners and developers",
+          "description": "a stronger position with buyers, and a clear list of what adds value."
+        },
+        {
+          "label": "Utilities and railroads",
+          "description": "a consistent way to evaluate and promote sites across a service territory or network."
+        },
+        {
+          "label": "States and regions",
+          "description": "a portfolio-level view of site inventory and where to direct readiness investment."
+        }
       ]
     },
+    "process": {
+      "eyebrow": "Getting Designated",
+      "heading": "The Designation Process",
+      "steps": [
+        {
+          "label": "Register",
+          "description": "Once registered, applicants submit documentation across five weighted categories of readiness through Lasso, an online property data collection database."
+        },
+        {
+          "label": "Submit your RFI and documentation",
+          "description": "Answer the RFI and upload exhibits covering the scored categories."
+        },
+        {
+          "label": "Engineering Review",
+          "description": "Your documentation goes to Terracon, the program's independent third-party engineering reviewer."
+        },
+        {
+          "label": "REDI Review",
+          "description": "REDI Reviewers, practicing Site Selectors Guild members, review the Terracon report and have final decision authority on the site's score and designation level."
+        },
+        {
+          "label": "Designation",
+          "description": "The site receives a feedback report, marketing materials and a listing in the REDI Sites database. Sites may use the REDI Sites logo and the logo for their designation level."
+        }
+      ],
+      "footnote": "Designations are valid for one year. As additional due diligence is completed, a site can be resubmitted and redesignated at a higher level."
+    },
     "criteria": {
-      "eyebrow": "What Is Scored",
-      "heading": "Criteria & Considerations",
+      "eyebrow": "What Is Evaluated",
+      "heading": "How Sites Are Scored",
+      "body": "Each site receives a score from 0 to 10 based on the documentation submitted across five weighted sections. Within each section, individual categories carry their own weights. The section weights reflect what matters most to companies and the site selectors who advise them.",
       "primaryLabel": "Primary site review criteria:",
-      "eligibleLabel": "Eligible sites must be:",
+      "eligibleLabel": "Does your site meet the minimum requirements?",
       "downloadLabel": "Download Scoring Scale",
-      "chartTitle": "Scoring Weights"
+      "downloadFormHeading": "Get the Full Scoring Scale",
+      "downloadFormBody": "Tell us a bit about yourself and we'll send you straight to the full REDI Sites scoring scale.",
+      "chartTitle": "Scoring Weights",
+      "documentsLabel": "Do You Have the Core Documents?",
+      "documentsIntro": "These are the documents that most often make the biggest difference in a site's designation.",
+      "documentsFootnote": "Missing a few items? That is normal. Categories without documentation can be skipped, and you can level up later through redesignation."
     }
   },
   "contact": {

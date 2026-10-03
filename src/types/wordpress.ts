@@ -108,6 +108,11 @@ export interface ScoringCriterion {
   color: string;
 }
 
+export interface CoreDocument {
+  area: string;
+  submit: string;
+}
+
 export interface BlogPost {
   id: string;
   slug: string;
@@ -147,7 +152,7 @@ export interface LegalSection {
 
 export interface AdvantageItem {
   id: string;
-  icon: 'map-pin' | 'trending-up' | 'shield-check';
+  icon: 'eye' | 'globe' | 'shield-check' | 'badge-check' | 'route' | 'megaphone' | 'zap';
   title: string;
   description: string;
 }

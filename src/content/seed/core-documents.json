@@ -1,0 +1,42 @@
+[
+  {
+    "area": "Ownership & Entitlements",
+    "submit": "Deed showing current owner, plus a listing/option agreement or owner letter confirming the site is for sale or lease; stated price or terms"
+  },
+  {
+    "area": "Survey",
+    "submit": "ALTA or boundary survey, or at minimum a legal description"
+  },
+  {
+    "area": "Zoning",
+    "submit": "Current zoning and land use map, and how the intended use fits"
+  },
+  {
+    "area": "Utility Will-Serve Letters",
+    "submit": "Water, wastewater, electric, natural gas, and fiber: provider, distance, capacity, who pays, and timeline to serve"
+  },
+  {
+    "area": "Phase I ESA",
+    "submit": "Ideally less than 5 years old"
+  },
+  {
+    "area": "Wetlands",
+    "submit": "Wetland delineation report and, if wetlands are present, a USACE Jurisdictional Determination"
+  },
+  {
+    "area": "Floodplain",
+    "submit": "FEMA FIRM panel map with the site clearly outlined"
+  },
+  {
+    "area": "Geotechnical",
+    "submit": "Geotechnical report or desktop subsurface study"
+  },
+  {
+    "area": "Cultural Resources & T&E Species",
+    "submit": "SHPO clearance letter and a threatened and endangered species assessment"
+  },
+  {
+    "area": "Access",
+    "submit": "Map showing the site, route to the nearest interstate interchange, and ingress/egress points"
+  }
+]

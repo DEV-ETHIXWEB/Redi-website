@@ -1,33 +1,14 @@
 [
   {
-    "id": "platinum",
-    "tier": "platinum",
-    "label": "Platinum",
-    "range": "9.0 - 10.0",
+    "id": "emerging",
+    "tier": "emerging",
+    "label": "Emerging",
+    "range": "Below 6.0",
     "badgeImage": {
-      "url": "/images/badges/platinum.png",
-      "alt": "REDI Sites Platinum designation badge"
+      "url": "/images/badges/emerging.png",
+      "alt": "REDI Sites Emerging designation badge"
     },
-    "description": "Exceptional sites with infrastructure in place, favorable zoning, and demonstrated market demand. Development-ready with minimal barriers."
-  },
-  {
-    "id": "gold",
-    "tier": "gold",
-    "label": "Gold",
-    "range": "8.0 - 8.9",
-    "badgeImage": { "url": "/images/badges/gold.png", "alt": "REDI Sites Gold designation badge" },
-    "description": "High-quality sites with strong fundamentals and clear pathways to development. Minor preparatory steps remain before shovel-ready status."
-  },
-  {
-    "id": "silver",
-    "tier": "silver",
-    "label": "Silver",
-    "range": "7.0 - 7.9",
-    "badgeImage": {
-      "url": "/images/badges/silver.png",
-      "alt": "REDI Sites Silver designation badge"
-    },
-    "description": "Solid opportunities with good market positioning. Some infrastructure or entitlement work needed to reach full development readiness."
+    "description": "These sites are in the early stages of readiness. Some foundational due diligence may be complete, but additional documentation and development steps are needed."
   },
   {
     "id": "bronze",
@@ -38,17 +19,36 @@
       "url": "/images/badges/bronze.png",
       "alt": "REDI Sites Bronze designation badge"
     },
-    "description": "Emerging sites with strong long-term potential. Requires foundational work on utilities, zoning, or access before development begins."
+    "description": "Sites at this level meet basic readiness standards. Core infrastructure and documentation are in place, but there may still be a few key areas requiring additional work or clarification."
   },
   {
-    "id": "emerging",
-    "tier": "emerging",
-    "label": "Emerging",
-    "range": "6.0 - 6.9",
+    "id": "silver",
+    "tier": "silver",
+    "label": "Silver",
+    "range": "7.0 - 7.9",
     "badgeImage": {
-      "url": "/images/badges/emerging.png",
-      "alt": "REDI Sites Emerging designation badge"
+      "url": "/images/badges/silver.png",
+      "alt": "REDI Sites Silver designation badge"
     },
-    "description": "Emerging sites with strong long-term potential. Requires foundational work on utilities, zoning, or access before development begins."
+    "description": "Sites at this level demonstrate a strong overall readiness profile, with many key elements of due diligence in place. There may still be a few areas where additional work could improve the site's competitiveness."
+  },
+  {
+    "id": "gold",
+    "tier": "gold",
+    "label": "Gold",
+    "range": "8.0 - 8.9",
+    "badgeImage": { "url": "/images/badges/gold.png", "alt": "REDI Sites Gold designation badge" },
+    "description": "Gold sites reflect a high level of preparedness, with nearly all due diligence completed and minimal (if any) barriers to immediate development."
+  },
+  {
+    "id": "platinum",
+    "tier": "platinum",
+    "label": "Platinum",
+    "range": "9.0 - 10.0",
+    "badgeImage": {
+      "url": "/images/badges/platinum.png",
+      "alt": "REDI Sites Platinum designation badge"
+    },
+    "description": "These are exceptional sites with comprehensive due diligence, excellent infrastructure access, and a high degree of development readiness. Platinum designations are rare and reflect the highest tier of readiness in the program."
   }
 ]
