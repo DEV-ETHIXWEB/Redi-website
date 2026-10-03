@@ -30,7 +30,7 @@ const hasAdvantages = advantages.length > 0;
 
         <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" role="list">
           {advantages.map((advantage, index) => (
-            <li class="reveal" style={`--reveal-delay: ${index * 70}ms`}>
+            <li class="reveal h-full" style={`--reveal-delay: ${index * 70}ms`}>
               <AdvantageCard advantage={advantage} />
             </li>
           ))}
