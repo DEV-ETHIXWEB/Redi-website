@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-03T03:50:51.648Z",
+  "generatedAt": "2026-10-03T11:34:07.510Z",
   "baseUrl": "http://localhost:4400",
   "tags": ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"],
   "viewports": ["desktop", "mobile"],
@@ -27,6 +27,12 @@
     },
     {
       "route": "/sites",
+      "viewport": "desktop",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/members",
       "viewport": "desktop",
       "error": null,
       "violations": []
@@ -123,6 +129,12 @@
     },
     {
       "route": "/sites",
+      "viewport": "mobile",
+      "error": null,
+      "violations": []
+    },
+    {
+      "route": "/members",
       "viewport": "mobile",
       "error": null,
       "violations": []

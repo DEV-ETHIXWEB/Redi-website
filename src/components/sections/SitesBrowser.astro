@@ -7,8 +7,17 @@ import Icon from '@/components/ui/Icon.astro';
  * 100vh/position:fixed snippet, so the widget stays inside normal page flow
  * (nav/footer/CTA banner below all still render) — see LOCATIONONE_URL for
  * the plain "open in a new tab" fallback.
+ *
+ * `organizationId` defaults to the public certified-sites org; the SSG
+ * member portal (src/pages/members.astro) passes a different org ID for
+ * the Guild-members-only map.
  */
-const LOCATIONONE_SRC = 'https://app.locationone.com/sites?organization=61253e933cccb456e7e98c2d';
+export interface Props {
+  organizationId?: string;
+}
+
+const { organizationId = '61253e933cccb456e7e98c2d' } = Astro.props;
+const LOCATIONONE_SRC = `https://app.locationone.com/sites?organization=${organizationId}`;
 const LOCATIONONE_URL = 'https://locationone.com';
 ---
 

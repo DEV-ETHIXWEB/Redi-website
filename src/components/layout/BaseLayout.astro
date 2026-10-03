@@ -7,6 +7,7 @@ import nunitoWoff2 from '@fontsource-variable/nunito/files/nunito-latin-wght-nor
 import Seo from './Seo.astro';
 import Navbar from '@/components/navigation/Navbar.astro';
 import Footer from '@/components/footer/Footer.astro';
+import Icon from '@/components/ui/Icon.astro';
 import { getSiteSettings } from '@/services/wordpress';
 import { heroSrcSet } from '@/utils/responsive-image';
 
@@ -114,6 +115,14 @@ const allLd = [organizationLd, ...structuredData];
       <slot />
     </main>
     <Footer settings={settings} />
+
+    <a
+      href="mailto:Info@REDISites.com?subject=Schedule%20a%20Meeting&body=Hi%20REDI%20Sites%20team%2C%0A%0AI%27d%20like%20to%20schedule%20a%20meeting%20to%20discuss%3A%0A%0A"
+      class="font-heading text-navy-950 shadow-lifted fixed right-5 bottom-5 z-40 flex h-12 items-center gap-2 rounded-full bg-cyan-400 px-5 text-sm font-semibold tracking-wide uppercase transition-all duration-200 hover:-translate-y-0.5 hover:bg-cyan-300 hover:shadow-xl sm:right-6 sm:bottom-6"
+    >
+      <Icon name="calendar-plus" size={18} />
+      Schedule a Meeting
+    </a>
 
     <script>
       const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)');

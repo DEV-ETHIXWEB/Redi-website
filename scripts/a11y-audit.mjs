@@ -55,6 +55,7 @@ const ROUTES = [
   '/about',
   '/approach',
   '/sites',
+  '/members',
   '/contact',
   '/register',
   '/sign-in',

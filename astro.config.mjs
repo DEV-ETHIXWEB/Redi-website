@@ -45,6 +45,16 @@ export default defineConfig({
       // service falls back to src/content/seed/*.json. See .env.example and
       // docs/WORDPRESS_INTEGRATION.md for the full contract.
       WORDPRESS_API_URL: envField.string({ context: 'server', access: 'secret', optional: true }),
+      // Shared password gating /members (see src/pages/members.astro) — the
+      // Site Selectors Guild-only LOIS map. Unset -> the gate is a no-op and
+      // /members stays public, so every environment that hasn't configured
+      // this keeps working exactly as before rather than silently locking
+      // everyone out.
+      SSG_PORTAL_PASSWORD: envField.string({
+        context: 'server',
+        access: 'secret',
+        optional: true,
+      }),
     },
   },
 
