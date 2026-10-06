@@ -29,6 +29,18 @@
  *                       WP Admin > Users > Profile > Application Passwords.
  *                       The normal password cannot authenticate REST writes.
  *
+ * PREREQUISITE — ACF must be exposed to the REST API. Their field groups
+ * supply nearly every meaningful field (jobTitle, group and order on a team
+ * member; externalUrl, source and heroImage on a post), and WordPress only
+ * accepts writes to fields whose group has "Show in REST API" enabled. With
+ * it off, `acf` is accepted as a parameter but declares zero properties, so
+ * every write is rejected as `Invalid parameter(s): acf`. A post created
+ * anyway would be missing externalUrl, which silently turns an outbound link
+ * into a dead internal article — so `import` refuses to run rather than
+ * publish content that looks imported but is wrong. `check` reports the flag
+ * per post type. Turn it on in WP Admin > ACF > Field Groups > (group) >
+ * Settings > Show in REST API.
+ *
  * What this script deliberately does NOT do:
  *   - It does not touch the six `redi/v1` routes (page copy, site settings,
  *     advantages, score tiers, scoring criteria, legal). Those aren't post
@@ -36,12 +48,11 @@
  *     WordPress side (docs/WORDPRESS_INTEGRATION.md §6.2). `check` reports
  *     their status so it's clear what's outstanding, but nothing here can
  *     create them.
- *   - It does not upload media. Image fields are written as absolute URLs
- *     pointing at the already-deployed assets, which satisfies the required
- *     `WPImage` shape without a media-library migration.
+ *   - It does not touch anything it did not create. Matching is by slug, so
+ *     re-running updates its own rows and leaves hand-authored ones alone.
  */
 
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -73,6 +84,7 @@ const TYPES = [
     label: 'Team members',
     route: 'wp/v2/team_member',
     seedFile: 'team',
+    featured: (m) => m.photo,
     title: (m) => m.name,
     slug: (m) => String(m.id),
     fields: (m) => ({
@@ -90,6 +102,7 @@ const TYPES = [
     label: 'Properties',
     route: 'wp/v2/property',
     seedFile: 'properties',
+    featured: (p) => p.image,
     title: (p) => p.title,
     slug: (p) => p.slug,
     fields: (p) => ({
@@ -106,6 +119,7 @@ const TYPES = [
     label: 'Testimonials',
     route: 'wp/v2/testimonial',
     seedFile: 'testimonials',
+    featured: (t) => t.backgroundImage,
     title: (t) => t.personName,
     slug: (t) => String(t.id),
     fields: (t) => ({
@@ -122,6 +136,7 @@ const TYPES = [
     label: 'Partners',
     route: 'wp/v2/partner',
     seedFile: 'partners',
+    featured: (p) => p.image,
     title: (p) => p.name,
     slug: (p) => String(p.id),
     fields: (p) => ({
@@ -138,12 +153,15 @@ const TYPES = [
     label: 'News posts',
     route: 'wp/v2/posts',
     seedFile: 'blog-posts',
+    featured: (p) => p.featuredImage,
     title: (p) => p.title,
     slug: (p) => p.slug,
     core: (p) => ({
       content: p.contentHtml ?? '',
       excerpt: p.excerpt ?? '',
-      ...(p.date ? { date: p.date } : {}),
+      // The seed stores a bare date; WordPress rejects anything that isn't a
+      // full ISO 8601 datetime with `Invalid parameter(s): date`.
+      ...(p.date ? { date: `${p.date}T00:00:00` } : {}),
     }),
     fields: (p) => ({
       author: p.author?.name,
@@ -186,6 +204,102 @@ async function call(path, { method = 'GET', body, auth = false } = {}) {
   return { status: res.status, ok: res.ok, payload };
 }
 
+/**
+ * WordPress's own `id` is overwritten by their REST filter with the frontend's
+ * string id (a slug), so the numeric id needed for updates only survives in
+ * the self link.
+ */
+function numericId(item) {
+  const href = item?._links?.self?.[0]?.href;
+  return href ? href.replace(/\/+$/, '').split('/').pop() : null;
+}
+
+/** Field names a post type's ACF group exposes to REST — empty means writes will be rejected. */
+async function acfFields(route) {
+  const res = await fetch(`${API}/wp-json/${route}`, {
+    method: 'OPTIONS',
+    headers: { Accept: 'application/json' },
+  });
+  if (!res.ok) return [];
+  const schema = await res.json().catch(() => null);
+  const post = (schema?.endpoints ?? []).find((e) => (e.methods ?? []).includes('POST'));
+  return Object.keys(post?.args?.acf?.properties ?? {});
+}
+
+/** Uploads an image once per source path and returns its attachment id. */
+const mediaCache = new Map();
+async function uploadMedia(image) {
+  const rel = image?.url;
+  if (typeof rel !== 'string' || !rel.startsWith('/')) return null;
+  if (mediaCache.has(rel)) return mediaCache.get(rel);
+
+  const file = join(__dirname, '..', 'public', rel.replace(/^\//, ''));
+  if (!existsSync(file)) {
+    console.log(`      (no local file for ${rel} — skipping image)`);
+    return null;
+  }
+  const name = rel.split('/').pop();
+  const ext = (name.split('.').pop() || '').toLowerCase();
+  const mime = {
+    webp: 'image/webp',
+    png: 'image/png',
+    jpg: 'image/jpeg',
+    jpeg: 'image/jpeg',
+    svg: 'image/svg+xml',
+  }[ext];
+
+  const res = await fetch(`${API}/wp-json/wp/v2/media`, {
+    method: 'POST',
+    headers: {
+      Authorization: authHeader(),
+      'Content-Disposition': `attachment; filename=${name}`,
+      ...(mime ? { 'Content-Type': mime } : {}),
+    },
+    body: readFileSync(file),
+  });
+  const payload = await res.json().catch(() => null);
+  if (!res.ok) {
+    console.log(`      media upload failed for ${rel}: ${payload?.message ?? res.status}`);
+    return null;
+  }
+  // alt text rides on the attachment, and their filter reads it into WPImage.alt.
+  if (image.alt) {
+    await fetch(`${API}/wp-json/wp/v2/media/${payload.id}`, {
+      method: 'POST',
+      headers: { Authorization: authHeader(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ alt_text: image.alt }),
+    });
+  }
+  mediaCache.set(rel, payload.id);
+  return payload.id;
+}
+
+/** Resolves tag names to term ids, creating any that don't exist yet. */
+const tagCache = new Map();
+async function tagIds(names) {
+  const ids = [];
+  for (const name of names ?? []) {
+    if (tagCache.has(name)) {
+      ids.push(tagCache.get(name));
+      continue;
+    }
+    const found = await call(`wp/v2/tags?search=${encodeURIComponent(name)}`);
+    const match = Array.isArray(found.payload)
+      ? found.payload.find((t) => t.name.toLowerCase() === name.toLowerCase())
+      : null;
+    let id = match?.id;
+    if (!id) {
+      const made = await call('wp/v2/tags', { method: 'POST', body: { name }, auth: true });
+      id = made.payload?.id;
+    }
+    if (id) {
+      tagCache.set(name, id);
+      ids.push(id);
+    }
+  }
+  return ids;
+}
+
 function requireApi() {
   if (API) return;
   console.error('WORDPRESS_API_URL is not set. Example:\n');
@@ -208,6 +322,7 @@ async function check() {
 
   console.log('  Stock post types (this script can populate these)');
   let importable = 0;
+  const blockedByAcf = [];
   for (const type of TYPES) {
     const approved = seed(type.seedFile).length;
     const res = await call(`${type.route}?per_page=1`);
@@ -217,10 +332,12 @@ async function check() {
       );
       continue;
     }
-    importable++;
+    const fields = await acfFields(type.route);
+    if (fields.length === 0) blockedByAcf.push(type.label);
+    else importable++;
     const live = Array.isArray(res.payload) ? res.payload.length : 0;
     console.log(
-      `    ${type.label.padEnd(14)} ok        live: ${live > 0 ? 'has content' : 'empty'}, approved content available: ${approved}`,
+      `    ${type.label.padEnd(14)} ${fields.length ? 'ok      ' : 'BLOCKED '}  live: ${live > 0 ? 'has content' : 'empty'}, approved: ${approved}, ACF fields writable: ${fields.length || 'none'}`,
     );
   }
 
@@ -250,9 +367,19 @@ async function check() {
     );
   }
 
+  console.log(`\n  Summary: ${importable}/${TYPES.length} post types ready to import.`);
+  if (blockedByAcf.length > 0) {
+    console.log(
+      `\n  BLOCKED: ${blockedByAcf.join(', ')} — the ACF field group for each is not\n` +
+        `  exposed to the REST API, so jobTitle/group/order/externalUrl and the rest\n` +
+        `  cannot be written. Importing without them would publish content that looks\n` +
+        `  complete but is wrong (an external-link post becomes a dead internal page),\n` +
+        `  so import refuses to run. Fix: WP Admin > ACF > Field Groups > open each\n` +
+        `  group > Settings > Show in REST API > Yes.`,
+    );
+  }
   console.log(
-    `\n  Summary: ${importable}/${TYPES.length} post types ready to import.\n` +
-      `  Anything marked MISSING is WordPress-side work — see docs/WORDPRESS_INTEGRATION.md §6.\n`,
+    `\n  Anything marked MISSING is WordPress-side work — see docs/WORDPRESS_INTEGRATION.md §6.\n`,
   );
 }
 
@@ -276,6 +403,25 @@ async function importContent({ only, dryRun }) {
   let updated = 0;
   let failed = 0;
 
+  // Refuse up front rather than publishing content that looks imported but is
+  // missing the fields that decide how it renders. See the ACF note up top.
+  const blocked = [];
+  for (const type of selected) {
+    if ((await acfFields(type.route)).length === 0) blocked.push(type);
+  }
+  if (blocked.length > 0 && !dryRun) {
+    console.error(
+      `  Refusing to import — ACF is not exposed to REST for: ${blocked.map((t) => t.label).join(', ')}.`,
+    );
+    console.error('  Those writes would be rejected, or worse, silently drop fields like');
+    console.error('  externalUrl and turn an outbound link into a dead internal page.');
+    console.error(
+      '  Fix: WP Admin > ACF > Field Groups > each group > Settings > Show in REST API.',
+    );
+    console.error('  Then re-run. Use `check` to confirm.\n');
+    process.exit(1);
+  }
+
   for (const type of selected) {
     const items = seed(type.seedFile);
     console.log(`  ${type.label} (${items.length})`);
@@ -287,11 +433,21 @@ async function importContent({ only, dryRun }) {
       continue;
     }
     const bySlug = new Map(
-      (Array.isArray(existing.payload) ? existing.payload : []).map((p) => [p.slug, p.id]),
+      (Array.isArray(existing.payload) ? existing.payload : []).map((p) => [p.slug, numericId(p)]),
     );
 
     for (const item of items) {
       const slug = type.slug(item);
+      const id = bySlug.get(slug);
+      const verb = id ? 'update' : 'create';
+
+      if (dryRun) {
+        console.log(`    would ${verb}: ${type.title(item)}`);
+        if (id) updated++;
+        else created++;
+        continue;
+      }
+
       const body = {
         title: type.title(item),
         slug,
@@ -299,15 +455,10 @@ async function importContent({ only, dryRun }) {
         ...(type.core ? type.core(item) : {}),
         acf: type.fields(item),
       };
-      const id = bySlug.get(slug);
-      const verb = id ? 'update' : 'create';
-
-      if (dryRun) {
-        console.log(`    would ${verb}: ${body.title}`);
-        if (id) updated++;
-        else created++;
-        continue;
-      }
+      // The frontend's required image comes from the featured image, not ACF.
+      const featured = await uploadMedia(type.featured ? type.featured(item) : null);
+      if (featured) body.featured_media = featured;
+      if (type.key === 'posts') body.tags = await tagIds(item.tags);
 
       const res = await call(id ? `${type.route}/${id}` : type.route, {
         method: 'POST',
