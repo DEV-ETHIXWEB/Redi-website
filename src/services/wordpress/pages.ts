@@ -1,5 +1,6 @@
 import seed from '@/content/seed/pages.json';
 import { wpFetch } from './client';
+import { deepMerge } from '@/utils/deep-merge';
 
 /**
  * Shape of the page-copy payload. Inferred directly from the seed JSON
@@ -43,8 +44,21 @@ let cache: PageCopy | null = null;
  *            A/B the two side by side locally).
  * Response:  a single large object — see `src/content/seed/pages.json` for
  *            the exact required shape (every key present there is required).
- * Optional fields: none — treat every key in `pages.json` as required.
- * Fallback:  `src/content/seed/pages.json`.
+ * Optional fields: none in principle, but see Fallback below — in practice
+ *            WordPress's response is allowed to lag behind the seed's shape.
+ * Fallback:  deep-merged onto `src/content/seed/pages.json`, key by key,
+ *            rather than swapped in wholesale. This is deliberate: the seed
+ *            file's shape evolves over time (new sections/fields get added
+ *            to support new site features), and WordPress won't always have
+ *            been updated to match yet. A plain `remote ?? seed` swap means
+ *            any field WordPress hasn't caught up on yet — present in seed,
+ *            missing from the live response — renders as `undefined` and
+ *            crashes the page instead of falling back. (This happened in
+ *            production: `/approach` crashed on `approach.process.eyebrow`
+ *            because the live WordPress response predated that section.)
+ *            Deep-merging means a field only needs to exist in the seed to
+ *            always have a safe value, regardless of whether WordPress has
+ *            caught up yet.
  * Failure:   handled inside `wpFetch()` — never throws.
  *
  * TODO(backend): consider whether this monolithic endpoint should eventually
@@ -57,6 +71,6 @@ let cache: PageCopy | null = null;
 export async function getPageCopy(): Promise<PageCopy> {
   if (cache) return cache;
   const remote = await wpFetch<PageCopy>('/wp-json/redi/v1/page-copy');
-  cache = remote ?? (seed as PageCopy);
+  cache = remote ? deepMerge(seed as PageCopy, remote) : (seed as PageCopy);
   return cache;
 }

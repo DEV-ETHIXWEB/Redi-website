@@ -3,6 +3,7 @@ import tiersSeed from '@/content/seed/score-tiers.json';
 import criteriaSeed from '@/content/seed/scoring-criteria.json';
 import coreDocumentsSeed from '@/content/seed/core-documents.json';
 import { wpFetch } from './client';
+import { deepMerge } from '@/utils/deep-merge';
 
 /**
  * Shape returned by `/wp-json/redi/v1/scoring-criteria` and consumed by
@@ -58,7 +59,9 @@ export async function getScoreTiers(): Promise<ScoreTier[]> {
  *   validated client-side, `color` — any valid CSS color string),
  *   `primaryCriteria` (`string[]`), `eligibility` (`string[]`).
  * Optional fields: none.
- * Fallback:  `src/content/seed/scoring-criteria.json`.
+ * Fallback:  `src/content/seed/scoring-criteria.json`, deep-merged key by key, so a
+ *            field WordPress has not caught up on yet falls back to the
+ *            seed's value instead of rendering `undefined` (see `getPageCopy`).
  * Failure:   handled inside `wpFetch()` — never throws.
  *
  * TODO(backend): if `weights` is built as an ACF repeater, validate on the
@@ -67,7 +70,9 @@ export async function getScoreTiers(): Promise<ScoreTier[]> {
  */
 export async function getScoringCriteria(): Promise<ScoringCriteriaData> {
   const remote = await wpFetch<ScoringCriteriaData>('/wp-json/redi/v1/scoring-criteria');
-  return remote ?? (criteriaSeed as ScoringCriteriaData);
+  return remote
+    ? deepMerge(criteriaSeed as ScoringCriteriaData, remote)
+    : (criteriaSeed as ScoringCriteriaData);
 }
 
 /**

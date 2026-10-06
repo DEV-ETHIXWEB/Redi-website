@@ -1,6 +1,7 @@
 import type { SiteSettings } from '@/types/wordpress';
 import seed from '@/content/seed/site-settings.json';
 import { wpFetch } from './client';
+import { deepMerge } from '@/utils/deep-merge';
 
 /**
  * Global site chrome: logos, primary nav, sign-in/register CTA links, footer
@@ -22,7 +23,9 @@ import { wpFetch } from './client';
  *   (`{ value, label }[]`).
  * Optional fields: none — every field is treated as required by the type;
  *   omit at your own risk, since no component null-checks these.
- * Fallback:  `src/content/seed/site-settings.json`.
+ * Fallback:  `src/content/seed/site-settings.json`, deep-merged key by key, so a
+ *            field WordPress has not caught up on yet falls back to the
+ *            seed's value instead of rendering `undefined` (see `getPageCopy`).
  * Failure:   handled inside `wpFetch()` — never throws, returns seed data.
  *
  * Post-fetch behavior: `{year}` inside `footer.copyright` is replaced with
@@ -37,7 +40,7 @@ import { wpFetch } from './client';
  */
 export async function getSiteSettings(): Promise<SiteSettings> {
   const remote = await wpFetch<SiteSettings>('/wp-json/redi/v1/site-settings');
-  const settings = remote ?? (seed as SiteSettings);
+  const settings = remote ? deepMerge(seed as SiteSettings, remote) : (seed as SiteSettings);
   return {
     ...settings,
     footer: {
