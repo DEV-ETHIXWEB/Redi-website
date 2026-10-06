@@ -3,6 +3,7 @@ import tiersSeed from '@/content/seed/score-tiers.json';
 import criteriaSeed from '@/content/seed/scoring-criteria.json';
 import coreDocumentsSeed from '@/content/seed/core-documents.json';
 import { wpFetch } from './client';
+import * as normalize from './normalize';
 import { deepMerge } from '@/utils/deep-merge';
 
 /**
@@ -40,7 +41,7 @@ interface ScoringCriteriaData {
  */
 export async function getScoreTiers(): Promise<ScoreTier[]> {
   const remote = await wpFetch<ScoreTier[]>('/wp-json/redi/v1/score-tiers');
-  return remote ?? (tiersSeed as ScoreTier[]);
+  return normalize.list(remote, tiersSeed as ScoreTier[], normalize.scoreTier);
 }
 
 /**
@@ -94,5 +95,5 @@ export async function getScoringCriteria(): Promise<ScoringCriteriaData> {
  */
 export async function getCoreDocuments(): Promise<CoreDocument[]> {
   const remote = await wpFetch<CoreDocument[]>('/wp-json/redi/v1/core-documents');
-  return remote ?? (coreDocumentsSeed as CoreDocument[]);
+  return normalize.list(remote, coreDocumentsSeed as CoreDocument[], normalize.coreDocument);
 }

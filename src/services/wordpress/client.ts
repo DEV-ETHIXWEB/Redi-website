@@ -42,11 +42,22 @@ import { WORDPRESS_API_URL } from 'astro:env/server';
  *    response body isn't valid JSON. Logged as
  *    `[wordpress] failed to fetch <url> <error>`.
  *
- * **Callers never need to null-check defensively beyond `?? seed` / `?? []`**
- * — every domain service in this directory follows the pattern
- * `const remote = await wpFetch<T>(...); return remote ?? seedFallback;` so
- * the site always renders, even if WordPress is down, misconfigured, or a
- * specific endpoint hasn't been built yet.
+ * **A `null` return is not the only thing callers must handle.** `wpFetch()`
+ * guarantees "valid JSON or null" — it does NOT guarantee that the JSON
+ * matches `T`. WordPress happily returns `200` with a half-filled CPT (ACF
+ * fields an editor hasn't completed come back `undefined`) or with an error
+ * body like `{code, message}` where a collection was expected, and neither
+ * is caught by a `?? seed` fallback. Since components dereference required
+ * fields directly (`member.photo.url`), that mismatch crashes the prerender
+ * and fails the whole build — which is exactly what happened to `/approach`
+ * in production.
+ *
+ * So domain services in this directory do two things, not one: fall back to
+ * seed when this returns `null`, and reconcile whatever JSON did arrive
+ * against the expected shape — `deepMerge` onto the seed for the object
+ * endpoints (see ./pages.ts), the coercions in ./normalize.ts for the
+ * collection endpoints. The site then always renders, whether WordPress is
+ * down, misconfigured, half-populated, or returning something unexpected.
  *
  * TODO(backend): once real endpoints exist, verify each one returns `2xx`
  * with `Content-Type: application/json` even for empty result sets (e.g. a

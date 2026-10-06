@@ -14,6 +14,22 @@ const { eyebrow, heading, partners } = Astro.props;
 // WordPress can legitimately return zero partners. Skip the whole section
 // rather than show a heading over an empty grid.
 const hasPartners = partners.length > 0;
+
+/**
+ * The visible link text is the partner's bare hostname, which means parsing
+ * their URL — and `new URL()` throws on an empty or malformed one, which at
+ * build time takes down the whole page. A partner whose CMS entry has no
+ * usable URL renders without the link row rather than linking nowhere.
+ */
+function hostname(url: string): string | null {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '');
+  } catch {
+    return null;
+  }
+}
+
+const cards = partners.map((partner) => ({ partner, host: hostname(partner.url) }));
 ---
 
 {
@@ -23,7 +39,7 @@ const hasPartners = partners.length > 0;
         <SectionHeading eyebrow={eyebrow} heading={heading} align="center" />
 
         <ul class="mt-12 grid gap-7 md:grid-cols-2" role="list">
-          {partners.map((partner, index) => (
+          {cards.map(({ partner, host }, index) => (
             <li class="reveal" style={`--reveal-delay: ${index * 80}ms`}>
               <article class="group shadow-soft hover:shadow-lifted overflow-hidden rounded-xl transition-all duration-300 ease-out hover:-translate-y-1.5">
                 {partner.variant === 'photo' ? (
@@ -74,17 +90,19 @@ const hasPartners = partners.length > 0;
                     </span>
                   )}
                 </div>
-                <div class="bg-steel-200 flex items-center gap-1.5 px-5 pb-4">
-                  <Icon name="external-link" size={14} class="text-ink-600" />
-                  <a
-                    href={partner.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="hover:text-navy-700 text-ink-600 text-sm underline underline-offset-2 transition-colors"
-                  >
-                    {new URL(partner.url).hostname.replace('www.', '')}
-                  </a>
-                </div>
+                {host && (
+                  <div class="bg-steel-200 flex items-center gap-1.5 px-5 pb-4">
+                    <Icon name="external-link" size={14} class="text-ink-600" />
+                    <a
+                      href={partner.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="hover:text-navy-700 text-ink-600 text-sm underline underline-offset-2 transition-colors"
+                    >
+                      {host}
+                    </a>
+                  </div>
+                )}
               </article>
             </li>
           ))}

@@ -1,6 +1,7 @@
 import type { Property } from '@/types/wordpress';
 import seed from '@/content/seed/properties.json';
 import { wpFetch } from './client';
+import * as normalize from './normalize';
 
 /**
  * Certified-site listings shown on `/sites` and the homepage "featured
@@ -39,7 +40,7 @@ import { wpFetch } from './client';
  */
 export async function getProperties(): Promise<Property[]> {
   const remote = await wpFetch<Property[]>('/wp-json/wp/v2/property?_embed');
-  return remote ?? (seed as Property[]);
+  return normalize.list(remote, seed as Property[], normalize.property);
 }
 
 /**

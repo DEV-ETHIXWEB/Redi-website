@@ -1,6 +1,7 @@
 import type { LegalSection } from '@/types/wordpress';
 import seed from '@/content/seed/legal.json';
 import { wpFetch } from './client';
+import * as normalize from './normalize';
 
 /**
  * Terms / privacy / branding-guidelines sections rendered on `/legal`, in
@@ -31,5 +32,5 @@ import { wpFetch } from './client';
  */
 export async function getLegalSections(): Promise<LegalSection[]> {
   const remote = await wpFetch<LegalSection[]>('/wp-json/redi/v1/legal');
-  return remote ?? (seed as LegalSection[]);
+  return normalize.list(remote, seed as LegalSection[], normalize.legalSection);
 }

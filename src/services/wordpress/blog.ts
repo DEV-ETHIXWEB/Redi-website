@@ -1,6 +1,7 @@
 import type { BlogPost } from '@/types/wordpress';
 import seed from '@/content/seed/blog-posts.json';
 import { wpFetch } from './client';
+import * as normalize from './normalize';
 
 /**
  * Query params accepted by `getBlogPosts()` — mirrors the `?q=&tag=&sort=&page=`
@@ -66,7 +67,7 @@ export interface BlogQuery {
  */
 async function getAllPosts(): Promise<BlogPost[]> {
   const remote = await wpFetch<BlogPost[]>('/wp-json/wp/v2/posts?_embed');
-  return remote ?? (seed as BlogPost[]);
+  return normalize.list(remote, seed as BlogPost[], normalize.blogPost);
 }
 
 /**
