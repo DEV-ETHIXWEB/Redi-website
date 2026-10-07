@@ -19,8 +19,17 @@ const isExternal = Boolean(post.externalUrl);
 const href = post.externalUrl ?? `/updates/${post.slug}`;
 ---
 
+{
+  /*
+  flex column + h-full so every card fills its grid cell. Titles run to one,
+  two or three lines, and without this each card shrank to its own content and
+  the row came out ragged. The image keeps its fixed aspect ratio and the text
+  block takes the slack, so the cards line up whatever the headline length.
+  Both callers put this in a grid, so there is always a cell to fill.
+*/
+}
 <article
-  class="group bg-steel-200 shadow-soft hover:shadow-lifted relative overflow-hidden rounded-xl transition-all duration-300 ease-out hover:-translate-y-1.5"
+  class="group bg-steel-200 shadow-soft hover:shadow-lifted relative flex h-full flex-col overflow-hidden rounded-xl transition-all duration-300 ease-out hover:-translate-y-1.5"
 >
   <a
     href={href}
@@ -28,7 +37,7 @@ const href = post.externalUrl ?? `/updates/${post.slug}`;
     aria-label={post.title}
     target={isExternal ? '_blank' : undefined}
     rel={isExternal ? 'noopener noreferrer' : undefined}></a>
-  <div class={cn('overflow-hidden', wide ? 'aspect-[1527/655]' : 'aspect-[998/655]')}>
+  <div class={cn('shrink-0 overflow-hidden', wide ? 'aspect-[1527/655]' : 'aspect-[998/655]')}>
     <img
       src={post.featuredImage.url}
       alt={post.featuredImage.alt}
@@ -39,7 +48,7 @@ const href = post.externalUrl ?? `/updates/${post.slug}`;
       class="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
     />
   </div>
-  <div class="px-4 pt-3.5 pb-4">
+  <div class="flex flex-1 flex-col px-4 pt-3.5 pb-4">
     <p class="text-navy-700 text-sm font-semibold">{post.tags.join(', ')}</p>
     <p class="mt-0.5 flex items-center gap-2 text-sm text-slate-600">
       {

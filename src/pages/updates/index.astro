@@ -27,11 +27,10 @@ const { items, total, totalPages } = await getBlogPosts({
   sort,
   tag,
   page: currentPage,
-  perPage: 11,
+  // 12 fills the three-column grid exactly, so a full page is always four
+  // complete rows rather than a short final row.
+  perPage: 12,
 });
-
-const gridPosts = items.slice(0, 9);
-const widePosts = items.slice(9);
 
 const buildHref = (overrides: { tag?: string | undefined; page?: number }) => {
   const params = new URLSearchParams();
@@ -160,22 +159,21 @@ const breadcrumbLd = {
           </p>
         ) : (
           <>
-            <ul class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" role="list">
-              {gridPosts.map((post, index) => (
-                <li class="reveal" style={`--reveal-delay: ${(index % 3) * 70}ms`}>
+            {/*
+              One grid, one card size. The last few posts used to render as a
+              separate "wide" two-column strip, which only lined up when there
+              were exactly two of them; with one left over it sat half-width
+              and alone against an empty column, and the page read as ragged.
+              Keeping every post on the same grid means the layout holds for
+              any number of posts, which matters because the client adds them.
+            */}
+            <ul class="mt-8 grid auto-rows-fr gap-6 sm:grid-cols-2 lg:grid-cols-3" role="list">
+              {items.map((post, index) => (
+                <li class="reveal h-full" style={`--reveal-delay: ${(index % 3) * 70}ms`}>
                   <BlogCard post={post} />
                 </li>
               ))}
             </ul>
-            {widePosts.length > 0 && (
-              <ul class="mt-6 grid gap-7 md:grid-cols-2" role="list">
-                {widePosts.map((post, index) => (
-                  <li class="reveal" style={`--reveal-delay: ${index * 80}ms`}>
-                    <BlogCard post={post} wide />
-                  </li>
-                ))}
-              </ul>
-            )}
             {totalPages > 1 && (
               <nav
                 aria-label="Updates pagination"
