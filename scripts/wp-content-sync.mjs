@@ -58,19 +58,12 @@ import { dirname, join } from 'node:path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const SEED_DIR = join(__dirname, '..', 'src', 'content', 'seed');
-const PUBLIC_SITE = process.env.PUBLIC_SITE_URL || 'https://www.redisites.com';
 
 const API = (process.env.WORDPRESS_API_URL || '').replace(/\/+$/, '');
 const USER = process.env.WP_USER || '';
 const APP_PASSWORD = process.env.WP_APP_PASSWORD || '';
 
 const seed = (name) => JSON.parse(readFileSync(join(SEED_DIR, `${name}.json`), 'utf8'));
-
-/** Absolute-ises the seed's site-relative asset paths so WordPress stores a usable URL. */
-const absolute = (url) =>
-  typeof url === 'string' && url.startsWith('/') ? PUBLIC_SITE + url : url;
-const img = (image) =>
-  image && typeof image === 'object' ? { ...image, url: absolute(image.url) } : image;
 
 /**
  * The five stock post types, in the build order §6.2 recommends. `fields`
@@ -157,11 +150,11 @@ const TYPES = [
       // full ISO 8601 datetime with `Invalid parameter(s): date`.
       ...(p.date ? { date: `${p.date}T00:00:00` } : {}),
     }),
+    // `featuredImage` is the WordPress featured image and `tags` are a
+    // taxonomy, so neither is an ACF field; only these three are.
+    images: { heroImage: (p) => p.heroImage },
     fields: (p) => ({
-      author: p.author?.name,
-      tags: p.tags,
-      featuredImage: img(p.featuredImage),
-      heroImage: img(p.heroImage),
+      authorName: p.author?.name,
       source: p.source,
       externalUrl: p.externalUrl,
     }),
@@ -302,7 +295,13 @@ async function tagIds(names) {
       ids.push(tagCache.get(name));
       continue;
     }
-    const found = await call(`wp/v2/tags?search=${encodeURIComponent(name)}`);
+    // Authenticated: WordPress hides terms with no posts attached from
+    // anonymous queries, so an unauthenticated search never finds a tag that
+    // exists but isn't in use yet — and the importer would then try to create
+    // it again and end up attaching nothing.
+    const found = await call(`wp/v2/tags?search=${encodeURIComponent(name)}&per_page=100`, {
+      auth: true,
+    });
     const match = Array.isArray(found.payload)
       ? found.payload.find((t) => t.name.toLowerCase() === name.toLowerCase())
       : null;
