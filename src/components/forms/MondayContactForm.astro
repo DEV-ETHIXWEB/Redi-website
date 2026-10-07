@@ -32,12 +32,31 @@ import Icon from '@/components/ui/Icon.astro';
  */
 export interface Props {
   formId: string;
+  /**
+   * Rendered height of this particular form, in CSS pixels at native width.
+   *
+   * Monday's form layout fills whatever height it is given, so a single
+   * constant for every embed left a lot of empty vendor background under the
+   * shorter ones — the register form needs 889px and was being handed 1500,
+   * which showed as roughly 600px of blank panel below the fields.
+   *
+   * Measured per form by loading it at a deliberately short viewport and
+   * reading documentElement.scrollHeight (at a tall viewport it just stretches
+   * to fit and tells you nothing). As of 2026-10-07: register 889, contact
+   * 1355, scoring scale 1355. The default keeps the previous value so any
+   * caller that does not pass one behaves exactly as before.
+   *
+   * Overshoot rather than undershoot when in doubt. Too tall is empty space;
+   * too short gives the iframe its own inner scrollbar, which reads as broken
+   * next to the page's own scrolling.
+   */
+  height?: number;
 }
 
-const { formId } = Astro.props;
+const { formId, height = 1500 } = Astro.props;
 const MONDAY_FORM_SRC = `https://forms.monday.com/forms/embed/${formId}?r=use1`;
 const NATIVE_WIDTH = 650;
-const NATIVE_HEIGHT = 1500;
+const NATIVE_HEIGHT = height;
 ---
 
 <div class="mx-auto w-full max-w-[650px]">
