@@ -1,20 +1,28 @@
 ---
 import BaseLayout from '@/components/layout/BaseLayout.astro';
 import Icon from '@/components/ui/Icon.astro';
-import { getAllBlogSlugs, getBlogPostBySlug } from '@/services/wordpress';
+import { getBlogPostBySlug } from '@/services/wordpress';
 import { formatDate } from '@/utils/format';
 import { heroSrcSet } from '@/utils/responsive-image';
 import { sanitizeRichText } from '@/lib/sanitize-html';
 
-export async function getStaticPaths() {
-  const slugs = await getAllBlogSlugs();
-  return slugs.map((slug) => ({ params: { slug } }));
-}
+// Rendered on demand rather than prerendered, so an article edited in
+// WordPress is current on the next request instead of waiting for a deploy,
+// and a post published after the last deploy has a working page instead of a
+// 404 reachable straight from the /updates listing. The sitemap no longer gets
+// the article URLs from here — see `customPages` in astro.config.mjs.
+export const prerender = false;
 
 const { slug } = Astro.params;
 const post = await getBlogPostBySlug(slug!);
 
-if (!post) {
+// A link-out post has no page of its own: the /updates card points straight
+// at the source, and all we hold is a title and a credit. While this route was
+// prerendered, `getStaticPaths()` filtered those posts out and the URL 404'd.
+// Rendering on demand would instead publish a near-empty article at a
+// canonical redisites.com URL, so send the visitor to the listing — the same
+// place an unknown slug goes.
+if (!post || post.externalUrl) {
   return Astro.redirect('/updates');
 }
 
