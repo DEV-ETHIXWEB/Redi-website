@@ -83,24 +83,12 @@ Key architectural facts:
   designed to always render — even with no backend, a broken backend, or a
   backend mid-migration — by falling back to `src/content/seed/*.json`.
   Components never import seed JSON directly; only the service layer does.
-- **Every content route renders on demand (ISR).** The nine routes that read
-  WordPress — `/`, `/about`, `/approach`, `/contact`, `/legal`, `/members`,
-  `/sites`, `/updates` and `/updates/[slug]` — each set
-  `export const prerender = false`, and on Vercel they are served through
-  Incremental Static Regeneration (`isr: { expiration: 600 }` in
-  `astro.config.mjs`). Vercel caches each rendered page and re-renders it on
-  the first request after the cached copy passes 10 minutes old, so the usual
-  request is a cache hit rather than a WordPress round trip, and an edit made
-  in wp-admin appears within about 10 minutes with nobody running a deploy.
-  The only prerendered pages left are the four auth shells and `404.html`,
-  none of which read WordPress.
-- **The sitemap is fed explicitly, not by crawling.** Because
-  `/updates/[slug]` no longer has `getStaticPaths()`, nothing enumerates the
-  article URLs at build time. `scripts/article-slugs.mjs` fetches them (with
-  the usual fall back to `src/content/seed/blog-posts.json`) and passes them
-  to `@astrojs/sitemap` as `customPages`. If you add another on-demand route
-  that should be indexed, add it there too or it will be missing from
-  `sitemap-0.xml`.
+- **Most routes are static (SSG).** 13 of 14 routes are prerendered to
+  static HTML at build time. Only `/updates` (the blog index, for its
+  search/sort/tag/pagination query params) is server-rendered per request
+  (`export const prerender = false` in `src/pages/updates/index.astro`).
+  This has a direct consequence for content freshness — see
+  [§16 Known limitations](#16-known-limitations).
 - **LocationOne and Monday.com are not API integrations.** Both are plain
   `<iframe>` embeds of third-party vendor apps
   (`src/components/sections/SitesBrowser.astro`,
@@ -448,9 +436,10 @@ pattern) FIRST — every TODO above depends on that decision.
 - **Backend:** not part of this repository. WordPress hosting (WP Engine or
   otherwise) is entirely separate infrastructure this repo has no code for
   — see `HANDOFF.md` for what's known/unknown about that environment.
-- **Content-freshness model:** WordPress edits go live on their own, within
-  roughly 10 minutes, via ISR (§3). No deploy, Deploy Hook or webhook is
-  needed for a content change. A deploy is still needed for a code change.
+- **Content-freshness model:** see [§16](#16-known-limitations) — most
+  routes are static, so WordPress content edits don't appear on the live
+  site until the next deploy, unless a revalidation/webhook mechanism is
+  added later.
 
 Build commands:
 
@@ -523,21 +512,12 @@ derived from what the frontend needs, for whoever provisions WordPress:
 
 These are real, current, repository-verifiable gaps — not speculation:
 
-- **Content freshness lags by up to the ISR window.** Content routes
-  re-render on demand (§3), but Vercel serves a cached copy until it is 10
-  minutes old, so an edit in wp-admin is not instant — expect it within about
-  10 minutes. Lowering `isr.expiration` in `astro.config.mjs` trades more
-  WordPress traffic for a shorter lag; on-demand revalidation (a webhook from
-  WordPress that invalidates the cache on save) would remove the lag
-  altogether and is not configured today.
-- **A new article's page works before the listing catches up.** A
-  just-published post has no cache entry of its own, so the first request to
-  `/updates/<slug>` renders it immediately. `/updates` is a separate cache
-  entry, so the post can take up to the ISR window to appear in the listing.
-  The lag runs that way round, never the other: there is no window in which
-  the listing offers a link that 404s. A slug WordPress does not have —
-  including a link-out post, which has no page of its own — redirects to
-  `/updates` rather than 404ing.
+- **Content-freshness gap.** 13 of 14 routes are static HTML generated at
+  build time. Editing content in WordPress will not appear on those routes
+  until the next Vercel deploy, unless someone adds on-demand
+  revalidation/ISR (not configured today) or a WP-webhook-triggered
+  redeploy. This is an open architectural decision, not something already
+  solved here.
 - **`wpFetch()` doesn't validate response shape.** A 2xx response with a
   missing/wrong-typed field will pass through uncaught (§6.4) — the
   TypeScript types are a contract for the frontend to code against, not a

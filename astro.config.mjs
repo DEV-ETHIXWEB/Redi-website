@@ -5,8 +5,6 @@ import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
-import { articleSlugs } from './scripts/article-slugs.mjs';
-
 import vercel from '@astrojs/vercel';
 import node from '@astrojs/node';
 
@@ -15,12 +13,6 @@ import node from '@astrojs/node';
 const isVercel = Boolean(process.env.VERCEL);
 
 // https://astro.build/config
-// Article URLs for the sitemap. /updates/[slug] renders on demand now, so
-// nothing else enumerates them — see scripts/article-slugs.mjs.
-const articlePages = (await articleSlugs()).map(
-  (slug) => `https://www.redisites.com/updates/${slug}`,
-);
-
 export default defineConfig({
   site: 'https://www.redisites.com',
   trailingSlash: 'never',
@@ -36,10 +28,6 @@ export default defineConfig({
         !['sign-in', 'register', 'forgot-password', 'set-password'].some((route) =>
           page.endsWith(`/${route}`),
         ),
-      // /updates/[slug] is rendered on demand, so the integration cannot see
-      // the article URLs by crawling build output. Without this the sitemap
-      // would silently lose every article.
-      customPages: articlePages,
     }),
   ],
 
@@ -70,20 +58,5 @@ export default defineConfig({
     },
   },
 
-  adapter: isVercel
-    ? vercel({
-        // Incremental Static Regeneration. The marketing pages opt out of
-        // prerendering (see `export const prerender = false` in each) so that
-        // editing content in WordPress shows up without anyone running a
-        // deploy. Vercel still serves them from its cache — they are only
-        // re-rendered once the cached copy is older than `expiration`, so the
-        // common request is a cache hit, not a WordPress round trip.
-        //
-        // The article pages under /updates/[slug] render on demand too, so an
-        // edited post is never stale and a newly published one does not 404.
-        // Their sitemap entries come from `customPages` above instead of from
-        // `getStaticPaths()`.
-        isr: { expiration: 600 },
-      })
-    : node({ mode: 'standalone' }),
+  adapter: isVercel ? vercel() : node({ mode: 'standalone' }),
 });
