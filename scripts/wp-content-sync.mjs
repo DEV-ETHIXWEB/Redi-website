@@ -233,6 +233,31 @@ async function uploadMedia(image) {
     return null;
   }
   const name = rel.split('/').pop();
+  const base = name.replace(/\.[^.]+$/, '');
+
+  // WordPress never overwrites an upload — it appends -1, -2 and so on — so
+  // without this an idempotent re-import would add a fresh copy of every image
+  // to the media library on every run.
+  //
+  // The match is on the stored filename, not the slug: attachments share the
+  // post_name namespace with posts, so uploading `nicki-dallison.jpg` for a
+  // team member already slugged `nicki-dallison` yields the slug
+  // `nicki-dallison-1` on the very first upload. `media_details.file` keeps the
+  // real filename and is the only field that stays equal to the source.
+  const existing = await call(`wp/v2/media?search=${encodeURIComponent(base)}&per_page=100`, {
+    auth: true,
+  });
+  // A large upload is downsized and stored as `<name>-scaled.<ext>`, with the
+  // untouched filename kept in `original_image`, so both have to be checked.
+  const already = (Array.isArray(existing.payload) ? existing.payload : []).find((m) => {
+    const stored = (m.media_details?.file ?? '').split('/').pop();
+    return stored === name || m.media_details?.original_image === name;
+  });
+  if (already) {
+    mediaCache.set(rel, already.id);
+    return already.id;
+  }
+
   const ext = (name.split('.').pop() || '').toLowerCase();
   const mime = {
     webp: 'image/webp',
@@ -426,9 +451,17 @@ async function importContent({ only, dryRun }) {
       failed += items.length;
       continue;
     }
-    const bySlug = new Map(
-      (Array.isArray(existing.payload) ? existing.payload : []).map((p) => [p.slug, numericId(p)]),
-    );
+    // Their REST filter replaces the response with the frontend's shape, which
+    // carries `id` (already the slug) and usually drops `slug` entirely. Keying
+    // on `slug` alone therefore matched nothing and every re-run would have
+    // created a second copy of every row, so both keys are indexed.
+    const bySlug = new Map();
+    for (const row of Array.isArray(existing.payload) ? existing.payload : []) {
+      const id = numericId(row);
+      if (!id) continue;
+      if (row.slug !== undefined && row.slug !== null) bySlug.set(String(row.slug), id);
+      if (row.id !== undefined && row.id !== null) bySlug.set(String(row.id), id);
+    }
 
     for (const item of items) {
       const slug = type.slug(item);
