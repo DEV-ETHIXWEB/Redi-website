@@ -84,12 +84,11 @@ const TYPES = [
     label: 'Team members',
     route: 'wp/v2/team_member',
     seedFile: 'team',
-    featured: (m) => m.photo,
     title: (m) => m.name,
     slug: (m) => String(m.id),
+    images: { photo: (m) => m.photo },
     fields: (m) => ({
       jobTitle: m.jobTitle,
-      photo: img(m.photo),
       order: m.order,
       group: m.group,
       quote: m.quote,
@@ -102,14 +101,13 @@ const TYPES = [
     label: 'Properties',
     route: 'wp/v2/property',
     seedFile: 'properties',
-    featured: (p) => p.image,
     title: (p) => p.title,
     slug: (p) => p.slug,
+    images: { image: (p) => p.image },
     fields: (p) => ({
       city: p.city,
       state: p.state,
       acreage: p.acreage,
-      image: img(p.image),
       featured: p.featured,
       tier: p.tier,
     }),
@@ -119,16 +117,14 @@ const TYPES = [
     label: 'Testimonials',
     route: 'wp/v2/testimonial',
     seedFile: 'testimonials',
-    featured: (t) => t.backgroundImage,
     title: (t) => t.personName,
     slug: (t) => String(t.id),
+    images: { companyLogo: (t) => t.companyLogo, backgroundImage: (t) => t.backgroundImage },
     fields: (t) => ({
       quote: t.quote,
       personName: t.personName,
       personTitle: t.personTitle,
       companyName: t.companyName,
-      companyLogo: img(t.companyLogo),
-      backgroundImage: img(t.backgroundImage),
     }),
   },
   {
@@ -136,16 +132,14 @@ const TYPES = [
     label: 'Partners',
     route: 'wp/v2/partner',
     seedFile: 'partners',
-    featured: (p) => p.image,
     title: (p) => p.name,
     slug: (p) => String(p.id),
+    images: { image: (p) => p.image, backgroundImage: (p) => p.backgroundImage },
     fields: (p) => ({
       url: p.url,
-      image: img(p.image),
       eyebrow: p.eyebrow,
       headline: p.headline,
       variant: p.variant,
-      backgroundImage: img(p.backgroundImage),
     }),
   },
   {
@@ -153,7 +147,7 @@ const TYPES = [
     label: 'News posts',
     route: 'wp/v2/posts',
     seedFile: 'blog-posts',
-    featured: (p) => p.featuredImage,
+    featuredMedia: (p) => p.featuredImage,
     title: (p) => p.title,
     slug: (p) => p.slug,
     core: (p) => ({
@@ -448,16 +442,26 @@ async function importContent({ only, dryRun }) {
         continue;
       }
 
+      // ACF image fields hold an attachment id, not a URL, so each image is
+      // uploaded to the media library first and the id written in its place.
+      const acf = { ...type.fields(item) };
+      for (const [field, pick] of Object.entries(type.images ?? {})) {
+        const id = await uploadMedia(pick(item));
+        if (id) acf[field] = id;
+      }
+
       const body = {
         title: type.title(item),
         slug,
         status: 'publish',
         ...(type.core ? type.core(item) : {}),
-        acf: type.fields(item),
+        acf,
       };
-      // The frontend's required image comes from the featured image, not ACF.
-      const featured = await uploadMedia(type.featured ? type.featured(item) : null);
-      if (featured) body.featured_media = featured;
+      // Posts carry their image as the WordPress featured image instead.
+      if (type.featuredMedia) {
+        const featured = await uploadMedia(type.featuredMedia(item));
+        if (featured) body.featured_media = featured;
+      }
       if (type.key === 'posts') body.tags = await tagIds(item.tags);
 
       const res = await call(id ? `${type.route}/${id}` : type.route, {

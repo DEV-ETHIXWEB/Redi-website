@@ -75,12 +75,24 @@ export function optionalImage(value: unknown): WPImage | undefined {
 }
 
 /**
- * Normalizes a remote collection, or returns `fallback` untouched when the
- * response isn't a list at all — a WP error body (`{code, message}`) is a
- * 200-with-JSON, so `?? seed` doesn't catch it and `[...remote]` throws.
+ * Normalizes a remote collection, falling back to `fallback` when the response
+ * isn't a list at all — a WP error body (`{code, message}`) is a 200-with-JSON,
+ * so `?? seed` doesn't catch it and `[...remote]` throws.
+ *
+ * An **empty** list also falls back. WordPress is populated one content type at
+ * a time, and an empty collection in practice means "nobody has filled this in
+ * yet", not "this section is deliberately blank" — the site would otherwise
+ * drop from ten news posts to an empty page the moment the CMS was connected.
+ * Falling back keeps each section showing approved content until WordPress
+ * actually has something to say, and WordPress wins the moment it does.
+ *
+ * The trade-off is deliberate: a collection emptied *on purpose* in WordPress
+ * will show seed content rather than nothing. Deleting every row of a content
+ * type is not something an editor does by accident, and a page that silently
+ * empties itself is the worse failure of the two.
  */
 export function list<T>(remote: unknown, fallback: T[], normalize: (raw: unknown) => T): T[] {
-  if (!Array.isArray(remote)) return fallback;
+  if (!Array.isArray(remote) || remote.length === 0) return fallback;
   return remote.filter(isObject).map(normalize);
 }
 
