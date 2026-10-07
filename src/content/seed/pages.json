@@ -8,8 +8,14 @@
         "Companies making location decisions move fast and eliminate sites early. Most sites are not ruled out because they are bad sites. They are ruled out because key information is missing, unclear or unverified when a site selector needs it.",
         "REDI Sites is the first national site readiness designation program in the United States, developed in affiliation with the Site Selectors Guild. Every site that completes the process receives a designation reflecting its current level of investment readiness, telling site selectors exactly where it stands, and telling you what to do next."
       ],
-      "ctaPrimary": { "label": "Explore Sites", "href": "/sites" },
-      "ctaSecondary": { "label": "Register Your Site", "href": "/register" },
+      "ctaPrimary": {
+        "label": "Explore Sites",
+        "href": "/sites"
+      },
+      "ctaSecondary": {
+        "label": "Register Your Site",
+        "href": "/register"
+      },
       "mapCaption": "Powered by LocationOne",
       "mapCtaLabel": "View all sites"
     },
@@ -47,8 +53,14 @@
         "title": "Ready",
         "hasBeenLabel": "Has been independently evaluated on",
         "items": [
-          { "label": "Utilities", "description": "Confirmed capacity with a path to the site" },
-          { "label": "Environmental", "description": "Record independently reviewed and cleared" },
+          {
+            "label": "Utilities",
+            "description": "Confirmed capacity with a path to the site"
+          },
+          {
+            "label": "Environmental",
+            "description": "Record independently reviewed and cleared"
+          },
           {
             "label": "Ownership & Entitlements",
             "description": "Title is clean, authority to sell is documented"
@@ -57,7 +69,10 @@
             "label": "Ease of Development",
             "description": "Ground studied, floodplain mapped, site cleared"
           },
-          { "label": "Logistics", "description": "Highway access and ingress/egress documented" }
+          {
+            "label": "Logistics",
+            "description": "Highway access and ingress/egress documented"
+          }
         ],
         "footnote": "Visibility matters. But readiness is what gives visibility value."
       }
@@ -124,9 +139,18 @@
         "The result is greater confidence for investors, greater clarity for communities, and a more efficient site selection process for everyone involved."
       ]
     },
-    "team": { "eyebrow": "Who We Are", "heading": "Our Team" },
-    "board": { "eyebrow": "Who We Are", "heading": "Our Board" },
-    "partners": { "eyebrow": "Who We Are With", "heading": "Our Partners" }
+    "team": {
+      "eyebrow": "Who We Are",
+      "heading": "Our Team"
+    },
+    "board": {
+      "eyebrow": "Who We Are",
+      "heading": "Our Board"
+    },
+    "partners": {
+      "eyebrow": "Who We Are With",
+      "heading": "Our Partners"
+    }
   },
   "approach": {
     "hero": {
@@ -200,7 +224,7 @@
       "eligibleLabel": "Does your site meet the minimum requirements?",
       "downloadLabel": "Download Scoring Scale",
       "downloadFormHeading": "Get the Full Scoring Scale",
-      "downloadFormBody": "Tell us a bit about yourself and we'll send you straight to the full REDI Sites scoring scale.",
+      "downloadFormBody": "The complete REDI Sites scoring scale, showing every category and how points are awarded.",
       "chartTitle": "Scoring Weights",
       "documentsLabel": "Do You Have the Core Documents?",
       "documentsIntro": "These are the documents that most often make the biggest difference in a site's designation.",
@@ -208,15 +232,24 @@
     }
   },
   "contact": {
-    "hero": { "kicker": "Get In Touch", "heading": "Contact" },
+    "hero": {
+      "kicker": "Get In Touch",
+      "heading": "Contact"
+    },
     "form": {
       "heading": "Send us a message"
     }
   },
   "sites": {
-    "hero": { "kicker": "View Properties", "heading": "Sites" },
+    "hero": {
+      "kicker": "View Properties",
+      "heading": "Sites"
+    },
     "resultsLabelTemplate": "{count} sites by Certified Sites",
-    "favorites": { "addAll": "Add All To Favorites", "removeAll": "Remove All From Favorites" },
+    "favorites": {
+      "addAll": "Add All To Favorites",
+      "removeAll": "Remove All From Favorites"
+    },
     "toolbar": [
       "Layers",
       "Draw",
@@ -234,7 +267,10 @@
     }
   },
   "updates": {
-    "hero": { "kicker": "Posts & News", "heading": "Latest Updates" },
+    "hero": {
+      "kicker": "Posts & News",
+      "heading": "Latest Updates"
+    },
     "filters": {
       "filterLabel": "Filter",
       "sortLabel": "Sort By: Most Recent First",
@@ -244,7 +280,10 @@
     "sectionHeading": "Newsfeed"
   },
   "legal": {
-    "hero": { "kicker": "Legalities", "heading": "Terms & Conditions" }
+    "hero": {
+      "kicker": "Legalities",
+      "heading": "Terms & Conditions"
+    }
   },
   "setPassword": {
     "heading": "Set Password",

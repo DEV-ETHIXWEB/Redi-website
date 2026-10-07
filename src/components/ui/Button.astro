@@ -10,6 +10,12 @@ export interface Props extends ButtonVariants {
   icon?: string;
   iconPosition?: 'left' | 'right';
   external?: boolean;
+  /**
+   * Passed straight through to the underlying <a>. `true` lets the browser
+   * save the file under its own name; a string renames it on the way down.
+   * Ignored when there is no `href`, since a <button> cannot download.
+   */
+  download?: boolean | string;
   'aria-label'?: string;
 }
 

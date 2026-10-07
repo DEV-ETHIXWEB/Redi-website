@@ -1,7 +1,6 @@
 ---
 import SectionHeading from '@/components/ui/SectionHeading.astro';
 import Button from '@/components/ui/Button.astro';
-import MondayContactForm from '@/components/forms/MondayContactForm.astro';
 import { getScoringCriteria, getCoreDocuments, getPageCopy } from '@/services/wordpress';
 
 const [criteria, documents, copy] = await Promise.all([
@@ -87,6 +86,24 @@ const SCORING_SCALE_PDF = '/downloads/redi-scoring-scale.pdf';
       <p class="text-ink-600 mt-4 max-w-[760px] text-sm leading-relaxed">{c.documentsFootnote}</p>
     </div>
 
+    {
+      /*
+        The button downloads the PDF directly.
+
+        It used to expand a Monday.com lead-capture form in place, and the PDF
+        was only reachable from an "Already filled this out?" link underneath
+        it. That meant a visitor who pressed a button labelled "Download
+        Scoring Scale" got a form instead of a download, and the escape hatch
+        only appeared once they had scrolled past the whole form — so the
+        quickest way to the file was to ignore the button they had just
+        pressed. The file is public at SCORING_SCALE_PDF either way, so the
+        form was not actually gating anything.
+
+        Note this removes a lead-capture step the client set up. If they want
+        it back, the right shape is a form that delivers the file on submit,
+        not a button that promises a download and opens a form.
+      */
+    }
     <div class="shadow-card mt-16 rounded-2xl bg-white p-8 text-center sm:p-10" data-scoring-scale>
       <p class="font-heading text-ink-900 text-xl font-bold tracking-tight sm:text-2xl">
         {c.downloadFormHeading}
@@ -94,57 +111,9 @@ const SCORING_SCALE_PDF = '/downloads/redi-scoring-scale.pdf';
       <p class="text-ink-600 mx-auto mt-2 max-w-[520px] text-[15px] leading-relaxed">
         {c.downloadFormBody}
       </p>
-      <Button
-        variant="primary"
-        icon="download"
-        class="mt-6"
-        data-scoring-scale-toggle
-        aria-expanded="false"
-      >
+      <Button variant="primary" icon="download" class="mt-6" href={SCORING_SCALE_PDF} download>
         {c.downloadLabel}
       </Button>
-      <div class="mt-8 hidden text-left" data-scoring-scale-form>
-        <MondayContactForm formId="f3ace5421a5775b7ed278a146becd8c6" />
-        <p class="text-ink-600 mt-4 text-center text-sm">
-          Already filled this out?{' '}
-          <a
-            href={SCORING_SCALE_PDF}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-navy-700 font-semibold underline underline-offset-2 transition-colors hover:text-cyan-600"
-          >
-            Open the Scoring Scale PDF
-          </a>
-          .
-        </p>
-      </div>
     </div>
   </div>
 </section>
-
-<script>
-  function initScoringScaleToggle() {
-    const toggle = document.querySelector<HTMLButtonElement>('[data-scoring-scale-toggle]');
-    const form = document.querySelector<HTMLElement>('[data-scoring-scale-form]');
-    if (!toggle || !form || toggle.dataset.bound === 'true') return;
-    toggle.dataset.bound = 'true';
-
-    toggle.addEventListener('click', () => {
-      const expanded = toggle.getAttribute('aria-expanded') === 'true';
-      toggle.setAttribute('aria-expanded', String(!expanded));
-      form.classList.toggle('hidden', expanded);
-      if (!expanded) {
-        form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        // MondayContactForm sizes itself from its wrapper's clientWidth on
-        // mount, which is 0 while this container is still `hidden` —
-        // without this, the embed permanently collapses to 0 height.
-        // Re-fire the resize listener it's already bound to, after layout
-        // from un-hiding has actually happened.
-        requestAnimationFrame(() => window.dispatchEvent(new Event('resize')));
-      }
-    });
-  }
-
-  initScoringScaleToggle();
-  document.addEventListener('astro:page-load', initScoringScaleToggle);
-</script>
