@@ -34,21 +34,23 @@ import MondayContactForm from '@/components/forms/MondayContactForm.astro';
         <h1 class="mt-1 text-4xl sm:text-[2.75rem]">Sign Up</h1>
         <p class="text-ink-600 mt-1 text-lg">Access REDI SITES tools &amp; value.</p>
 
+        {
+          /*
+          The Monday.com form embedded below opens with its own REDI Sites
+          logo, a "Begin your site's readiness journey" heading and the two
+          paragraphs describing the programme and the designation levels. This
+          card used to repeat all three verbatim directly above it, so the page
+          read as two stacked registration panels saying the same thing. Only
+          the practical detail the embed does not cover is kept here — the
+          steps, the fee, who evaluates, the eligibility minimums and the
+          portfolio contact. If the client ever edits that copy out of the
+          Monday form, it belongs here again, not in both places.
+        */
+        }
         <div class="shadow-soft mt-8 rounded-2xl bg-white p-6 sm:p-10">
           <h2 class="font-heading text-navy-950 text-2xl font-bold tracking-tight sm:text-3xl">
-            Begin Your Site's Readiness Journey
+            Before You Register
           </h2>
-          <p class="text-ink-600 mt-4 leading-relaxed">
-            REDI Sites is the first national site readiness designation program in the United
-            States, developed in affiliation with the Site Selectors Guild — the only association of
-            the world's foremost professional site selection consultants.
-          </p>
-          <p class="text-ink-600 mt-4 leading-relaxed">
-            Every site that completes the process earns a designation reflecting its current level
-            of readiness: Emerging, Bronze, Silver, Gold or Platinum. There's no pass or fail.
-            You'll come away with a clear, independent picture of where your site stands today and
-            exactly what it takes to reach the next level.
-          </p>
 
           <p class="font-heading text-ink-800 mt-6 text-sm font-bold tracking-wide uppercase">
             Here's How It Works

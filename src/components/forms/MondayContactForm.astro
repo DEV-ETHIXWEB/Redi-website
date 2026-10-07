@@ -92,13 +92,19 @@ const NATIVE_HEIGHT = 1500;
 
 <script is:inline define:vars={{ NATIVE_WIDTH, NATIVE_HEIGHT }}>
   function initMondayForm() {
-    const wrapper = document.querySelector('[data-monday-wrapper]');
-    const frame = document.querySelector('[data-monday-frame]');
-    const loader = document.querySelector('[data-monday-loader]');
-    const spinner = document.querySelector('[data-monday-spinner]');
-    const status = document.querySelector('[data-monday-status]');
-    const fallbackLink = document.querySelector('[data-monday-fallback-link]');
-    if (!wrapper || !frame || !loader || frame.dataset.bound === 'true') return;
+    // querySelectorAll, not querySelector: a page may hold more than one embed
+    // (and the scoring-scale one sits inside a collapsed container), so binding
+    // only the first would leave the others spinning forever.
+    document.querySelectorAll('[data-monday-wrapper]').forEach(setupMondayForm);
+  }
+
+  function setupMondayForm(wrapper) {
+    const frame = wrapper.querySelector('[data-monday-frame]');
+    const loader = wrapper.querySelector('[data-monday-loader]');
+    const spinner = wrapper.querySelector('[data-monday-spinner]');
+    const status = wrapper.querySelector('[data-monday-status]');
+    const fallbackLink = wrapper.querySelector('[data-monday-fallback-link]');
+    if (!frame || !loader || frame.dataset.bound === 'true') return;
     frame.dataset.bound = 'true';
 
     const applyScale = () => {
@@ -115,6 +121,7 @@ const NATIVE_HEIGHT = 1500;
     // has no postMessage API telling us when the form itself has painted).
     let settled = false;
     let stuck = false;
+    let stuckTimer = null;
 
     const hide = () => {
       if (settled) return;
@@ -138,7 +145,7 @@ const NATIVE_HEIGHT = 1500;
     // the wrapper from its tall NATIVE_HEIGHT guess down to a compact card —
     // otherwise the fallback message sits stranded in the middle of a mostly
     // empty 1500px box the visitor has to scroll through to find.
-    const stuckTimer = setTimeout(() => {
+    const giveUp = () => {
       if (settled) return;
       stuck = true;
       spinner?.remove();
@@ -147,7 +154,43 @@ const NATIVE_HEIGHT = 1500;
       window.removeEventListener('resize', applyScale);
       frame.style.display = 'none';
       wrapper.style.height = '220px';
-    }, 12000);
+    };
+
+    /**
+     * Arm the timeout only once the embed is actually on screen.
+     *
+     * This used to start counting the moment the page loaded, which broke the
+     * scoring-scale form on /approach: that embed lives inside a container
+     * that stays collapsed until the visitor clicks "Download Scoring Scale".
+     * Anyone who clicked more than 12 seconds after the page loaded — i.e.
+     * anyone who read the page first — was shown "This is taking longer than
+     * expected" instantly, before the form had been given any chance at all.
+     *
+     * A hidden element never intersects the viewport, so IntersectionObserver
+     * is also what makes `loading="lazy"` honest here: the iframe only starts
+     * fetching once it is revealed, and the clock starts at that same moment.
+     * Re-running applyScale() on reveal matters too, because clientWidth is 0
+     * while the container is collapsed.
+     */
+    const start = () => {
+      if (stuckTimer !== null || settled) return;
+      applyScale();
+      stuckTimer = setTimeout(giveUp, 12000);
+    };
+
+    if (typeof IntersectionObserver === 'function') {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (!entries.some((entry) => entry.isIntersecting)) return;
+          observer.disconnect();
+          start();
+        },
+        { rootMargin: '200px' },
+      );
+      observer.observe(wrapper);
+    } else {
+      start();
+    }
 
     frame.addEventListener('load', hide, { once: true });
   }
