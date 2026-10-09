@@ -28,6 +28,19 @@ const [copy, settings, properties, testimonials, advantages, tiers] = await Prom
 
 const home = copy.home;
 
+/*
+  Featured Sites is hidden at the client's request (2026-10-09): the six
+  properties on show are placeholders, not REDI's own sites, and they are
+  still deciding which sites to feature. Flip this to `true` to bring the
+  section back once real properties are published.
+
+  Hidden here rather than by emptying the data, because `getFeaturedProperties()`
+  falls back to the approved seed whenever WordPress returns an empty
+  collection (see normalize.list) — so deleting the properties in WordPress
+  would put these same placeholders straight back on the page.
+*/
+const SHOW_FEATURED_SITES = false;
+
 const websiteLd = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
@@ -43,7 +56,7 @@ const websiteLd = {
   preloadImages={['/images/hero/home-hero-bg.webp']}
 >
   <HomeHero copy={home.hero} />
-  <FeaturedSites copy={home.featured} properties={properties} />
+  {SHOW_FEATURED_SITES && <FeaturedSites copy={home.featured} properties={properties} />}
   <StatsBar stats={settings.stats} />
   <StatementOfValue copy={home.statementOfValue} compare={home.valueCompare} />
   <TestimonialCarousel client:visible testimonials={testimonials} />

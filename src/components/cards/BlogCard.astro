@@ -1,70 +1,82 @@
 ---
 import type { BlogPost } from '@/types/wordpress';
 import { formatDate } from '@/utils/format';
-import { cn } from '@/lib/utils';
 
 export interface Props {
   post: BlogPost;
-  loading?: 'eager' | 'lazy';
-  /** Wide two-column variant used at the end of the newsfeed grid. */
-  wide?: boolean;
 }
 
-const { post, loading = 'lazy', wide = false } = Astro.props;
+const { post } = Astro.props;
 
 // A post with no REDI-authored article (externalUrl set) links straight to
 // that URL in a new tab instead of the internal /updates/[slug] page — see
 // BlogPost.externalUrl and getAllBlogSlugs() in src/services/wordpress/blog.ts.
 const isExternal = Boolean(post.externalUrl);
 const href = post.externalUrl ?? `/updates/${post.slug}`;
+
+// The reference layout leads with a single category label rather than the
+// full tag list, which ran to two lines on posts carrying several tags.
+// Remaining tags stay searchable through the filter dropdown on /updates.
+const category = post.tags[0];
 ---
 
 {
   /*
-  flex column + h-full so every card fills its grid cell. Titles run to one,
-  two or three lines, and without this each card shrank to its own content and
-  the row came out ragged. The image keeps its fixed aspect ratio and the text
-  block takes the slack, so the cards line up whatever the headline length.
-  Both callers put this in a grid, so there is always a cell to fill.
+  A text card, not a thumbnail card.
+
+  Every post used to open with a 998x655 image, which took up around sixty
+  percent of the card and left the headline as a caption under a photo. The
+  client asked for the listing to read as text instead, pointing at the Site
+  Selectors Guild's own news index as the model: category, date, headline,
+  author, and no image anywhere in the list.
+
+  That also removes a standing content problem. Posts without artwork were
+  falling back to a placeholder graphic, so the grid advertised whichever
+  posts had no image yet.
+
+  `post.featuredImage` is untouched and still renders at the top of the
+  article page itself (src/pages/updates/[slug].astro) — only the index
+  stopped showing it.
+
+  flex column + h-full so every card fills its grid cell: headlines run to
+  one, two or three lines, and without this each card shrank to its own
+  content and the row came out ragged. The byline is pinned to the bottom
+  with mt-auto so it sits on one line across the row whatever the headline
+  length. The caller puts this in a grid with auto-rows-fr, so there is
+  always a cell to fill.
 */
 }
 <article
-  class="group bg-steel-200 shadow-soft hover:shadow-lifted relative flex h-full flex-col overflow-hidden rounded-xl transition-all duration-300 ease-out hover:-translate-y-1.5"
+  class="group bg-steel-200 shadow-soft hover:shadow-lifted relative flex h-full flex-col rounded-xl p-6 transition-all duration-300 ease-out hover:-translate-y-1.5"
 >
   <a
     href={href}
-    class="absolute inset-0 z-10"
-    aria-label={post.title}
+    class="absolute inset-0 z-10 rounded-xl"
+    aria-label={isExternal ? `${post.title} (opens in a new tab)` : post.title}
     target={isExternal ? '_blank' : undefined}
     rel={isExternal ? 'noopener noreferrer' : undefined}></a>
-  <div class={cn('shrink-0 overflow-hidden', wide ? 'aspect-[1527/655]' : 'aspect-[998/655]')}>
-    <img
-      src={post.featuredImage.url}
-      alt={post.featuredImage.alt}
-      width="998"
-      height="655"
-      loading={loading}
-      decoding="async"
-      class="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-    />
-  </div>
-  <div class="flex flex-1 flex-col px-4 pt-3.5 pb-4">
-    <p class="text-navy-700 text-sm font-semibold">{post.tags.join(', ')}</p>
-    <p class="mt-0.5 flex items-center gap-2 text-sm text-slate-600">
-      {
-        post.date && (
-          <>
-            <time datetime={post.date}>{formatDate(post.date)}</time>
-            <span aria-hidden="true">·</span>
-          </>
-        )
-      }
-      <span>{post.author.name}</span>
-    </p>
-    <h3
-      class="font-heading text-ink-800 group-hover:text-navy-700 mt-1 text-base font-bold tracking-normal transition-colors"
-    >
-      {post.title}
-    </h3>
-  </div>
+
+  {
+    category && (
+      <p class="font-heading text-cyan-550 text-xs font-semibold tracking-[0.2em] uppercase">
+        {category}
+      </p>
+    )
+  }
+
+  {
+    post.date && (
+      <time datetime={post.date} class="text-ink-600 mt-2 block text-sm">
+        {formatDate(post.date)}
+      </time>
+    )
+  }
+
+  <h3
+    class="font-heading text-ink-900 group-hover:text-navy-700 mt-3 text-lg leading-snug font-bold tracking-normal transition-colors sm:text-xl"
+  >
+    {post.title}
+  </h3>
+
+  <p class="text-ink-600 mt-auto pt-6 text-sm">{post.author.name}</p>
 </article>

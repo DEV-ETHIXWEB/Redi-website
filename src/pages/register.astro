@@ -54,8 +54,26 @@ import MondayContactForm from '@/components/forms/MondayContactForm.astro';
           surrounding copy should be reinstated here rather than duplicated.
         */
         }
+        {
+          /*
+            maxWidth scales the form up to fill this card instead of leaving
+            it a 650px column inside it — the client asked for a larger
+            embed. The card is max-w-[900px] with 48px of padding a side, so
+            820 here resolves to the card's real 804px inner width on
+            desktop (about 1.24x) and to the container width on anything
+            narrower.
+
+            height is the form's height at the native 650px width, measured
+            at 889px and rounded up; MondayContactForm scales it by the same
+            factor as the frame.
+          */
+        }
         <div id="register-form" class="mt-10 scroll-mt-10">
-          <MondayContactForm formId="474841603e14828e7b565d097a98ad89" height={1000} />
+          <MondayContactForm
+            formId="474841603e14828e7b565d097a98ad89"
+            height={900}
+            maxWidth={820}
+          />
         </div>
 
         <!--

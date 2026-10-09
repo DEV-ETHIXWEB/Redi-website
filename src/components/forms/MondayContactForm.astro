@@ -19,9 +19,18 @@ import Icon from '@/components/ui/Icon.astro';
  * a whole (`transform: scale()`, computed client-side from the actual
  * available width) to fit narrower screens — shrinking uniformly rather than
  * clipping. Text gets smaller on narrow phones as a result; that's the
- * accepted trade-off for keeping the whole form visible in place. Desktop/
- * tablet (>=650px available) computes a scale of 1, i.e. renders at native
- * size, unchanged from before.
+ * accepted trade-off for keeping the whole form visible in place.
+ *
+ * `maxWidth` scales the same frame UP, past 1, for callers that have room
+ * for a bigger form. Scaling rather than widening is deliberate, and was
+ * measured on 2026-10-09: Monday caps its own form card at 640px no matter
+ * how wide the iframe is (522px at a 650px frame, 632 at 760, then 640 from
+ * ~800px on, with the heading pinned at 32px throughout). Handing the frame
+ * a wider viewport therefore stops enlarging the form and just pads it with
+ * vendor background. Scaling enlarges the type and the fields along with it,
+ * which is what "make the embed larger" actually asks for. Checked side by
+ * side against the unscaled version at 804px: no blurring, since the browser
+ * rasterizes the frame at its composited scale.
  *
  * NATIVE_HEIGHT has to be a guess, not a measurement: forms.monday.com is a
  * different origin, so same-origin policy blocks reading the iframe's real
@@ -51,15 +60,30 @@ export interface Props {
    * next to the page's own scrolling.
    */
   height?: number;
+  /**
+   * Widest the embed may render, in CSS pixels. Defaults to Monday's native
+   * 650 — the width every caller used before this prop existed, so leaving it
+   * unset reproduces the old layout exactly.
+   *
+   * Pass something larger to render the form bigger (the client asked for a
+   * bigger embed on /register, whose card is 804px wide inside its padding).
+   * The embed never exceeds its container, so this is a ceiling, not a fixed
+   * width, and anything at or below 650 leaves the old behaviour untouched.
+   *
+   * `height` stays the height at the NATIVE width; it is scaled by the same
+   * factor as the frame, so it does not need re-measuring per maxWidth.
+   */
+  maxWidth?: number;
 }
 
-const { formId, height = 1500 } = Astro.props;
+const { formId, height = 1500, maxWidth } = Astro.props;
 const MONDAY_FORM_SRC = `https://forms.monday.com/forms/embed/${formId}?r=use1`;
 const NATIVE_WIDTH = 650;
 const NATIVE_HEIGHT = height;
+const MAX_WIDTH = Math.max(maxWidth ?? NATIVE_WIDTH, NATIVE_WIDTH);
 ---
 
-<div class="mx-auto w-full max-w-[650px]">
+<div class="mx-auto w-full" style={`max-width: ${MAX_WIDTH}px;`}>
   <div
     class="shadow-lifted bg-steel-100 relative w-full overflow-hidden rounded-xl"
     style={`height: ${NATIVE_HEIGHT}px;`}
@@ -126,8 +150,15 @@ const NATIVE_HEIGHT = height;
     if (!frame || !loader || frame.dataset.bound === 'true') return;
     frame.dataset.bound = 'true';
 
+    // One rule in both directions: render at Monday's native size and scale
+    // the whole frame to whatever width the wrapper actually has. Below 650
+    // that shrinks (the form would clip rather than reflow); above it, that
+    // enlarges, because the vendor caps its own layout at 640px and will not
+    // grow into a wider frame on its own. The wrapper's max-width is what
+    // stops this running away, so a caller that passes no maxWidth is capped
+    // at 650 and behaves exactly as it always did.
     const applyScale = () => {
-      const scale = Math.min(1, wrapper.clientWidth / NATIVE_WIDTH);
+      const scale = wrapper.clientWidth / NATIVE_WIDTH;
       frame.style.transform = `scale(${scale})`;
       wrapper.style.height = `${NATIVE_HEIGHT * scale}px`;
     };

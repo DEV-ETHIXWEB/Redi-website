@@ -1,7 +1,5 @@
 import type { SiteSettings } from '@/types/wordpress';
 import seed from '@/content/seed/site-settings.json';
-import { wpFetch } from './client';
-import { deepMerge } from '@/utils/deep-merge';
 
 /**
  * Global site chrome: logos, primary nav, sign-in/register CTA links, footer
@@ -23,10 +21,8 @@ import { deepMerge } from '@/utils/deep-merge';
  *   (`{ value, label }[]`).
  * Optional fields: none — every field is treated as required by the type;
  *   omit at your own risk, since no component null-checks these.
- * Fallback:  `src/content/seed/site-settings.json`, deep-merged key by key, so a
- *            field WordPress has not caught up on yet falls back to the
- *            seed's value instead of rendering `undefined` (see `getPageCopy`).
- * Failure:   handled inside `wpFetch()` — never throws, returns seed data.
+ * Source of truth: **this repo**, not WordPress — see the block below.
+ * Failure:   not applicable; nothing is fetched.
  *
  * Post-fetch behavior: `{year}` inside `footer.copyright` is replaced with
  * the current year at request time, regardless of source (WordPress or
@@ -39,8 +35,32 @@ import { deepMerge } from '@/utils/deep-merge';
  * static `/sign-in` and `/register` pages.
  */
 export async function getSiteSettings(): Promise<SiteSettings> {
-  const remote = await wpFetch<SiteSettings>('/wp-json/redi/v1/site-settings');
-  const settings = remote ? deepMerge(seed as SiteSettings, remote) : (seed as SiteSettings);
+  /*
+    These settings are read from the seed file and WordPress is not consulted.
+
+    `redi/v1/site-settings` is not an editable screen in WordPress — it is a
+    one-time export of this repo's seed, served back by a plugin. As of
+    2026-10-09 its response is byte-for-byte identical to the version of
+    site-settings.json committed on 2026-07-19, so nobody has ever changed a
+    value there, and nobody can.
+
+    That made it a trap rather than a CMS: it answered every request with
+    whatever this file said months ago, and because the response was merged
+    over the seed with WordPress winning, any edit made here was overwritten
+    at render time by the stale copy. The client's LinkedIn URL change is
+    exactly that case — updating the seed alone would have changed nothing on
+    the live site.
+
+    Reading the seed directly is therefore not a fallback, it is the honest
+    description of where this content lives. If WordPress ever gains a real
+    settings screen, restore the fetch and the `deepMerge(seed, remote)` call
+    that used to be here, and delete this comment.
+
+    The same stale export also backs `redi/v1/page-copy`, `advantages` and
+    `score-tiers`, which still override this repo. Those are a larger,
+    client-visible copy change, so they are deliberately left alone here.
+  */
+  const settings = seed as SiteSettings;
   return {
     ...settings,
     footer: {
