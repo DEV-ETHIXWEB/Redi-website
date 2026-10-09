@@ -1,7 +1,5 @@
 import type { AdvantageItem } from '@/types/wordpress';
 import seed from '@/content/seed/advantages.json';
-import { wpFetch } from './client';
-import * as normalize from './normalize';
 
 /**
  * "Why Choose REDI" icon/title/description cards (homepage).
@@ -29,6 +27,9 @@ import * as normalize from './normalize';
  * today.
  */
 export async function getAdvantages(): Promise<AdvantageItem[]> {
-  const remote = await wpFetch<AdvantageItem[]>('/wp-json/redi/v1/advantages');
-  return normalize.list(remote, seed as AdvantageItem[], normalize.advantage);
+  // Read from the seed, not WordPress. The redi/v1 route answers, but its
+  // response is a frozen export of this repo that silently overrode newer
+  // approved copy — see docs/WORDPRESS_INTEGRATION.md §6.2.1 for the evidence
+  // and for how to hand this back to WordPress once it is genuinely editable.
+  return seed as AdvantageItem[];
 }

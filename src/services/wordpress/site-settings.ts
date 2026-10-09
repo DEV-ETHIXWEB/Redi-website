@@ -56,9 +56,10 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     settings screen, restore the fetch and the `deepMerge(seed, remote)` call
     that used to be here, and delete this comment.
 
-    The same stale export also backs `redi/v1/page-copy`, `advantages` and
-    `score-tiers`, which still override this repo. Those are a larger,
-    client-visible copy change, so they are deliberately left alone here.
+    Every other `redi/v1` route is read the same way for the same reason —
+    see docs/WORDPRESS_INTEGRATION.md §6.2.1 for the evidence and for what
+    each one was overriding. The five stock CPTs (posts, properties, team,
+    testimonials, partners) still come from WordPress and are unaffected.
   */
   const settings = seed as SiteSettings;
   return {

@@ -1,6 +1,4 @@
 import seed from '@/content/seed/pages.json';
-import { wpFetch } from './client';
-import { deepMerge } from '@/utils/deep-merge';
 
 /**
  * Shape of the page-copy payload. Inferred directly from the seed JSON
@@ -70,7 +68,10 @@ let cache: PageCopy | null = null;
  */
 export async function getPageCopy(): Promise<PageCopy> {
   if (cache) return cache;
-  const remote = await wpFetch<PageCopy>('/wp-json/redi/v1/page-copy');
-  cache = remote ? deepMerge(seed as PageCopy, remote) : (seed as PageCopy);
+  // Read from the seed, not WordPress. The redi/v1 route answers, but its
+  // response is a frozen export of this repo that silently overrode newer
+  // approved copy — see docs/WORDPRESS_INTEGRATION.md §6.2.1 for the evidence
+  // and for how to hand this back to WordPress once it is genuinely editable.
+  cache = seed as PageCopy;
   return cache;
 }

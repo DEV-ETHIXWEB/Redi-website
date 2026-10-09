@@ -2,9 +2,6 @@ import type { ScoreTier, CoreDocument } from '@/types/wordpress';
 import tiersSeed from '@/content/seed/score-tiers.json';
 import criteriaSeed from '@/content/seed/scoring-criteria.json';
 import coreDocumentsSeed from '@/content/seed/core-documents.json';
-import { wpFetch } from './client';
-import * as normalize from './normalize';
-import { deepMerge } from '@/utils/deep-merge';
 
 /**
  * Shape returned by `/wp-json/redi/v1/scoring-criteria` and consumed by
@@ -40,8 +37,11 @@ interface ScoringCriteriaData {
  * Failure:   handled inside `wpFetch()` — never throws.
  */
 export async function getScoreTiers(): Promise<ScoreTier[]> {
-  const remote = await wpFetch<ScoreTier[]>('/wp-json/redi/v1/score-tiers');
-  return normalize.list(remote, tiersSeed as ScoreTier[], normalize.scoreTier);
+  // Read from the seed, not WordPress. The redi/v1 route answers, but its
+  // response is a frozen export of this repo that silently overrode newer
+  // approved copy — see docs/WORDPRESS_INTEGRATION.md §6.2.1 for the evidence
+  // and for how to hand this back to WordPress once it is genuinely editable.
+  return tiersSeed as ScoreTier[];
 }
 
 /**
@@ -70,10 +70,11 @@ export async function getScoreTiers(): Promise<ScoreTier[]> {
  * 100 — the frontend renders whatever it's given without checking.
  */
 export async function getScoringCriteria(): Promise<ScoringCriteriaData> {
-  const remote = await wpFetch<ScoringCriteriaData>('/wp-json/redi/v1/scoring-criteria');
-  return remote
-    ? deepMerge(criteriaSeed as ScoringCriteriaData, remote)
-    : (criteriaSeed as ScoringCriteriaData);
+  // Read from the seed, not WordPress. The redi/v1 route answers, but its
+  // response is a frozen export of this repo that silently overrode newer
+  // approved copy — see docs/WORDPRESS_INTEGRATION.md §6.2.1 for the evidence
+  // and for how to hand this back to WordPress once it is genuinely editable.
+  return criteriaSeed as ScoringCriteriaData;
 }
 
 /**
@@ -94,6 +95,9 @@ export async function getScoringCriteria(): Promise<ScoringCriteriaData> {
  * Failure:   handled inside `wpFetch()` — never throws.
  */
 export async function getCoreDocuments(): Promise<CoreDocument[]> {
-  const remote = await wpFetch<CoreDocument[]>('/wp-json/redi/v1/core-documents');
-  return normalize.list(remote, coreDocumentsSeed as CoreDocument[], normalize.coreDocument);
+  // Read from the seed, not WordPress. The redi/v1 route answers, but its
+  // response is a frozen export of this repo that silently overrode newer
+  // approved copy — see docs/WORDPRESS_INTEGRATION.md §6.2.1 for the evidence
+  // and for how to hand this back to WordPress once it is genuinely editable.
+  return coreDocumentsSeed as CoreDocument[];
 }

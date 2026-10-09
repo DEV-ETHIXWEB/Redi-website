@@ -1,7 +1,5 @@
 import type { LegalSection } from '@/types/wordpress';
 import seed from '@/content/seed/legal.json';
-import { wpFetch } from './client';
-import * as normalize from './normalize';
 
 /**
  * Terms / privacy / branding-guidelines sections rendered on `/legal`, in
@@ -31,6 +29,9 @@ import * as normalize from './normalize';
  * frontend.
  */
 export async function getLegalSections(): Promise<LegalSection[]> {
-  const remote = await wpFetch<LegalSection[]>('/wp-json/redi/v1/legal');
-  return normalize.list(remote, seed as LegalSection[], normalize.legalSection);
+  // Read from the seed, not WordPress. The redi/v1 route answers, but its
+  // response is a frozen export of this repo that silently overrode newer
+  // approved copy — see docs/WORDPRESS_INTEGRATION.md §6.2.1 for the evidence
+  // and for how to hand this back to WordPress once it is genuinely editable.
+  return seed as LegalSection[];
 }

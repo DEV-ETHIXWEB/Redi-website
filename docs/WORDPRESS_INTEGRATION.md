@@ -243,7 +243,12 @@ sends no credentials. All require `show_in_rest: true` on the CPT
 registration. All expect draft/unpublished content excluded from the
 response for unauthenticated requests (WordPress's default behavior).
 
-### 6.2 Custom `redi/v1` namespace — must be hand-built
+### 6.2 Custom `redi/v1` namespace — currently disconnected
+
+> **As of 2026-10-09 the app does not call any of these routes.** They are
+> listed here as the contract to implement if page copy is ever moved into
+> WordPress for real. Everything in this namespace is read from
+> `src/content/seed/` instead. See §6.2.1 for why.
 
 None of these exist in stock WordPress or via ACF-to-REST-API alone.
 Someone needs to register a custom REST namespace — typically a small
@@ -265,6 +270,55 @@ simpler `redi/v1` routes (`advantages`, `score-tiers`, `scoring-criteria`,
 `legal`, `site-settings`), and `page-copy` last — it's the largest and most
 structurally rigid payload (see the JSDoc in `src/services/wordpress/pages.ts`
 for why).
+
+#### 6.2.1 Why these routes are not called
+
+The live WordPress does answer every route above, but **it is not a CMS for
+them.** Its responses are a one-time export of this repo's seed files, taken
+at some point in the past and never edited since. Proved on 2026-10-09 by
+diffing each live response against every git revision of the matching seed
+file; each one matches an old commit byte for byte:
+
+| Route              | Matches seed at      | Dated      |
+| ------------------ | -------------------- | ---------- |
+| `page-copy`        | `4975991`            | 2026-09-04 |
+| `advantages`       | `6c00dea` (initial)  | 2026-07-19 |
+| `score-tiers`      | `6c00dea` (initial)  | 2026-07-19 |
+| `site-settings`    | current seed         | —          |
+| `scoring-criteria` | current seed         | —          |
+| `legal`            | current seed         | —          |
+| `core-documents`   | not registered (404) | —          |
+
+Because the services merged with WordPress winning, that frozen export
+silently overrode every content change made in this repo after those dates.
+It is not a theoretical risk — it shipped these defects to production:
+
+- The homepage ran the pre-September hero ("Prime Sites" / "Strategic
+  Investments" / "Search Sites") and the old Why Choose copy.
+- `/approach` ran entirely superseded copy.
+- Why Choose showed 3 placeholder advantages ("Prime Locations", "Expert
+  Analysis", "Proven Returns") instead of the 7 real ones, all rendering the
+  same icon because the stale `icon` values (`map-pin`, `trending-up`) are not
+  in `ADVANTAGE_ICONS` and get coerced to `badge-check`.
+- The REDI score tiers were listed Platinum-first and **two tiers shared the
+  same 6.0 - 6.9 range and the same description**.
+
+Nothing failed or logged while this was happening — a copy change could be
+committed, built and deployed and still be invisible. `scripts/wp-content-sync.mjs`
+cannot write these routes either, so it could not be fixed from the CMS side.
+
+**The split now is:** page copy, site settings, advantages, score tiers,
+scoring criteria, legal and core documents are owned by this repo. The five
+stock CPTs in §6.1 (`post`, `property`, `team_member`, `testimonial`,
+`partner`) are owned by WordPress and are unaffected — the client edits those
+daily and they publish automatically via the deploy hook.
+
+**To hand any of these back to WordPress:** build a real editable screen for
+it, then restore the `wpFetch` call and the `deepMerge(seed, remote)` (or
+`normalize.list(remote, seed, …)`) line in that route's service function, and
+delete its "read from the seed" comment. Do not restore the call before the
+WordPress side is genuinely editable, or the same silent-override bug comes
+straight back.
 
 ### 6.3 Required fields, per type
 
