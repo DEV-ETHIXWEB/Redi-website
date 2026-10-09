@@ -16,8 +16,10 @@ import seed from '@/content/seed/advantages.json';
  *   names hardcoded into the frontend's icon-rendering switch, NOT free
  *   text), `title`, `description`.
  * Optional fields: none.
- * Fallback:  `src/content/seed/advantages.json`.
- * Failure:   handled inside `wpFetch()` — never throws.
+ * Source:    `src/content/seed/advantages.json` — this repo, not WordPress. The
+ *            `redi/v1/advantages` route is a frozen export that silently overrode
+ *            newer approved copy; see docs/WORDPRESS_INTEGRATION.md 6.2.1.
+ * Failure:   not applicable; nothing is fetched.
  *
  * TODO(backend): constrain the WP-side `icon` field to a select/radio with
  * exactly these three options. If a new icon is ever needed, the frontend's

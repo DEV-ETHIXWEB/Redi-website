@@ -33,8 +33,10 @@ interface ScoringCriteriaData {
  *   `label`, `range` (display string, e.g. `"90–100"`), `badgeImage`
  *   (`WPImage`), `description`.
  * Optional fields: none.
- * Fallback:  `src/content/seed/score-tiers.json`.
- * Failure:   handled inside `wpFetch()` — never throws.
+ * Source:    `src/content/seed/score-tiers.json` — this repo, not WordPress. The
+ *            `redi/v1/score-tiers` route is a frozen export that silently overrode
+ *            newer approved copy; see docs/WORDPRESS_INTEGRATION.md 6.2.1.
+ * Failure:   not applicable; nothing is fetched.
  */
 export async function getScoreTiers(): Promise<ScoreTier[]> {
   // Read from the seed, not WordPress. The redi/v1 route answers, but its
@@ -60,10 +62,10 @@ export async function getScoreTiers(): Promise<ScoreTier[]> {
  *   validated client-side, `color` — any valid CSS color string),
  *   `primaryCriteria` (`string[]`), `eligibility` (`string[]`).
  * Optional fields: none.
- * Fallback:  `src/content/seed/scoring-criteria.json`, deep-merged key by key, so a
- *            field WordPress has not caught up on yet falls back to the
- *            seed's value instead of rendering `undefined` (see `getPageCopy`).
- * Failure:   handled inside `wpFetch()` — never throws.
+ * Source:    `src/content/seed/scoring-criteria.json` — this repo, not WordPress. The
+ *            `redi/v1/scoring-criteria` route is a frozen export that silently overrode
+ *            newer approved copy; see docs/WORDPRESS_INTEGRATION.md 6.2.1.
+ * Failure:   not applicable; nothing is fetched.
  *
  * TODO(backend): if `weights` is built as an ACF repeater, validate on the
  * WP side (or in a REST response filter) that `weightPercent` values sum to
@@ -91,8 +93,10 @@ export async function getScoringCriteria(): Promise<ScoringCriteriaData> {
  *   (what to submit for that category — plain text, may itself contain
  *   commas/semicolons, no markup).
  * Optional fields: none.
- * Fallback:  `src/content/seed/core-documents.json`.
- * Failure:   handled inside `wpFetch()` — never throws.
+ * Source:    `src/content/seed/core-documents.json` — this repo, not WordPress. The
+ *            `redi/v1/core-documents` route is a frozen export that silently overrode
+ *            newer approved copy; see docs/WORDPRESS_INTEGRATION.md 6.2.1.
+ * Failure:   not applicable; nothing is fetched.
  */
 export async function getCoreDocuments(): Promise<CoreDocument[]> {
   // Read from the seed, not WordPress. The redi/v1 route answers, but its

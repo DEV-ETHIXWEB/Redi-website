@@ -16,8 +16,10 @@ import seed from '@/content/seed/legal.json';
  *   `heading`), `heading`, `bodyHtml` (raw HTML string, rendered with
  *   `set:html` — see security note below).
  * Optional fields: none.
- * Fallback:  `src/content/seed/legal.json`.
- * Failure:   handled inside `wpFetch()` — never throws.
+ * Source:    `src/content/seed/legal.json` — this repo, not WordPress. The
+ *            `redi/v1/legal` route is a frozen export that silently overrode
+ *            newer approved copy; see docs/WORDPRESS_INTEGRATION.md 6.2.1.
+ * Failure:   not applicable; nothing is fetched.
  *
  * SECURITY NOTE: `bodyHtml` is trusted, unsanitized HTML injected directly
  * into the page. This is safe today because content only ever comes from
