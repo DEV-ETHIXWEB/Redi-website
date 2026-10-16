@@ -15,6 +15,27 @@ const isVercel = Boolean(process.env.VERCEL);
 // https://astro.build/config
 export default defineConfig({
   site: 'https://www.redisites.com',
+
+  // TEMPORARY, FOR THE PRE-LAUNCH PASSWORD GATE. Remove this line at launch.
+  //
+  // The gate lives in src/middleware.ts, and Astro middleware only runs for
+  // routes that are rendered on demand. Verified against the generated Vercel
+  // output: `handle: filesystem` is matched before the middleware function, so
+  // with the default static output every prerendered page (home, about,
+  // approach, contact, legal, register, the article pages) is served straight
+  // off the CDN and never reaches the gate. Rendering on demand is what puts
+  // every page behind it.
+  //
+  // Vercel's own Password Protection would cover static assets too, but on
+  // their Pro plan it is a $150/month add-on, so this is the no-cost route.
+  //
+  // Reverting is this one line: delete it and the site goes back to being
+  // fully static, exactly as it was. `getStaticPaths()` in
+  // src/pages/updates/[slug].astro is deliberately left in place for that
+  // reason — it is ignored (with a build warning) while this is set, and the
+  // route falls back to looking the post up from `Astro.params.slug`, which it
+  // already did.
+  output: 'server',
   trailingSlash: 'never',
   integrations: [
     react(),
@@ -51,6 +72,15 @@ export default defineConfig({
       // this keeps working exactly as before rather than silently locking
       // everyone out.
       SSG_PORTAL_PASSWORD: envField.string({
+        context: 'server',
+        access: 'secret',
+        optional: true,
+      }),
+      // Pre-launch gate over the WHOLE site (see src/middleware.ts). Unset ->
+      // no gate at all, so local dev and any environment that has not set it
+      // behave exactly as before rather than locking everyone out. Set it on
+      // the client's Vercel project to turn the gate on; delete it at launch.
+      SITE_PASSWORD: envField.string({
         context: 'server',
         access: 'secret',
         optional: true,
