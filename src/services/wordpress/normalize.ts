@@ -113,11 +113,17 @@ export function property(raw: unknown): Property {
 
 export function teamMember(raw: unknown): TeamMember {
   const r = isObject(raw) ? raw : {};
+  // Optional contact fields: an empty string from an untouched CMS field must
+  // not render as an empty mailto:/tel: link, so blank is treated as absent.
+  const email = str(r.email).trim();
+  const phone = str(r.phone).trim();
   return {
     ...(r as unknown as TeamMember),
     id: id(r.id),
     name: str(r.name),
     jobTitle: str(r.jobTitle),
+    ...(email ? { email } : {}),
+    ...(phone ? { phone } : {}),
     order: num(r.order),
     photo: image(r.photo),
   };

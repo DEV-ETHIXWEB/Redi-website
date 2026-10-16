@@ -2,7 +2,6 @@
 import BaseLayout from '@/components/layout/BaseLayout.astro';
 import HomeHero from '@/components/sections/HomeHero.astro';
 import FeaturedSites from '@/components/sections/FeaturedSites.astro';
-import StatsBar from '@/components/sections/StatsBar.astro';
 import StatementOfValue from '@/components/sections/StatementOfValue.astro';
 import TestimonialCarousel from '@/components/sections/TestimonialCarousel';
 import WhyChoose from '@/components/sections/WhyChoose.astro';
@@ -57,10 +56,19 @@ const websiteLd = {
 >
   <HomeHero copy={home.hero} />
   {SHOW_FEATURED_SITES && <FeaturedSites copy={home.featured} properties={properties} />}
-  <StatsBar stats={settings.stats} />
-  <StatementOfValue copy={home.statementOfValue} compare={home.valueCompare} />
-  <TestimonialCarousel client:visible testimonials={testimonials} />
+  {
+    /*
+      Order set by the client (2026-10-16): "Why Designate a Site?" takes the
+      slot Statement of Value used to hold, and Statement of Value moves below
+      the testimonials. The stats bar that sat above this ($2.5B+, 150+, 45,
+      95%) was removed in the same pass — those figures were placeholders.
+      `settings.stats` still exists in the CMS, so putting the bar back is a
+      one-line change.
+    */
+  }
   <WhyChoose copy={home.whyChoose} advantages={advantages} />
+  <TestimonialCarousel client:visible testimonials={testimonials} />
+  <StatementOfValue copy={home.statementOfValue} compare={home.valueCompare} />
   <RediScoreStrip copy={home.rediScore} tiers={tiers} />
   <CtaBanner
     heading={home.ctaInvest.heading}
