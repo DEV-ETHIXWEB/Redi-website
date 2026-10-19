@@ -35,17 +35,21 @@ export default defineConfig({
   // reason — it is ignored (with a build warning) while this is set, and the
   // route falls back to looking the post up from `Astro.params.slug`, which it
   // already did.
-  // DISABLED 2026-10-19 after a production incident: with this set, /legal and
-  // every /updates/[slug] article returned 500 on Vercel while the rest of the
-  // site rendered fine. Same two route groups, and the same signature, as the
-  // ISR attempt that was reverted in ec33bdf and never root-caused.
+  // Renders every route on demand, which is what puts the whole site behind
+  // the password gate in src/middleware.ts: Astro middleware does not run for
+  // prerendered pages, and Vercel matches `handle: filesystem` before the
+  // function, so with the default static output the gate would cover only the
+  // three routes that already opt out of prerendering.
   //
-  // The password gate in src/middleware.ts needs this to cover static pages, so
-  // the gate is currently inert for them. Do not re-enable it to switch the
-  // gate on until the 500 is understood: it takes /legal and the articles down
-  // with it. Diagnosis needs the Vercel function logs for the failing
-  // deployment, which is the same thing the ISR investigation was blocked on.
-  // output: 'server',
+  // This was enabled once before and took /legal and every /updates/[slug]
+  // article to a 500 (and did the same thing as ISR in ec33bdf). Root cause,
+  // from the Vercel function logs the client supplied: ERR_REQUIRE_ESM, with
+  // sanitize-html require()ing htmlparser2@12, which is ESM-only. Those two
+  // routes are the only ones that call sanitizeRichText. Fixed by pinning
+  // htmlparser2 to the dual CJS/ESM v10 — see pnpm-workspace.yaml.
+  //
+  // Reverting is still this one line if anything else surfaces.
+  output: 'server',
   trailingSlash: 'never',
   integrations: [
     react(),

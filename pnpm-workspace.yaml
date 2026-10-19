@@ -5,3 +5,17 @@ allowBuilds:
   esbuild: true
   sharp: true
   '@tailwindcss/oxide': true
+
+# sanitize-html@2.17.7 is CommonJS and require()s htmlparser2, which became
+# ESM-only in v12. Node 22.12+ allows require(ESM) locally, so this resolves
+# fine in dev and in a normal build. Vercel's serverless runtime does not, and
+# throws ERR_REQUIRE_ESM at request time, which took /legal and every
+# /updates/[slug] article to a 500 in production on 2026-10-19 (and almost
+# certainly caused the identical ISR failure reverted in ec33bdf).
+#
+# htmlparser2@10 is dual CJS/ESM and exposes the only API sanitize-html uses
+# (htmlparser.Parser), so pinning it keeps require() working everywhere.
+# Remove this once sanitize-html ships a build that does not require() an
+# ESM-only dependency.
+overrides:
+  htmlparser2: ^10.1.0
