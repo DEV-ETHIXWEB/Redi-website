@@ -35,7 +35,17 @@ export default defineConfig({
   // reason — it is ignored (with a build warning) while this is set, and the
   // route falls back to looking the post up from `Astro.params.slug`, which it
   // already did.
-  output: 'server',
+  // DISABLED 2026-10-19 after a production incident: with this set, /legal and
+  // every /updates/[slug] article returned 500 on Vercel while the rest of the
+  // site rendered fine. Same two route groups, and the same signature, as the
+  // ISR attempt that was reverted in ec33bdf and never root-caused.
+  //
+  // The password gate in src/middleware.ts needs this to cover static pages, so
+  // the gate is currently inert for them. Do not re-enable it to switch the
+  // gate on until the 500 is understood: it takes /legal and the articles down
+  // with it. Diagnosis needs the Vercel function logs for the failing
+  // deployment, which is the same thing the ISR investigation was blocked on.
+  // output: 'server',
   trailingSlash: 'never',
   integrations: [
     react(),
