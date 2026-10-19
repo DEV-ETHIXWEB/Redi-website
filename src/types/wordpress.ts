@@ -63,6 +63,12 @@ export interface TeamMember {
   quote?: string;
   linkedIn?: string;
   /**
+   * Shown on the card when present. Only the people a visitor is meant to
+   * contact directly have these; board members deliberately do not.
+   */
+  email?: string;
+  phone?: string;
+  /**
    * CSS `object-position` for the card photo (e.g. `"50% 10%"`), for the rare
    * photo whose default top-aligned crop (see TeamCard.astro) needs a small
    * per-photo nudge. Omit unless a specific photo actually needs it.

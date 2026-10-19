@@ -7,13 +7,24 @@ import RediScoreStrip from '@/components/sections/RediScoreStrip.astro';
 import TestimonialCarousel from '@/components/sections/TestimonialCarousel';
 import CriteriaSection from '@/components/sections/CriteriaSection.astro';
 import CtaBanner from '@/components/sections/CtaBanner.astro';
-import { getPageCopy, getScoreTiers, getTestimonials } from '@/services/wordpress';
+import {
+  getPageCopy,
+  getScoreTiers,
+  getTestimonials,
+  getScoringCriteria,
+} from '@/services/wordpress';
 
-const [copy, tiers, testimonials] = await Promise.all([
+const [copy, tiers, testimonials, criteria] = await Promise.all([
   getPageCopy(),
   getScoreTiers(),
   getTestimonials(),
+  getScoringCriteria(),
 ]);
+
+// Darkest band carries the heaviest weight, so the table reads as a scale at a
+// glance. Fixed here rather than taken from `criteria.weights[].color`: those
+// are the pie-chart colours, and white text fails contrast on the lighter ones.
+const WEIGHT_BANDS = ['bg-navy-950', 'bg-navy-800', 'bg-navy-700', 'bg-navy-600', 'bg-cyan-600'];
 
 const approach = copy.approach;
 const home = copy.home;
@@ -38,14 +49,14 @@ const breadcrumbLd = {
   title="Our Approach - REDI Sites"
   description="REDI Sites is the national standard in assessing site readiness for U.S. office and industrial projects, administered by the Site Selectors Guild."
   structuredData={[breadcrumbLd]}
-  preloadImages={['/images/hero/approach-hero-bg.webp', '/images/hero/approach-hero-inset.webp']}
+  preloadImages={['/images/hero/home-hero-bg.webp', '/images/hero/approach-hero-inset.webp']}
 >
   <AboutHero
     kicker={approach.hero.kicker}
     heading={approach.hero.heading}
     body={approach.hero.body}
     image={approach.hero.image}
-    backgroundImage="/images/hero/approach-hero-bg.webp"
+    backgroundImage="/images/hero/home-hero-bg.webp"
     imageBadge={{ url: '/images/badges/platinum.png', alt: 'REDI Sites Platinum designation' }}
   />
 
@@ -91,6 +102,66 @@ const breadcrumbLd = {
       <p class="text-ink-600 mt-10 max-w-[1030px] text-[15px] leading-relaxed sm:text-base">
         {approach.process.footnote}
       </p>
+
+      {
+        /*
+          How scoring works, moved here under The Designation Process at the
+          client's request (2026-10-16). It used to be its own section further
+          down the page, which repeated the designation story out of order.
+
+          The weights render as a table rather than the pie chart that was
+          here before: the client supplied the figures as a table, and a table
+          is readable on a phone and to a screen reader, which an image of a
+          chart is not.
+        */
+      }
+      <div class="mt-14 max-w-[1030px]">
+        <h3 class="font-heading text-ink-900 text-xl font-bold tracking-tight sm:text-2xl">
+          {approach.criteria.heading}
+        </h3>
+        <p class="text-ink-600 mt-3 text-[15px] leading-relaxed sm:text-base">
+          {approach.criteria.body}
+        </p>
+
+        <div
+          class="shadow-card mt-8 overflow-x-auto rounded-xl bg-white"
+          tabindex="0"
+          role="region"
+          aria-label={approach.criteria.chartTitle}
+        >
+          <table class="w-full min-w-[640px] text-center text-sm">
+            <caption class="sr-only">{approach.criteria.chartTitle}</caption>
+            <thead>
+              <tr>
+                {
+                  criteria.weights.map((weight, index) => (
+                    <th
+                      scope="col"
+                      class:list={[
+                        'font-heading px-4 py-3 text-lg font-bold tracking-tight text-white',
+                        WEIGHT_BANDS[index % WEIGHT_BANDS.length],
+                      ]}
+                    >
+                      {weight.weightPercent}%
+                    </th>
+                  ))
+                }
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                {
+                  criteria.weights.map((weight) => (
+                    <td class="text-ink-800 border-steel-200 border-t px-4 py-3.5 align-top text-[13.5px] font-semibold">
+                      {weight.label}
+                    </td>
+                  ))
+                }
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </section>
 
