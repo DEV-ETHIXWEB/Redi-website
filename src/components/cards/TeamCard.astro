@@ -12,7 +12,18 @@ const { member } = Astro.props;
 <article
   class="group bg-steel-200 shadow-soft hover:shadow-lifted flex h-full flex-col overflow-hidden rounded-xl transition-all duration-300 ease-out hover:-translate-y-1.5"
 >
-  <div class="aspect-[998/690] overflow-hidden">
+  {
+    /*
+      Square, because every supplied headshot is square (1600x1600, 1254x1254,
+      1200x1159). The old 998/690 landscape window showed only 69% of the photo
+      height, so a tightly-cropped headshot lost its chin and the head filled
+      the frame: Taylor's took 90% of the card and Darin's 100%, against 51%
+      for the wider-framed shots. The client asked why those two looked so
+      large. Matching the frame to the source shows the whole photo, so how a
+      face sits in the card is now decided by the photo rather than by a crop.
+    */
+  }
+  <div class="aspect-square overflow-hidden">
     <img
       src={member.photo.url}
       alt={member.photo.alt}
@@ -21,7 +32,7 @@ const { member } = Astro.props;
       loading="lazy"
       decoding="async"
       class="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-      style={`object-position: ${member.photoPosition ?? 'top'};`}
+      style={`object-position: ${member.photoPosition ?? 'center'};`}
     />
   </div>
   <div class="px-4 pt-3 pb-3.5">
