@@ -1,5 +1,4 @@
 ---
-import SectionHeading from '@/components/ui/SectionHeading.astro';
 import Button from '@/components/ui/Button.astro';
 import { getScoringCriteria, getCoreDocuments, getPageCopy } from '@/services/wordpress';
 
@@ -12,35 +11,35 @@ const c = copy.approach.criteria;
 const SCORING_SCALE_PDF = '/downloads/redi-scoring-scale.pdf';
 ---
 
+{
+  /*
+    What this section used to carry, and where it went (2026-10-16, client):
+
+      - The "How Sites Are Scored" heading, its intro and the scoring-weights
+        pie chart moved to /approach under The Designation Process, where the
+        figures now render as a table. See src/pages/approach.astro.
+      - The "Primary site review criteria" list was dropped. The same five
+        categories are the weights table's own labels, so it was saying the
+        same thing twice.
+      - The minimum requirements stayed, and now sit ABOVE the core documents
+        table: a visitor who does not meet them has no reason to read the
+        document checklist at all.
+
+    What remains: minimum requirements, the core documents table, and the
+    scoring-scale download.
+  */
+}
 <section class="bg-steel-100 py-14 sm:py-20 md:py-24">
   <div class="container-page">
-    <SectionHeading eyebrow={c.eyebrow} heading={c.heading} body={c.body} />
-
-    <div class="mt-10 grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
-      <div class="text-ink-600 text-[15px] leading-relaxed sm:text-base">
-        <p>{c.primaryLabel}</p>
-        <ul class="mt-2 list-disc space-y-1 pl-6">
-          {criteria.primaryCriteria.map((item) => <li>{item}</li>)}
-        </ul>
-        <p class="font-heading text-ink-800 mt-8 text-sm font-bold tracking-wide uppercase">
-          {c.eligibleLabel}
-        </p>
-        <ul class="mt-2 list-disc space-y-1 pl-6">
-          {criteria.eligibility.map((item) => <li>{item}</li>)}
-        </ul>
-      </div>
-
-      <figure class="shadow-card overflow-hidden rounded-xl bg-white">
-        <img
-          src="/images/sections/scoring-weights.webp"
-          alt="Scoring Weights chart: Utilities 30%, Ownership & Entitlements 20%, Environmental 20%, Ease of Development 15%, Logistics 15%"
-          width="1482"
-          height="1496"
-          loading="lazy"
-          decoding="async"
-          class="w-full"
-        />
-      </figure>
+    <div class="max-w-[1030px]">
+      <p class="font-heading text-ink-900 text-xl font-bold tracking-tight sm:text-2xl">
+        {c.eligibleLabel}
+      </p>
+      <ul
+        class="text-ink-600 mt-3 list-disc space-y-1 pl-6 text-[15px] leading-relaxed sm:text-base"
+      >
+        {criteria.eligibility.map((item) => <li>{item}</li>)}
+      </ul>
     </div>
 
     <div class="mt-16">

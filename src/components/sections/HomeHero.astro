@@ -1,6 +1,5 @@
 ---
 import Button from '@/components/ui/Button.astro';
-import Badge from '@/components/ui/Badge.astro';
 import HeroMap from '@/components/sections/HeroMap';
 import type { PageCopy } from '@/services/wordpress';
 import { heroSrcSet } from '@/utils/responsive-image';
@@ -33,14 +32,12 @@ const { copy } = Astro.props;
   <div class="container-page">
     <div class="grid items-center gap-12 lg:grid-cols-[1fr_611px] lg:gap-16">
       <div>
-        <Badge
-          variant="outline"
-          size="md"
-          class="animate-in fade-in slide-in-from-bottom-2 duration-500"
-        >
-          {copy.eyebrowBadge}
-        </Badge>
-        {copy.kicker && <p class="kicker mt-6">{copy.kicker}</p>}
+        {
+          /* The "Site Selectors Guild" badge that sat here was removed at the
+            client's request (2026-10-16); the affiliation is still stated in
+            the hero copy below and in the footer. */
+        }
+        {copy.kicker && <p class="kicker">{copy.kicker}</p>}
         <h1
           class={`${copy.kicker ? 'mt-3' : 'mt-0'} text-4xl leading-[1.08] text-white sm:text-5xl md:text-[3.5rem]`}
         >

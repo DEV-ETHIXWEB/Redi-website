@@ -53,5 +53,39 @@ const { member } = Astro.props;
         </blockquote>
       )
     }
+    {
+      /*
+        Contact details for the people a visitor is meant to reach directly.
+        Rendered only when present, so board members (who have none) are
+        unchanged. The phone number keeps its display formatting while `href`
+        strips everything but the digits, which is what tel: expects.
+      */
+    }
+    {
+      (member.email || member.phone) && (
+        <ul class="mt-3 space-y-1 text-[13.5px] leading-relaxed">
+          {member.email && (
+            <li>
+              <a
+                href={`mailto:${member.email}`}
+                class="text-navy-700 font-semibold break-all transition-colors hover:text-cyan-600"
+              >
+                {member.email}
+              </a>
+            </li>
+          )}
+          {member.phone && (
+            <li>
+              <a
+                href={`tel:${member.phone.replace(/[^\d+]/g, '')}`}
+                class="text-navy-700 font-semibold transition-colors hover:text-cyan-600"
+              >
+                {member.phone}
+              </a>
+            </li>
+          )}
+        </ul>
+      )
+    }
   </div>
 </article>

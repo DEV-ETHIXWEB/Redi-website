@@ -9,7 +9,8 @@
     },
     "order": 1,
     "group": "staff",
-    "linkedIn": "https://www.linkedin.com/in/nickidallison/"
+    "linkedIn": "https://www.linkedin.com/in/nickidallison/",
+    "email": "Nicki@redisites.com"
   },
   {
     "id": "stevie-chavez",
@@ -21,7 +22,9 @@
     },
     "order": 2,
     "group": "staff",
-    "linkedIn": "https://www.linkedin.com/in/thestevieproject/"
+    "linkedIn": "https://www.linkedin.com/in/thestevieproject/",
+    "email": "Stevie@redisites.com",
+    "phone": "(615) 517-5505"
   },
   {
     "id": "didi-caldwell",
@@ -73,8 +76,8 @@
     "order": 6,
     "group": "board",
     "linkedIn": "https://www.linkedin.com/in/taylor-gravois-pe-pls-pmp-8aa96b19/",
-    "quote": "Speed to market is an overused cliché, but it still rings true – site readiness is a ticket to enter the economic development game. We have clients who have consistently invested in site prep for 10+ years until finally getting a win. Economic development is a game of persistence and endurance, and success favors those who put in the work over the long term.",
-    "photoPosition": "50% 22%"
+    "quote": "Speed to market is an overused clich\u00e9, but it still rings true \u2013 site readiness is a ticket to enter the economic development game. We have clients who have consistently invested in site prep for 10+ years until finally getting a win. Economic development is a game of persistence and endurance, and success favors those who put in the work over the long term.",
+    "photoPosition": "50% 25%"
   },
   {
     "id": "denise-mullis",
@@ -101,6 +104,7 @@
     "order": 8,
     "group": "board",
     "linkedIn": "https://www.linkedin.com/in/darinbuelow/",
-    "quote": "I am excited to see REDI Sites continue to gain momentum as a national standard for site readiness and see site owners and economic development entities strive to achieve higher scores in the evaluation framework."
+    "quote": "I am excited to see REDI Sites continue to gain momentum as a national standard for site readiness and see site owners and economic development entities strive to achieve higher scores in the evaluation framework.",
+    "photoPosition": "50% 18%"
   }
 ]
