@@ -1,15 +1,35 @@
 {
   "weights": [
-    { "id": "utilities", "label": "Utilities", "weightPercent": 30, "color": "#4FA8D8" },
+    {
+      "id": "utilities",
+      "label": "Utilities",
+      "weightPercent": 30,
+      "color": "#4FA8D8"
+    },
     {
       "id": "ownership",
       "label": "Ownership & Entitlements",
       "weightPercent": 20,
       "color": "#D97B3F"
     },
-    { "id": "environmental", "label": "Environmental", "weightPercent": 20, "color": "#3E8E5A" },
-    { "id": "ease", "label": "Ease of Development", "weightPercent": 15, "color": "#8B3FA0" },
-    { "id": "logistics", "label": "Logistics", "weightPercent": 15, "color": "#1C3D63" }
+    {
+      "id": "environmental",
+      "label": "Environmental",
+      "weightPercent": 20,
+      "color": "#3E8E5A"
+    },
+    {
+      "id": "ease",
+      "label": "Ease of Development",
+      "weightPercent": 15,
+      "color": "#8B3FA0"
+    },
+    {
+      "id": "logistics",
+      "label": "Logistics",
+      "weightPercent": 15,
+      "color": "#1C3D63"
+    }
   ],
   "primaryCriteria": [
     "Ownership and Entitlements",
@@ -18,9 +38,5 @@
     "Environmental",
     "Logistics"
   ],
-  "eligibility": [
-    "Located in the United States",
-    "Five acres or larger",
-    "Available for sale or lease."
-  ]
+  "eligibility": ["Located in the US", "At least 5 acres", "Available for sale or lease"]
 }
