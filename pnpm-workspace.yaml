@@ -17,5 +17,11 @@ allowBuilds:
 # (htmlparser.Parser), so pinning it keeps require() working everywhere.
 # Remove this once sanitize-html ships a build that does not require() an
 # ESM-only dependency.
+# Declared in BOTH this file and package.json on purpose. CI pins pnpm 9
+# (.github/workflows/ci.yml), and pnpm 9 reads overrides from package.json
+# only - pnpm-workspace.yaml became their home in pnpm 10. With the override
+# in just one place, `pnpm install --frozen-lockfile` fails on whichever
+# version cannot see it: ERR_PNPM_LOCKFILE_CONFIG_MISMATCH, which is what
+# broke the build. Keep the two values identical.
 overrides:
   htmlparser2: ^10.1.0
