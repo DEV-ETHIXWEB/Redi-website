@@ -33,3 +33,6 @@ pnpm-debug.log*
 # technical guide (docs/WORDPRESS_INTEGRATION.md) stays tracked.
 /HANDOFF.md
 /ENGINEERING_HANDOFF.md
+
+# Packaged WordPress plugins - built by scripts/wp-page-editor/build.mjs --zip
+wordpress-plugins/*.zip

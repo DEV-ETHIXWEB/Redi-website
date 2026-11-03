@@ -15,6 +15,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "astro check",
+    "wp:pages": "node scripts/wp-page-editor/build.mjs --zip",
+    "wp:pages:check": "node scripts/wp-page-editor/build.mjs --check",
+    "verify:page-copy": "node --experimental-strip-types --no-warnings scripts/verify-page-overlay.mjs && node --experimental-strip-types --no-warnings scripts/wp-page-editor/verify.mjs",
     "prepare": "husky"
   },
   "lint-staged": {

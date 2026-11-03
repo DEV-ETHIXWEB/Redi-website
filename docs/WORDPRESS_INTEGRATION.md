@@ -245,10 +245,15 @@ response for unauthenticated requests (WordPress's default behavior).
 
 ### 6.2 Custom `redi/v1` namespace — currently disconnected
 
-> **As of 2026-10-09 the app does not call any of these routes.** They are
-> listed here as the contract to implement if page copy is ever moved into
-> WordPress for real. Everything in this namespace is read from
-> `src/content/seed/` instead. See §6.2.1 for why.
+> **The app calls no route in this namespace, and that is still true.** They
+> are listed here as the contract that was never made editable. Everything in
+> this namespace is read from `src/content/seed/` instead — see §6.2.1 for why.
+>
+> Page copy is the exception, and it did **not** come back through this
+> namespace: it is editable as of 2026-11-04 through a separate
+> `ethixweb/v1` namespace that overlays rather than replaces. See §6.2.2.
+> `redi/v1/page-copy` still answers, still serves the 2026-09-04 export, and
+> nothing reads it.
 
 None of these exist in stock WordPress or via ACF-to-REST-API alone.
 Someone needs to register a custom REST namespace — typically a small
@@ -263,13 +268,13 @@ exactly like the corresponding seed file.
 | `/wp-json/redi/v1/score-tiers`      | GET    | `src/content/seed/score-tiers.json`      | `getScoreTiers()`      |
 | `/wp-json/redi/v1/scoring-criteria` | GET    | `src/content/seed/scoring-criteria.json` | `getScoringCriteria()` |
 | `/wp-json/redi/v1/legal`            | GET    | `src/content/seed/legal.json`            | `getLegalSections()`   |
-| `/wp-json/redi/v1/page-copy`        | GET    | `src/content/seed/pages.json`            | `getPageCopy()`        |
+| `/wp-json/redi/v1/page-copy`        | GET    | `src/content/seed/pages.json`            | none — see §6.2.2      |
 
-Recommended build order: the five stock-REST CPTs first (§6.1), then the
-simpler `redi/v1` routes (`advantages`, `score-tiers`, `scoring-criteria`,
-`legal`, `site-settings`), and `page-copy` last — it's the largest and most
-structurally rigid payload (see the JSDoc in `src/services/wordpress/pages.ts`
-for why).
+Recommended build order, if this namespace is ever implemented for real: the
+five stock-REST CPTs first (§6.1), then the simpler `redi/v1` routes
+(`advantages`, `score-tiers`, `scoring-criteria`, `legal`, `site-settings`).
+Do not reimplement `page-copy` here — it is already editable via §6.2.2, and
+two sources for the same copy is how the original bug happened.
 
 #### 6.2.1 Why these routes are not called
 
@@ -307,8 +312,10 @@ Nothing failed or logged while this was happening — a copy change could be
 committed, built and deployed and still be invisible. `scripts/wp-content-sync.mjs`
 cannot write these routes either, so it could not be fixed from the CMS side.
 
-**The split now is:** page copy, site settings, advantages, score tiers,
-scoring criteria, legal and core documents are owned by this repo. The five
+**The split now is:** site settings, advantages, score tiers, scoring
+criteria, legal and core documents are owned by this repo. Page copy is
+owned by this repo _and_ overlaid by WordPress (§6.2.2) — the repo holds the
+approved wording, WordPress can change it, and a blank field changes nothing. The five
 stock CPTs in §6.1 (`post`, `property`, `team_member`, `testimonial`,
 `partner`) are owned by WordPress and are unaffected — the client edits those
 daily and they publish automatically via the deploy hook.
@@ -319,6 +326,99 @@ it, then restore the `wpFetch` call and the `deepMerge(seed, remote)` (or
 delete its "read from the seed" comment. Do not restore the call before the
 WordPress side is genuinely editable, or the same silent-override bug comes
 straight back.
+
+#### 6.2.2 The `ethixweb/v1` namespace — page copy, editable for real
+
+Added 2026-11-04, after the client asked for the marketing pages to be
+editable. Served by the **REDI Page Editor** plugin (built in this repo, see
+below), not by REDI Headless CMS.
+
+| Endpoint                         | Method | Auth | Service function |
+| -------------------------------- | ------ | ---- | ---------------- |
+| `/wp-json/ethixweb/v1/page-copy` | GET    | none | `getPageCopy()`  |
+
+**It returns a partial tree, and that is the whole design.** The response is
+shaped like `src/content/seed/pages.json` but contains only the fields an
+editor has actually typed into. Nothing is required. An absent key means "no
+change".
+
+`getPageCopy()` then _overlays_ it onto the seed
+(`src/services/wordpress/page-copy-overlay.ts`), walking the **seed's** shape
+and asking WordPress for a replacement at each leaf. The consequences are
+worth stating explicitly, because they are the difference between this and the
+route it replaces:
+
+- a field left blank keeps the copy already on the site;
+- a key WordPress invents is never read;
+- a value of the wrong type is ignored rather than rendered;
+- the result always has exactly the seed's shape, so no page can render
+  `undefined` because WordPress omitted a section.
+
+So the worst case is "the CMS changed nothing", not "the CMS wiped the page".
+A half-filled screen in wp-admin cannot blank a section. Compare §6.2.1,
+where WordPress won outright and a stale export silently overrode a month of
+approved copy with nothing failing or logging.
+
+**Where the plugin comes from.** `wordpress-plugins/redi-page-editor/` is
+generated, not hand-written:
+
+```
+pnpm wp:pages          # regenerate + package wordpress-plugins/redi-page-editor.zip
+pnpm wp:pages:check    # fail if the plugin is out of date with pages.json
+pnpm verify:page-copy   # prove every field reaches the site, and blanks do not blank it
+```
+
+The plugin needs one ACF field per editable string — 120 of them. Kept by hand
+they would drift from the site the first time the copy changed shape, and **a
+field whose path no longer resolves fails silently**: the client types, saves,
+sees "Updated", and the site does not change. So the field list is derived from
+the same file the site renders, and `pnpm verify:page-copy` fills in all 120
+with unique markers and checks each one comes out at the right place — plus
+cross-checks that the plugin's own PHP expands those paths identically.
+
+**After editing `src/content/seed/pages.json`**, run `pnpm wp:pages`, commit
+the regenerated plugin, and re-upload the zip in wp-admin so the new field
+appears. `pnpm wp:pages:check` is there to catch the commit that forgets.
+
+Re-uploading a zip over an active plugin does **not** fire WordPress's
+activation hook, so the plugin re-checks its own pages on `admin_init` when its
+version changes. The version carries a hash of the field list
+(`REDI_PAGES_VERSION`), so any copy change bumps it automatically — otherwise a
+regenerated plugin that adds a page would register fields for a page that was
+never created, and the editor would just not see it. The re-check reuses any
+page that already has the slug and only writes defaults into pages it creates,
+so nothing already typed is overwritten.
+
+**What is deliberately not editable:**
+
+- **Links, images, icons and alt text** (`href`, `url`, `image`, `icon`,
+  `alt`). Handing a copy editor a URL or an icon-name invites a broken page,
+  and none of it is text they were asked to write.
+- **The number of items in a structured list** — the five readiness
+  categories, the two comparison columns, the process steps. Each item's text
+  is editable individually; rows cannot be added or removed, because the count
+  is layout. (ACF free has no Repeater field, so this is also a hard limit —
+  see §16.)
+- **Copy that nothing renders.** `sites.resultsLabelTemplate`,
+  `sites.favorites`, `sites.toolbar` and `updates.resultsLabelTemplate` sit in
+  `pages.json` but appear nowhere in `src/` — `SitesBrowser` takes no props and
+  hardcodes its own map-toolbar labels. They are excluded rather than shown,
+  because a field that silently does nothing looks exactly like a broken CMS.
+  `pnpm verify:page-copy` re-checks that they are still unrendered, so one
+  becoming live is reported rather than quietly left out.
+- **`setPassword`** — part of the auth flow, not marketing copy.
+
+**Blank means "no change" in both directions**, which is the one deliberate
+asymmetry: an editor cannot empty a heading or a CTA label by clearing the
+field, because for a field that carries layout, restoring the approved wording
+is the safe direction. Copy that should disappear is a code change.
+
+**Supersedes REDI Home Editor 1.x.** That plugin served
+`ethixweb/v1/home-copy` for the home page only; nothing reads that route now.
+It must be **deactivated** — left active it registers a competing field group
+on the same `redi-home` page. Its page is reused on activation, so the page
+itself survives; its field _values_ do not carry over, because the field names
+changed.
 
 ### 6.3 Required fields, per type
 
@@ -506,17 +606,32 @@ pnpm build     # runs `astro check` (typecheck) then `astro build`
 
 ## 13. Required WordPress plugins
 
-Nothing is confirmed installed anywhere — this is a requirements list
-derived from what the frontend needs, for whoever provisions WordPress:
+**Confirmed installed and in use** on the client's WordPress:
 
-- **ACF (Advanced Custom Fields)**, likely **ACF Pro** — needed for Options
-  Pages (`site-settings`, `advantages`, `score-tiers`, `scoring-criteria`,
-  `legal`, `page-copy` all look like options-page/repeater data, not
-  per-post content) and flexible-content fields (`page-copy` especially).
-- **A way to register custom REST routes** — either a small custom/must-use
-  plugin, or theme `functions.php`, implementing `register_rest_route()`
-  for the six `redi/v1` endpoints in §6.2. Not a stock plugin; someone
-  writes this.
+- **ACF (Advanced Custom Fields), free edition.** Not Pro. This is a
+  constraint, not a preference — no Options Pages, no Repeater, no Flexible
+  Content. It is why page copy lives on real WordPress pages rather than an
+  options screen, why prose blocks are one textarea split on blank lines, and
+  why list items cannot be added or removed in wp-admin (§6.2.2, §16).
+- **REDI Headless CMS** — registers the four CPTs and the `redi/v1`
+  namespace. Its `redi/v1` routes serve a frozen export and nothing reads
+  them (§6.2.1).
+- **REDI Page Editor** (Ethixweb, generated from this repo) — makes the
+  marketing page copy editable and serves `ethixweb/v1/page-copy` (§6.2.2).
+  Source: `wordpress-plugins/redi-page-editor/`. **Supersedes REDI Home
+  Editor, which must be deactivated.**
+- **REDI Auto Deploy** (Ethixweb) — pings the Vercel deploy hook when content
+  is saved, so publishing does not need a developer (§12). REDI Page Editor
+  calls into it on save, since it watches the CPTs rather than pages.
+- **REDI Post Fields** / **REDI Admin Fix** (Ethixweb) — restore the core REST
+  keys that were making the wp-admin editor unusable for all five CPTs.
+
+Still only a requirement, not confirmed:
+
+- **A way to register custom REST routes** for the remaining `redi/v1`
+  endpoints in §6.2, if they are ever made editable. Not a stock plugin;
+  someone writes this. Note that `page-copy` is already handled (§6.2.2) and
+  should not be reimplemented there.
 - **A way to register the four custom post types** (`property`,
   `team_member`, `testimonial`, `partner`) with `show_in_rest: true` — via
   code (`register_post_type()`) or a CPT-UI-style plugin, either works as
@@ -590,3 +705,15 @@ These are real, current, repository-verifiable gaps — not speculation:
 - **No caching/retry layer** beyond `getPageCopy()`'s per-request-lifecycle
   memoization. Every other service call is a fresh fetch on every render
   that needs it.
+- **ACF free edition caps what page copy can do.** Editors can change the
+  text of any item in a structured list (the five readiness categories, the
+  process steps, the two comparison columns) but cannot add or remove items,
+  because ACF free has no Repeater field. Prose blocks are the exception —
+  those are one textarea split on blank lines, so paragraph count is free.
+  Adding or removing a _row_ is still a code change to
+  `src/content/seed/pages.json` plus `pnpm wp:pages`. ACF Pro would lift this.
+- **The page-editor plugin has to be re-uploaded when the copy shape changes.**
+  Its field list is generated from `pages.json` (§6.2.2), so adding a new
+  heading in the repo means running `pnpm wp:pages` and uploading the zip
+  again before the client can edit it. `pnpm wp:pages:check` catches the
+  commit that forgets; nothing catches the upload that is never done.
