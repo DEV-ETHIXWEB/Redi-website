@@ -420,6 +420,37 @@ on the same `redi-home` page. Its page is reused on activation, so the page
 itself survives; its field _values_ do not carry over, because the field names
 changed.
 
+#### 6.2.3 WP Engine caches every one of these routes for 10 minutes
+
+Not a quirk worth filing away — it silently broke publishing until 2026-11-04.
+
+Every REST route this app reads comes back cached, the five CPT collections in
+§6.1 as well as `ethixweb/v1/page-copy`:
+
+```
+x-cacheable: SHORT
+cache-control: max-age=600, must-revalidate
+x-cache: HIT: 3
+```
+
+The Vercel Deploy Hook (§12) fires the moment an editor saves, the build starts
+within a minute, and it then fetches a response that can be ten minutes old. So
+**the edit that triggers a deploy is routinely missing from the deploy it
+triggered.** The editor sees "Updated", the site does not change, and a later
+unrelated deploy quietly picks it up. Nothing errors or logs, so it reads as
+flaky rather than broken.
+
+`wpFetch()` therefore sends `Cache-Control: no-cache` on every request. Do not
+remove it to "reduce load on WordPress" — the load is one uncached round trip
+per serverless instance, since each service memoizes its result for the life of
+the module, and the alternative is content that publishes whenever it feels
+like it.
+
+**When testing this WordPress by hand, a plain `curl` of a REST route shows
+stale data.** Send `-H 'Cache-Control: no-cache'`, or you will conclude a save
+did not work when it did. Demonstrated on 2026-11-04: the same URL in the same
+second returned `Legalities` plain and `Legalities Test` with the header.
+
 ### 6.3 Required fields, per type
 
 Full field-level detail (required vs. optional, exact literal unions like
