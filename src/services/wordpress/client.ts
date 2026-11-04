@@ -26,8 +26,9 @@ import { WORDPRESS_API_URL } from 'astro:env/server';
  *   (e.g. `/wp-json/wp/v2/property?_embed` or `/wp-json/redi/v1/site-settings`).
  *   Joined onto `WORDPRESS_API_URL` with duplicate slashes collapsed.
  * - `init` — standard `RequestInit`, merged with a default
- *   `Accept: application/json` and `Cache-Control: no-cache` headers (see
- *   the comment in the body for why the latter is not optional on WP Engine).
+ *   `Accept: application/json` and `Cache-Control: no-cache` headers, plus a
+ *   `_redi=<timestamp>` cache-busting parameter — see the comment in the body
+ *   for why the parameter, not the header, is what defeats WP Engine's cache.
  *   No auth header is sent — every
  *   endpoint this app calls is expected to be publicly readable (see
  *   docs/WORDPRESS_INTEGRATION.md §Authentication for why, and what would
@@ -71,34 +72,32 @@ export async function wpFetch<T>(path: string, init?: RequestInit): Promise<T | 
   if (!WORDPRESS_API_URL) return null;
 
   const base = WORDPRESS_API_URL.replace(/\/+$/, '');
-  const url = `${base}${path.startsWith('/') ? path : `/${path}`}`;
+  const joined = `${base}${path.startsWith('/') ? path : `/${path}`}`;
+
+  /*
+    Cache-busting parameter. WP Engine caches every REST route this app reads
+    for 10 minutes (`x-cacheable: SHORT`, `cache-control: max-age=600`), which
+    breaks publishing: the deploy hook fires the moment an editor saves, the
+    build starts within a minute, and it would otherwise fetch a response up to
+    ten minutes old - so the edit that triggered the deploy is missing from the
+    deploy it triggered. Nothing errors; it just looks flaky.
+
+    A unique URL is used rather than a `Cache-Control: no-cache` request header
+    because the header does NOT work here. Measured on 2026-11-04 against the
+    live install, with a known-fresh value sitting in WordPress: six consecutive
+    requests sending that header all came back `x-cache: HIT` with stale data,
+    while the same URL with a changing query parameter returned the new value
+    every time. The header is still sent below, but it is not what does the job.
+  */
+  const url = `${joined}${joined.includes('?') ? '&' : '?'}_redi=${Date.now()}`;
 
   try {
     const res = await fetch(url, {
       ...init,
       headers: {
         Accept: 'application/json',
-        /*
-          WP Engine caches every one of these REST routes for 10 minutes
-          (`x-cacheable: SHORT`, `cache-control: max-age=600`), and that breaks
-          publishing outright.
-
-          The deploy hook fires the moment an editor saves, Vercel starts
-          building within a minute, and the build then fetches a response that
-          can be up to ten minutes old - so the edit that triggered the deploy
-          is often missing from the deploy it triggered. The editor sees
-          "Updated", the site does not change, and some unrelated deploy picks
-          it up later. Nothing errors, and it looks random rather than broken.
-
-          Verified against the live install on 2026-11-04: a saved change was
-          absent from the plain request and present with this header, on the
-          same second. `Pragma: no-cache` and a cache-busting query param both
-          work too; this is the honest one, since we genuinely need the current
-          state rather than a unique URL.
-
-          The cost is one uncached round trip per serverless instance - each
-          service memoizes its result for the life of the module.
-        */
+        // Belt and braces alongside the cache-busting parameter above, which is
+        // what actually defeats WP Engine's cache. Harmless on its own.
         'Cache-Control': 'no-cache',
         ...init?.headers,
       },
