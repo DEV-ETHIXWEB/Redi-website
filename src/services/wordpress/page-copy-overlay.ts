@@ -70,8 +70,23 @@ export function overlay<T>(base: T, remote: unknown): T {
     if (base.every((item) => typeof item === 'string')) {
       return (list(remote) ?? base) as T;
     }
-    // A list of objects keeps its length - the number of process steps or
-    // comparison rows is layout, not copy - and is merged item by item.
+    // A list of objects. Two different things can arrive here.
+    //
+    // A real array means the editor typed the whole list in one box and may
+    // have added or removed rows, so it replaces the list outright. Each row
+    // is laid over the FIRST seed item rather than onto nothing, so keys the
+    // editor never sees - ids, icons, colours, badge images - keep working
+    // values on rows that did not exist before.
+    if (Array.isArray(remote)) {
+      const rows = remote.filter((row) => row && typeof row === 'object' && !Array.isArray(row));
+      if (rows.length === 0) return base;
+      const template = base[0];
+      return rows.map((row, i) => overlay(base[i] ?? template, row)) as T;
+    }
+
+    // An object with numeric keys is PHP's sparse array - the editor filled in
+    // the third row and not the first - so the length is kept and the rows are
+    // merged individually.
     const source = indexed(remote);
     if (!source) return base;
     return base.map((item, i) =>

@@ -1,5 +1,7 @@
 import type { SiteSettings } from '@/types/wordpress';
 import seed from '@/content/seed/site-settings.json';
+import { overlay } from './page-copy-overlay';
+import { getOverride } from './content-overrides';
 
 /**
  * Global site chrome: logos, primary nav, sign-in/register CTA links, footer
@@ -51,17 +53,17 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     exactly that case — updating the seed alone would have changed nothing on
     the live site.
 
-    Reading the seed directly is therefore not a fallback, it is the honest
-    description of where this content lives. If WordPress ever gains a real
-    settings screen, restore the fetch and the `deepMerge(seed, remote)` call
-    that used to be here, and delete this comment.
+    WordPress now has a real settings screen — Site Settings (REDI), served by
+    the REDI Page Editor plugin on `ethixweb/v1/page-copy`
+    (docs/WORDPRESS_INTEGRATION.md §6.2.2) — so the seed is overlaid with
+    whatever an editor has typed. It is still not `redi/v1/site-settings`, and
+    it is an overlay rather than a merge-with-WordPress-winning, which is the
+    difference that makes it safe: a blank field keeps the approved value.
 
-    Every other `redi/v1` route is read the same way for the same reason —
-    see docs/WORDPRESS_INTEGRATION.md §6.2.1 for the evidence and for what
-    each one was overriding. The five stock CPTs (posts, properties, team,
-    testimonials, partners) still come from WordPress and are unaffected.
+    Links are deliberately not editable (nav `href`s, logo URLs), so the
+    client's LinkedIn URL and the nav targets stay code-owned.
   */
-  const settings = seed as SiteSettings;
+  const settings = overlay(seed as SiteSettings, await getOverride('siteSettings'));
   return {
     ...settings,
     footer: {

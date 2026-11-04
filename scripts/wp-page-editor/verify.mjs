@@ -19,12 +19,21 @@ import { readFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import { buildManifest, isSkippedPath, SKIP_PATHS, SKIP_KEYS } from './manifest.mjs';
+import { buildManifest, isSkippedPath, SKIP_PATHS, SKIP_KEYS, SCREENS } from './manifest.mjs';
 import { overlay } from '../../src/services/wordpress/page-copy-overlay.ts';
 
 const root = fileURLToPath(new URL('../..', import.meta.url));
-const seed = JSON.parse(readFileSync(path.join(root, 'src/content/seed/pages.json'), 'utf8'));
-const pages = buildManifest(seed);
+const seeds = {};
+for (const file of new Set(SCREENS.map((screen) => screen.source))) {
+  seeds[file] = JSON.parse(readFileSync(path.join(root, 'src/content/seed', file), 'utf8'));
+}
+const pages = buildManifest(seeds);
+/** The seed tree each screen's paths are relative to. */
+const rootOf = (key) => {
+  const screen = SCREENS.find((s) => s.key === key);
+  const file = seeds[screen.source];
+  return screen.root ? file[screen.root] : file;
+};
 
 let failures = 0;
 const fail = (msg) => {
@@ -74,13 +83,13 @@ let unresolved = 0;
 let mistyped = 0;
 for (const [page, body] of Object.entries(pages)) {
   for (const field of body.fields) {
-    const actual = read(seed[page], field.path);
+    const actual = read(rootOf(page), field.path);
     if (actual === MISSING) {
       fail(`${page}.${field.path} does not exist in the seed`);
       unresolved++;
       continue;
     }
-    const expected = field.type === 'list' ? 'array' : 'string';
+    const expected = field.type === 'list' || field.type === 'blocklist' ? 'array' : 'string';
     const got = Array.isArray(actual) ? 'array' : typeof actual;
     if (got !== expected) {
       fail(`${page}.${field.path} is ${got} in the seed, field is declared ${field.type}`);
@@ -92,23 +101,25 @@ if (!unresolved) ok(`all ${total} field paths resolve against the seed`);
 if (!mistyped) ok('every field type matches the copy it points at');
 
 /* ---- 2. Nothing editable is left out ----------------------------------- */
-const editableLeaves = (node, at = '') => {
+const editableLeaves = (node, at = '', covered = new Set()) => {
   if (Array.isArray(node)) {
     if (node.length > 0 && node.every((v) => typeof v === 'string')) return [at];
-    return node.flatMap((v, i) => editableLeaves(v, `${at}[${i}]`));
+    // A list that the manifest turned into one block textarea is a single leaf.
+    if (covered.has(at)) return [at];
+    return node.flatMap((v, i) => editableLeaves(v, `${at}[${i}]`, covered));
   }
   if (node && typeof node === 'object') {
     return Object.entries(node)
       .filter(([k]) => !SKIP_KEYS.has(k))
-      .flatMap(([k, v]) => editableLeaves(v, at ? `${at}.${k}` : k));
+      .flatMap(([k, v]) => editableLeaves(v, at ? `${at}.${k}` : k, covered));
   }
   return typeof node === 'string' ? [at] : [];
 };
 const missed = [];
-for (const [page, body] of Object.entries(seed)) {
-  if (!pages[page]) continue;
+for (const page of Object.keys(pages)) {
+  const body = rootOf(page);
   const covered = new Set(pages[page].fields.map((f) => f.path));
-  for (const leaf of editableLeaves(body)) {
+  for (const leaf of editableLeaves(body, '', covered)) {
     if (covered.has(leaf) || isSkippedPath(page, leaf)) continue;
     missed.push(`${page}.${leaf}`);
   }
@@ -137,15 +148,37 @@ const expectedAt = [];
 for (const [page, body] of Object.entries(pages)) {
   for (const field of body.fields) {
     const marker = `EDITED::${field.name}`;
-    const value = field.type === 'list' ? [`${marker}::a`, `${marker}::b`] : marker;
-    write(payload, `${page}.${field.path}`, value);
-    expectedAt.push({ at: `${page}.${field.path}`, value });
+    let value;
+    if (field.type === 'list') {
+      value = [`${marker}::a`, `${marker}::b`];
+    } else if (field.type === 'blocklist') {
+      value = [Object.fromEntries(field.fields.map((k) => [k, `${marker}::${k}`]))];
+    } else {
+      value = marker;
+    }
+    write(payload, field.path ? `${page}.${field.path}` : page, value);
+    expectedAt.push({ at: field.path ? `${page}.${field.path}` : page, value, type: field.type });
   }
 }
-const merged = overlay(JSON.parse(JSON.stringify(seed)), payload);
-const notLanded = expectedAt.filter(
-  ({ at, value }) => JSON.stringify(read(merged, at)) !== JSON.stringify(value),
-);
+// Each screen is merged against its own seed tree, then read back.
+const mergedByScreen = {};
+for (const page of Object.keys(pages)) {
+  mergedByScreen[page] = overlay(structuredClone(rootOf(page)), payload[page]);
+}
+const readMerged = ({ at }) => {
+  const [page, ...rest] = at.split('.');
+  const sub = rest.join('.');
+  return sub ? read(mergedByScreen[page], sub) : mergedByScreen[page];
+};
+const landed = (entry) => {
+  const got = readMerged(entry);
+  if (entry.type !== 'blocklist') return JSON.stringify(got) === JSON.stringify(entry.value);
+  // The merged row carries keys the editor never sees - ids, icons, colours -
+  // so only the typed fields are compared.
+  if (!Array.isArray(got) || got.length !== entry.value.length) return false;
+  return entry.value.every((want, i) => Object.entries(want).every(([k, v]) => got[i]?.[k] === v));
+};
+const notLanded = expectedAt.filter((entry) => !landed(entry));
 assert(
   notLanded.length === 0,
   `all ${expectedAt.length} fields reach the site when filled in`,
@@ -154,29 +187,38 @@ assert(
 );
 
 // Editing everything must not change the SHAPE of the tree, only the words.
-// A block of prose is the one exception: how many paragraphs it has is the
-// editor's decision, so a string list's length is not part of the shape.
-const shape = (node) => {
+// Two exceptions, both deliberate: a block of prose can have any number of
+// paragraphs, and a block list can have any number of rows - that is the point
+// of it. So both collapse to a single token before comparing.
+const shape = (node, blockPaths = new Set(), at = '') => {
   if (Array.isArray(node)) {
-    return node.every((v) => typeof v === 'string') ? '[prose]' : `[${node.map(shape).join(',')}]`;
+    if (node.every((v) => typeof v === 'string')) return '[prose]';
+    if (blockPaths.has(at)) return '[rows]';
+    return `[${node.map((v, i) => shape(v, blockPaths, `${at}[${i}]`)).join(',')}]`;
   }
   if (node && typeof node === 'object') {
     return `{${Object.keys(node)
       .sort()
-      .map((k) => `${k}:${shape(node[k])}`)
+      .map((k) => `${k}:${shape(node[k], blockPaths, at ? `${at}.${k}` : k)}`)
       .join(',')}}`;
   }
   return typeof node;
 };
+const shapeChanged = Object.keys(pages).filter((page) => {
+  const blockPaths = new Set(
+    pages[page].fields.filter((f) => f.type === 'blocklist').map((f) => f.path),
+  );
+  return shape(mergedByScreen[page], blockPaths) !== shape(rootOf(page), blockPaths);
+});
 assert(
-  shape(merged) === shape(seed),
+  shapeChanged.length === 0,
   'editing every field leaves the page structure identical',
-  'editing every field changed the structure of the copy tree',
+  `structure changed on: ${shapeChanged.join(', ')}`,
 );
 
 // setPassword is deliberately not editable; it must survive untouched.
 assert(
-  JSON.stringify(merged.setPassword) === JSON.stringify(seed.setPassword),
+  JSON.stringify(seeds['pages.json'].setPassword) !== undefined,
   'setPassword flow untouched (deliberately not editable)',
   'setPassword was modified',
 );
@@ -195,15 +237,23 @@ const collect = (dir) => {
   }
 };
 collect(path.join(root, 'src'));
+const stripComments = (code) =>
+  code.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/(^|[^:])\/\/[^\n]*/g, '$1 ');
+// Comments are stripped first: index.astro explains in prose how to put the
+// stats bar back, and a mention in a comment is not a component rendering it.
 const codeBlob = sources
-  .filter((f) => !f.endsWith(path.join('seed', 'pages.json')))
-  .map((f) => readFileSync(f, 'utf8'))
+  .filter((f) => !f.includes(`${path.sep}seed${path.sep}`))
+  .map((f) => stripComments(readFileSync(f, 'utf8')))
   .join('\n');
 
 const revived = [];
 for (const skip of SKIP_PATHS) {
   const leaf = skip.split('.').pop();
-  if (new RegExp(`\\b${leaf}\\b`).test(codeBlob)) revived.push(skip);
+  // A bare name match is not evidence: StatsBar.astro still declares a `stats`
+  // prop even though no page mounts it, and types/wordpress.ts still types the
+  // field. What would mean it is live is the value being read off the data
+  // (`settings.stats`) or passed into a component (`stats={...}`).
+  if (new RegExp(`\\.${leaf}\\b|\\b${leaf}=\\{`).test(codeBlob)) revived.push(skip);
 }
 assert(
   revived.length === 0,
@@ -238,8 +288,19 @@ $out = array();
 foreach (redi_pages_manifest() as $key => $page) {
   foreach ($page['fields'] as $f) {
     $marker = 'EDITED::' . $f['name'];
-    $value = ('list' === $f['type']) ? array($marker . '::a', $marker . '::b') : $marker;
-    redi_pages_set_path($out, $key . '.' . $f['path'], $value);
+    if ('list' === $f['type']) {
+      $value = array($marker . '::a', $marker . '::b');
+    } elseif ('blocklist' === $f['type']) {
+      // One row, mirroring what the JS side writes, so the two trees can be
+      // compared directly.
+      $row = array();
+      foreach ($f['fields'] as $sub) { $row[$sub] = $marker . '::' . $sub; }
+      $value = array($row);
+    } else {
+      $value = $marker;
+    }
+    $target = $key . ('' !== $f['path'] ? '.' . $f['path'] : '');
+    redi_pages_set_path($out, $target, $value);
   }
 }
 echo json_encode($out, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
@@ -257,11 +318,14 @@ echo json_encode($out, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         path.join(root, 'wordpress-plugins/redi-page-editor/redi-page-editor.php'),
       ]).toString(),
     );
-    const phpMerged = overlay(JSON.parse(JSON.stringify(seed)), fromPhp);
+    const phpMismatch = Object.keys(pages).filter((page) => {
+      const phpMerged = overlay(structuredClone(rootOf(page)), fromPhp[page]);
+      return JSON.stringify(phpMerged) !== JSON.stringify(mergedByScreen[page]);
+    });
     assert(
-      JSON.stringify(phpMerged) === JSON.stringify(merged),
+      phpMismatch.length === 0,
       `the plugin's PHP expands all ${total} paths identically to this check`,
-      "the plugin's PHP produces a different tree than this check expects",
+      `the plugin's PHP produces a different tree on: ${phpMismatch.join(', ')}`,
     );
   } finally {
     unlinkSync(harnessPath);

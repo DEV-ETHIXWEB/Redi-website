@@ -26,10 +26,10 @@ import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
-import { buildManifest } from './manifest.mjs';
+import { buildManifest, SCREENS } from './manifest.mjs';
 
 const root = fileURLToPath(new URL('../..', import.meta.url));
-const SEED = path.join(root, 'src/content/seed/pages.json');
+const SEED_DIR = path.join(root, 'src/content/seed');
 const TEMPLATE = path.join(root, 'scripts/wp-page-editor/plugin.template.php');
 const OUT_DIR = path.join(root, 'wordpress-plugins/redi-page-editor');
 const OUT = path.join(OUT_DIR, 'redi-page-editor.php');
@@ -44,13 +44,25 @@ function renderManifest(pages) {
   for (const [key, page] of Object.entries(pages)) {
     lines.push(`\t\t${phpStr(key)} => array(`);
     lines.push(`\t\t\t'label'  => ${phpStr(page.label)},`);
-    lines.push(`\t\t\t'slug'   => ${phpStr(`redi-${key}`)},`);
+    lines.push(`\t\t\t'slug'   => ${phpStr(page.slug)},`);
+    lines.push(`\t\t\t'title'  => ${phpStr(page.title)},`);
     lines.push(`\t\t\t'fields' => array(`);
     for (const f of page.fields) {
-      const def = f.type === 'list' ? f.value.join('\n\n') : f.value;
+      let def;
+      if (f.type === 'list') {
+        def = f.value.join('\n\n');
+      } else if (f.type === 'blocklist') {
+        // One row per block, its fields one per line, blank line between rows.
+        def = f.value.map((row) => f.fields.map((k) => row[k]).join('\n')).join('\n\n');
+      } else {
+        def = f.value;
+      }
+      const extra =
+        f.type === 'blocklist' ? `, 'fields' => array( ${f.fields.map(phpStr).join(', ')} )` : '';
       lines.push(
         `\t\t\t\tarray( 'name' => ${phpStr(f.name)}, 'path' => ${phpStr(f.path)}, ` +
-          `'type' => ${phpStr(f.type)}, 'label' => ${phpStr(f.label)}, 'default' => ${phpStr(def)} ),`,
+          `'type' => ${phpStr(f.type)}, 'label' => ${phpStr(f.label)}, ` +
+          `'default' => ${phpStr(def)}${extra} ),`,
       );
     }
     lines.push(`\t\t\t),`);
@@ -59,8 +71,12 @@ function renderManifest(pages) {
   return lines.join('\n');
 }
 
-const seed = JSON.parse(readFileSync(SEED, 'utf8'));
-const pages = buildManifest(seed);
+/** Every seed file any screen is built from, loaded once. */
+const seeds = {};
+for (const file of new Set(SCREENS.map((screen) => screen.source))) {
+  seeds[file] = JSON.parse(readFileSync(path.join(SEED_DIR, file), 'utf8'));
+}
+const pages = buildManifest(seeds);
 /** Human-readable plugin version, shown in wp-admin. Bump by hand for real releases. */
 const VERSION = '2.0.1';
 

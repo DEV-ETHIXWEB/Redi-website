@@ -330,8 +330,26 @@ straight back.
 #### 6.2.2 The `ethixweb/v1` namespace — page copy, editable for real
 
 Added 2026-11-04, after the client asked for the marketing pages to be
-editable. Served by the **REDI Page Editor** plugin (built in this repo, see
-below), not by REDI Headless CMS.
+editable, then extended the same day to cover everything else the repo owned.
+Served by the **REDI Page Editor** plugin (built in this repo, see below), not
+by REDI Headless CMS.
+
+**Thirteen wp-admin screens, 153 fields.** The seven marketing pages, plus the
+six content domains that §6.2.1 had left repo-owned:
+
+| Screen                                                | Overlays                | Rows                            |
+| ----------------------------------------------------- | ----------------------- | ------------------------------- |
+| Home, About, Approach, Contact, Sites, Updates, Legal | `pages.json`            | mixed                           |
+| Why Choose Cards                                      | `advantages.json`       | add/remove                      |
+| Legal Sections                                        | `legal.json`            | fixed                           |
+| REDI Score Tiers                                      | `score-tiers.json`      | fixed                           |
+| Core Documents                                        | `core-documents.json`   | add/remove                      |
+| Scoring Criteria                                      | `scoring-criteria.json` | weights fixed, lists add/remove |
+| Site Settings                                         | `site-settings.json`    | fixed                           |
+
+Every service reads the **same** request — `getContentOverrides()` in
+`src/services/wordpress/content-overrides.ts` memoizes it per module instance,
+so seven services asking during one render make one call, not seven.
 
 | Endpoint                         | Method | Auth | Service function |
 | -------------------------------- | ------ | ---- | ---------------- |
@@ -391,17 +409,37 @@ so nothing already typed is overwritten.
 
 **What is deliberately not editable:**
 
-- **Links, images, icons and alt text** (`href`, `url`, `image`, `icon`,
-  `alt`). Handing a copy editor a URL or an icon-name invites a broken page,
-  and none of it is text they were asked to write.
-- **The number of items in a structured list** — the five readiness
-  categories, the two comparison columns, the process steps. Each item's text
-  is editable individually; rows cannot be added or removed, because the count
-  is layout. (ACF free has no Repeater field, so this is also a hard limit —
-  see §16.)
+- **Links, images, icons, alt text and machine keys** (`href`, `url`, `image`,
+  `icon`, `alt`, `id`, `tier`, `color`, `slug`). Handing a copy editor a URL or
+  an icon name invites a broken page, and components look values up by the
+  machine keys — `iconMap[advantage.icon]`, the badge image per tier — so a typo
+  there removes an icon or a badge with no warning.
+- **Numbers.** The only ones are the five scoring weights, which must total
+  100%; changing one is a programme decision, not copy.
+- **The length of a list whose count is structure, not copy.** The five
+  scoring weights are the national standard and must total 100%; the five
+  designation levels are the programme itself and each carries a badge image
+  that exists only for those five; the legal sections are fixed documents with
+  anchors pointing at them; nav and footer rows need an `href`, which editors
+  are not given, so a new row could only point at the wrong page. Their text is
+  still fully editable.
+
+  Everywhere else, **rows can be added and removed**: the core documents table,
+  the process steps, the methodology benefits, the value-comparison rows, the
+  Why Choose cards, and the primary-criteria and eligibility lists. ACF free
+  has no Repeater, so those lists are one textarea with a block per row and a
+  blank line between — the first line of a block is the first field, the rest is
+  the second. Removing a block removes the row.
+
+  A row the editor adds is laid over the corresponding seed row, or over the
+  first one if it is past the end, so keys they never see — ids, icons,
+  colours, badge images — always arrive with working values rather than
+  `undefined`.
+
 - **Copy that nothing renders.** `sites.resultsLabelTemplate`,
-  `sites.favorites`, `sites.toolbar` and `updates.resultsLabelTemplate` sit in
-  `pages.json` but appear nowhere in `src/` — `SitesBrowser` takes no props and
+  `sites.favorites`, `sites.toolbar`, `updates.resultsLabelTemplate` and
+  `siteSettings.stats` (the stats bar removed on 2026-10-16) sit in the seed but
+  are rendered nowhere — `SitesBrowser` takes no props and
   hardcodes its own map-toolbar labels. They are excluded rather than shown,
   because a field that silently does nothing looks exactly like a broken CMS.
   `pnpm verify:page-copy` re-checks that they are still unrendered, so one

@@ -2,6 +2,8 @@ import type { ScoreTier, CoreDocument } from '@/types/wordpress';
 import tiersSeed from '@/content/seed/score-tiers.json';
 import criteriaSeed from '@/content/seed/scoring-criteria.json';
 import coreDocumentsSeed from '@/content/seed/core-documents.json';
+import { overlay } from './page-copy-overlay';
+import { getOverride } from './content-overrides';
 
 /**
  * Shape returned by `/wp-json/redi/v1/scoring-criteria` and consumed by
@@ -43,7 +45,12 @@ export async function getScoreTiers(): Promise<ScoreTier[]> {
   // response is a frozen export of this repo that silently overrode newer
   // approved copy — see docs/WORDPRESS_INTEGRATION.md §6.2.1 for the evidence
   // and for how to hand this back to WordPress once it is genuinely editable.
-  return tiersSeed as ScoreTier[];
+  // WordPress is now genuinely editable for this content (REDI Page Editor,
+  // docs/WORDPRESS_INTEGRATION.md section 6.2.2), so the seed is overlaid with
+  // whatever an editor has typed. Still NOT the redi/v1 route: that one answers
+  // too, but serves a frozen export of this repo that silently overrode newer
+  // approved copy for a month - see section 6.2.1.
+  return overlay(tiersSeed as ScoreTier[], await getOverride('scoreTiers'));
 }
 
 /**
@@ -76,7 +83,12 @@ export async function getScoringCriteria(): Promise<ScoringCriteriaData> {
   // response is a frozen export of this repo that silently overrode newer
   // approved copy — see docs/WORDPRESS_INTEGRATION.md §6.2.1 for the evidence
   // and for how to hand this back to WordPress once it is genuinely editable.
-  return criteriaSeed as ScoringCriteriaData;
+  // WordPress is now genuinely editable for this content (REDI Page Editor,
+  // docs/WORDPRESS_INTEGRATION.md section 6.2.2), so the seed is overlaid with
+  // whatever an editor has typed. Still NOT the redi/v1 route: that one answers
+  // too, but serves a frozen export of this repo that silently overrode newer
+  // approved copy for a month - see section 6.2.1.
+  return overlay(criteriaSeed as ScoringCriteriaData, await getOverride('scoringCriteria'));
 }
 
 /**
@@ -103,5 +115,10 @@ export async function getCoreDocuments(): Promise<CoreDocument[]> {
   // response is a frozen export of this repo that silently overrode newer
   // approved copy — see docs/WORDPRESS_INTEGRATION.md §6.2.1 for the evidence
   // and for how to hand this back to WordPress once it is genuinely editable.
-  return coreDocumentsSeed as CoreDocument[];
+  // WordPress is now genuinely editable for this content (REDI Page Editor,
+  // docs/WORDPRESS_INTEGRATION.md section 6.2.2), so the seed is overlaid with
+  // whatever an editor has typed. Still NOT the redi/v1 route: that one answers
+  // too, but serves a frozen export of this repo that silently overrode newer
+  // approved copy for a month - see section 6.2.1.
+  return overlay(coreDocumentsSeed as CoreDocument[], await getOverride('coreDocuments'));
 }

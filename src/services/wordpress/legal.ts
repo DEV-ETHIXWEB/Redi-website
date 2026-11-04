@@ -1,5 +1,7 @@
 import type { LegalSection } from '@/types/wordpress';
 import seed from '@/content/seed/legal.json';
+import { overlay } from './page-copy-overlay';
+import { getOverride } from './content-overrides';
 
 /**
  * Terms / privacy / branding-guidelines sections rendered on `/legal`, in
@@ -35,5 +37,10 @@ export async function getLegalSections(): Promise<LegalSection[]> {
   // response is a frozen export of this repo that silently overrode newer
   // approved copy — see docs/WORDPRESS_INTEGRATION.md §6.2.1 for the evidence
   // and for how to hand this back to WordPress once it is genuinely editable.
-  return seed as LegalSection[];
+  // WordPress is now genuinely editable for this content (REDI Page Editor,
+  // docs/WORDPRESS_INTEGRATION.md section 6.2.2), so the seed is overlaid with
+  // whatever an editor has typed. Still NOT the redi/v1 route: that one answers
+  // too, but serves a frozen export of this repo that silently overrode newer
+  // approved copy for a month - see section 6.2.1.
+  return overlay(seed as LegalSection[], await getOverride('legalSections'));
 }

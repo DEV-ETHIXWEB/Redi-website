@@ -1,6 +1,6 @@
 import seed from '@/content/seed/pages.json';
-import { wpFetch } from './client';
-import { overlay, type RemoteCopy } from './page-copy-overlay';
+import { overlay } from './page-copy-overlay';
+import { getContentOverrides } from './content-overrides';
 
 /**
  * Shape of the page-copy payload. Inferred directly from the seed JSON
@@ -58,9 +58,11 @@ export async function getPageCopy(): Promise<PageCopy> {
 
     Note the namespace: `ethixweb/v1`, not `redi/v1`. The latter belongs to
     REDI Headless CMS and still serves the frozen export; nothing here reads
-    it. wpFetch returns null on any failure, which lands on the approved copy.
+    it. The fetch is shared with every other service that reads this route
+    (./content-overrides.ts) and never throws, so a failure lands on the
+    approved copy.
   */
-  const remote = await wpFetch<RemoteCopy>('/wp-json/ethixweb/v1/page-copy');
+  const remote = await getContentOverrides();
   cache = overlay(seed as PageCopy, remote);
   return cache;
 }

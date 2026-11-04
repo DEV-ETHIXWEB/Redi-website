@@ -93,7 +93,7 @@ function redi_pages_activate() {
 		} else {
 			$id = wp_insert_post(
 				array(
-					'post_title'   => $page['label'] . ' Page (REDI)',
+					'post_title'   => $page['title'],
 					'post_name'    => $page['slug'],
 					'post_type'    => 'page',
 					'post_status'  => 'publish',
@@ -218,17 +218,38 @@ add_action(
 					);
 				}
 
-				$is_list = 'list' === $field['type'];
+				$is_list  = 'list' === $field['type'];
+				$is_block = 'blocklist' === $field['type'];
+
+				if ( $is_block ) {
+					// Rows are entered as blocks so they can be added and removed,
+					// which ACF free cannot do with a Repeater. Spell the format
+					// out in the instructions - it is the only place it appears.
+					$labels = array_map(
+						function ( $name ) {
+							return ucfirst( str_replace( '_', ' ', $name ) );
+						},
+						$field['fields']
+					);
+					$instructions = 'One per block, separated by a blank line. Inside a block: '
+						. ( count( $labels ) > 1
+							? 'first line is the ' . strtolower( $labels[0] ) . ', the rest is the ' . strtolower( $labels[1] ) . '.'
+							: 'the ' . strtolower( $labels[0] ) . '.' )
+						. ' Add or remove blocks to add or remove rows. Leave the whole box empty to keep what is on the site now.';
+				} elseif ( $is_list ) {
+					$instructions = 'One item per block, separated by a blank line. Leave empty to keep what is on the site now.';
+				} else {
+					$instructions = 'Leave empty to keep what is on the site now.';
+				}
+
 				$fields[] = array(
 					'key'          => 'field_' . $field['name'],
 					'label'        => count( $parts ) > 1 ? implode( ' / ', array_slice( $parts, 1 ) ) : $field['label'],
 					'name'         => $field['name'],
-					'type'         => $is_list || 'textarea' === $field['type'] ? 'textarea' : 'text',
-					'rows'         => $is_list ? 8 : 3,
+					'type'         => $is_list || $is_block || 'textarea' === $field['type'] ? 'textarea' : 'text',
+					'rows'         => $is_block ? 14 : ( $is_list ? 8 : 3 ),
 					'new_lines'    => '',
-					'instructions' => $is_list
-						? 'One item per block, separated by a blank line. Leave empty to keep what is on the site now.'
-						: 'Leave empty to keep what is on the site now.',
+					'instructions' => $instructions,
 				);
 			}
 
@@ -335,15 +356,45 @@ add_action(
 								continue; // untouched: let the site keep its own copy
 							}
 
+							$target = $key . ( '' !== $field['path'] ? '.' . $field['path'] : '' );
+
 							if ( 'list' === $field['type'] ) {
 								$items = preg_split( '/\R\s*\R/', $value );
 								$items = array_values( array_filter( array_map( 'trim', $items ), 'strlen' ) );
 								if ( ! $items ) {
 									continue;
 								}
-								redi_pages_set_path( $out, $key . '.' . $field['path'], $items );
+								redi_pages_set_path( $out, $target, $items );
+							} elseif ( 'blocklist' === $field['type'] ) {
+								// A block per row; inside a block, the first line is the
+								// first field and everything after it is the second.
+								$rows = array();
+								foreach ( preg_split( '/\R\s*\R/', $value ) as $block ) {
+									$block = trim( $block );
+									if ( '' === $block ) {
+										continue;
+									}
+									$lines = preg_split( '/\R/', $block );
+									$row   = array();
+									if ( count( $field['fields'] ) > 1 ) {
+										$row[ $field['fields'][0] ] = trim( array_shift( $lines ) );
+										$row[ $field['fields'][1] ] = trim( implode( ' ', array_map( 'trim', $lines ) ) );
+									} else {
+										$row[ $field['fields'][0] ] = trim( implode( ' ', array_map( 'trim', $lines ) ) );
+									}
+									// A row whose first field is blank is a stray blank
+									// line, not a row the editor meant to create.
+									if ( '' === reset( $row ) ) {
+										continue;
+									}
+									$rows[] = $row;
+								}
+								if ( ! $rows ) {
+									continue;
+								}
+								redi_pages_set_path( $out, $target, $rows );
 							} else {
-								redi_pages_set_path( $out, $key . '.' . $field['path'], $value );
+								redi_pages_set_path( $out, $target, $value );
 							}
 						}
 					}

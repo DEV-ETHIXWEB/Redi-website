@@ -106,15 +106,18 @@ if (!objectList) {
   const { section, key, field, items: before } = objectList;
   console.log(`        (using approach.${section}.${key}[].${field})`);
 
-  const asArray = overlay(clone(seed), {
-    approach: { [section]: { [key]: [{ [field]: 'Edited Item One' }] } },
+  // Editing ONE row without touching the others is the sparse form: PHP sends
+  // an object keyed by index when only some rows were filled in. A real array
+  // means "here is the whole list", which may add or remove rows - see 4b.
+  const one = overlay(clone(seed), {
+    approach: { [section]: { [key]: { 0: { [field]: 'Edited Item One' } } } },
   }).approach[section][key];
-  check('item 0 edited', asArray[0][field], 'Edited Item One');
-  check('length unchanged', asArray.length, before.length);
-  check('later items untouched', asArray.slice(1), before.slice(1));
+  check('item 0 edited', one[0][field], 'Edited Item One');
+  check('length unchanged', one.length, before.length);
+  check('later items untouched', one.slice(1), before.slice(1));
   check(
     'other keys of item 0 untouched',
-    { ...asArray[0], [field]: null },
+    { ...one[0], [field]: null },
     {
       ...before[0],
       [field]: null,
@@ -136,6 +139,41 @@ if (!objectList) {
   }).approach[section][key];
   check('an out-of-range item is not appended', extra.length, before.length);
   check('and its text appears nowhere', JSON.stringify(extra).includes('Smuggled Row'), false);
+}
+
+/* ---- 4b. Editors can now add and remove rows ---------------------------- */
+console.log('\nadding and removing rows (the whole list typed in one box)');
+if (objectList) {
+  const { section, key, field, items: before } = objectList;
+  const asList = (rows) =>
+    overlay(clone(seed), { approach: { [section]: { [key]: rows } } }).approach[section][key];
+
+  // Fewer rows than the seed: the list shrinks.
+  const shrunk = asList([{ [field]: 'Only Row' }]);
+  check('a shorter list removes rows', shrunk.length, 1);
+  check('the surviving row keeps the edit', shrunk[0][field], 'Only Row');
+
+  // More rows than the seed: the list grows, and the extra rows still carry
+  // every key the components dereference.
+  const grown = asList(
+    before.map((r) => ({ [field]: r[field] })).concat([{ [field]: 'Brand New Row' }]),
+  );
+  check('a longer list adds rows', grown.length, before.length + 1);
+  check('the new row carries the edit', grown[grown.length - 1][field], 'Brand New Row');
+  check(
+    'the new row has every key the seed items have',
+    Object.keys(grown[grown.length - 1]).sort(),
+    Object.keys(before[0]).sort(),
+  );
+  check(
+    'no key on a new row is null or undefined',
+    Object.values(grown[grown.length - 1]).filter((v) => v === null || v === undefined).length,
+    0,
+  );
+
+  // An empty list is still "no change", never "wipe the section".
+  check('an empty list changes nothing', asList([]), before);
+  check('a list of junk changes nothing', asList(['nope', 42, null]), before);
 }
 
 /* ---- 5. A malformed payload can never reshape the site ------------------ */

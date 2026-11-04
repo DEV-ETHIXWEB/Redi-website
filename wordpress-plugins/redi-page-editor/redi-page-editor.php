@@ -58,6 +58,7 @@ function redi_pages_manifest() {
 		'home' => array(
 			'label'  => 'Home',
 			'slug'   => 'redi-home',
+			'title'  => 'Home Page (REDI)',
 			'fields' => array(
 				array( 'name' => 'home_hero_kicker', 'path' => 'hero.kicker', 'type' => 'text', 'label' => 'Hero / Kicker', 'default' => '' ),
 				array( 'name' => 'home_hero_headline', 'path' => 'hero.headline', 'type' => 'text', 'label' => 'Hero / Headline', 'default' => 'The National Standard for Site Readiness' ),
@@ -94,16 +95,20 @@ What\'s actually beneath the surface
 How a company gets in and out' ),
 				array( 'name' => 'home_valuecompare_ready_title', 'path' => 'valueCompare.ready.title', 'type' => 'text', 'label' => 'Value Compare / Ready / Title', 'default' => 'Ready' ),
 				array( 'name' => 'home_valuecompare_ready_hasbeenlabel', 'path' => 'valueCompare.ready.hasBeenLabel', 'type' => 'text', 'label' => 'Value Compare / Ready / Has Been Label', 'default' => 'Has been independently evaluated on' ),
-				array( 'name' => 'home_valuecompare_ready_items_0_label', 'path' => 'valueCompare.ready.items[0].label', 'type' => 'text', 'label' => 'Value Compare / Ready / Items 1 / Label', 'default' => 'Utilities' ),
-				array( 'name' => 'home_valuecompare_ready_items_0_description', 'path' => 'valueCompare.ready.items[0].description', 'type' => 'text', 'label' => 'Value Compare / Ready / Items 1 / Description', 'default' => 'Confirmed capacity with a path to the site' ),
-				array( 'name' => 'home_valuecompare_ready_items_1_label', 'path' => 'valueCompare.ready.items[1].label', 'type' => 'text', 'label' => 'Value Compare / Ready / Items 2 / Label', 'default' => 'Environmental' ),
-				array( 'name' => 'home_valuecompare_ready_items_1_description', 'path' => 'valueCompare.ready.items[1].description', 'type' => 'text', 'label' => 'Value Compare / Ready / Items 2 / Description', 'default' => 'Record independently reviewed and cleared' ),
-				array( 'name' => 'home_valuecompare_ready_items_2_label', 'path' => 'valueCompare.ready.items[2].label', 'type' => 'text', 'label' => 'Value Compare / Ready / Items 3 / Label', 'default' => 'Ownership & Entitlements' ),
-				array( 'name' => 'home_valuecompare_ready_items_2_description', 'path' => 'valueCompare.ready.items[2].description', 'type' => 'text', 'label' => 'Value Compare / Ready / Items 3 / Description', 'default' => 'Title is clean, authority to sell is documented' ),
-				array( 'name' => 'home_valuecompare_ready_items_3_label', 'path' => 'valueCompare.ready.items[3].label', 'type' => 'text', 'label' => 'Value Compare / Ready / Items 4 / Label', 'default' => 'Ease of Development' ),
-				array( 'name' => 'home_valuecompare_ready_items_3_description', 'path' => 'valueCompare.ready.items[3].description', 'type' => 'text', 'label' => 'Value Compare / Ready / Items 4 / Description', 'default' => 'Ground studied, floodplain mapped, site cleared' ),
-				array( 'name' => 'home_valuecompare_ready_items_4_label', 'path' => 'valueCompare.ready.items[4].label', 'type' => 'text', 'label' => 'Value Compare / Ready / Items 5 / Label', 'default' => 'Logistics' ),
-				array( 'name' => 'home_valuecompare_ready_items_4_description', 'path' => 'valueCompare.ready.items[4].description', 'type' => 'text', 'label' => 'Value Compare / Ready / Items 5 / Description', 'default' => 'Highway access and ingress/egress documented' ),
+				array( 'name' => 'home_valuecompare_ready_items', 'path' => 'valueCompare.ready.items', 'type' => 'blocklist', 'label' => 'Value Compare / Ready / Items', 'default' => 'Utilities
+Confirmed capacity with a path to the site
+
+Environmental
+Record independently reviewed and cleared
+
+Ownership & Entitlements
+Title is clean, authority to sell is documented
+
+Ease of Development
+Ground studied, floodplain mapped, site cleared
+
+Logistics
+Highway access and ingress/egress documented', 'fields' => array( 'label', 'description' ) ),
 				array( 'name' => 'home_valuecompare_ready_footnote', 'path' => 'valueCompare.ready.footnote', 'type' => 'text', 'label' => 'Value Compare / Ready / Footnote', 'default' => 'Visibility matters. But readiness is what gives visibility value.' ),
 				array( 'name' => 'home_whychoose_eyebrow', 'path' => 'whyChoose.eyebrow', 'type' => 'text', 'label' => 'Why Choose / Eyebrow', 'default' => 'The Value' ),
 				array( 'name' => 'home_whychoose_heading', 'path' => 'whyChoose.heading', 'type' => 'text', 'label' => 'Why Choose / Heading', 'default' => 'Why Designate a Site?' ),
@@ -121,6 +126,7 @@ How a company gets in and out' ),
 		'about' => array(
 			'label'  => 'About',
 			'slug'   => 'redi-about',
+			'title'  => 'About Page (REDI)',
 			'fields' => array(
 				array( 'name' => 'about_hero_heading', 'path' => 'hero.heading', 'type' => 'text', 'label' => 'Hero / Heading', 'default' => 'Who We Are' ),
 				array( 'name' => 'about_hero_body', 'path' => 'hero.body', 'type' => 'textarea', 'label' => 'Hero / Body', 'default' => 'REDI Sites is an initiative of the Site Selectors Guild dedicated to improving investment readiness through consistent standards, independent evaluation, and education that better aligns community preparedness with corporate site selection requirements.' ),
@@ -164,6 +170,7 @@ The result is greater confidence for investors, greater clarity for communities,
 		'approach' => array(
 			'label'  => 'Approach',
 			'slug'   => 'redi-approach',
+			'title'  => 'Approach Page (REDI)',
 			'fields' => array(
 				array( 'name' => 'approach_hero_kicker', 'path' => 'hero.kicker', 'type' => 'text', 'label' => 'Hero / Kicker', 'default' => '' ),
 				array( 'name' => 'approach_hero_heading', 'path' => 'hero.heading', 'type' => 'text', 'label' => 'Hero / Heading', 'default' => 'The Standard' ),
@@ -174,26 +181,33 @@ The result is greater confidence for investors, greater clarity for communities,
 
 There is no pass or fail. Every site that completes the process receives a designation on a 10-point readiness index, along with a report showing where it is strong and where gaps remain.' ),
 				array( 'name' => 'approach_methodology_benefitslabel', 'path' => 'methodology.benefitsLabel', 'type' => 'text', 'label' => 'Methodology / Benefits Label', 'default' => 'Who Benefits?' ),
-				array( 'name' => 'approach_methodology_benefits_0_label', 'path' => 'methodology.benefits[0].label', 'type' => 'text', 'label' => 'Methodology / Benefits 1 / Label', 'default' => 'Economic development organizations' ),
-				array( 'name' => 'approach_methodology_benefits_0_description', 'path' => 'methodology.benefits[0].description', 'type' => 'text', 'label' => 'Methodology / Benefits 1 / Description', 'default' => 'a credible, third-party way to show site readiness to prospects, boards, and funders.' ),
-				array( 'name' => 'approach_methodology_benefits_1_label', 'path' => 'methodology.benefits[1].label', 'type' => 'text', 'label' => 'Methodology / Benefits 2 / Label', 'default' => 'Landowners and developers' ),
-				array( 'name' => 'approach_methodology_benefits_1_description', 'path' => 'methodology.benefits[1].description', 'type' => 'text', 'label' => 'Methodology / Benefits 2 / Description', 'default' => 'a stronger position with buyers, and a clear list of what adds value.' ),
-				array( 'name' => 'approach_methodology_benefits_2_label', 'path' => 'methodology.benefits[2].label', 'type' => 'text', 'label' => 'Methodology / Benefits 3 / Label', 'default' => 'Utilities and railroads' ),
-				array( 'name' => 'approach_methodology_benefits_2_description', 'path' => 'methodology.benefits[2].description', 'type' => 'text', 'label' => 'Methodology / Benefits 3 / Description', 'default' => 'a consistent way to evaluate and promote sites across a service territory or network.' ),
-				array( 'name' => 'approach_methodology_benefits_3_label', 'path' => 'methodology.benefits[3].label', 'type' => 'text', 'label' => 'Methodology / Benefits 4 / Label', 'default' => 'States and regions' ),
-				array( 'name' => 'approach_methodology_benefits_3_description', 'path' => 'methodology.benefits[3].description', 'type' => 'text', 'label' => 'Methodology / Benefits 4 / Description', 'default' => 'a portfolio-level view of site inventory and where to direct readiness investment.' ),
+				array( 'name' => 'approach_methodology_benefits', 'path' => 'methodology.benefits', 'type' => 'blocklist', 'label' => 'Methodology / Benefits', 'default' => 'Economic development organizations
+a credible, third-party way to show site readiness to prospects, boards, and funders.
+
+Landowners and developers
+a stronger position with buyers, and a clear list of what adds value.
+
+Utilities and railroads
+a consistent way to evaluate and promote sites across a service territory or network.
+
+States and regions
+a portfolio-level view of site inventory and where to direct readiness investment.', 'fields' => array( 'label', 'description' ) ),
 				array( 'name' => 'approach_process_eyebrow', 'path' => 'process.eyebrow', 'type' => 'text', 'label' => 'Process / Eyebrow', 'default' => 'Getting Designated' ),
 				array( 'name' => 'approach_process_heading', 'path' => 'process.heading', 'type' => 'text', 'label' => 'Process / Heading', 'default' => 'The Designation Process' ),
-				array( 'name' => 'approach_process_steps_0_label', 'path' => 'process.steps[0].label', 'type' => 'text', 'label' => 'Process / Steps 1 / Label', 'default' => 'Register' ),
-				array( 'name' => 'approach_process_steps_0_description', 'path' => 'process.steps[0].description', 'type' => 'textarea', 'label' => 'Process / Steps 1 / Description', 'default' => 'Once registered, applicants submit documentation across five weighted categories of readiness through Lasso, an online property data collection database.' ),
-				array( 'name' => 'approach_process_steps_1_label', 'path' => 'process.steps[1].label', 'type' => 'text', 'label' => 'Process / Steps 2 / Label', 'default' => 'Submit your RFI and documentation' ),
-				array( 'name' => 'approach_process_steps_1_description', 'path' => 'process.steps[1].description', 'type' => 'text', 'label' => 'Process / Steps 2 / Description', 'default' => 'Answer the RFI and upload exhibits covering the scored categories.' ),
-				array( 'name' => 'approach_process_steps_2_label', 'path' => 'process.steps[2].label', 'type' => 'text', 'label' => 'Process / Steps 3 / Label', 'default' => 'Engineering Review' ),
-				array( 'name' => 'approach_process_steps_2_description', 'path' => 'process.steps[2].description', 'type' => 'text', 'label' => 'Process / Steps 3 / Description', 'default' => 'Your documentation goes to Terracon, the program\'s independent third-party engineering reviewer.' ),
-				array( 'name' => 'approach_process_steps_3_label', 'path' => 'process.steps[3].label', 'type' => 'text', 'label' => 'Process / Steps 4 / Label', 'default' => 'REDI Review' ),
-				array( 'name' => 'approach_process_steps_3_description', 'path' => 'process.steps[3].description', 'type' => 'textarea', 'label' => 'Process / Steps 4 / Description', 'default' => 'REDI Reviewers, practicing Site Selectors Guild members, review the Terracon report and have final decision authority on the site\'s score and designation level.' ),
-				array( 'name' => 'approach_process_steps_4_label', 'path' => 'process.steps[4].label', 'type' => 'text', 'label' => 'Process / Steps 5 / Label', 'default' => 'Designation' ),
-				array( 'name' => 'approach_process_steps_4_description', 'path' => 'process.steps[4].description', 'type' => 'textarea', 'label' => 'Process / Steps 5 / Description', 'default' => 'The site receives a feedback report, marketing materials and a listing in the REDI Sites database. Sites may use the REDI Sites logo and the logo for their designation level.' ),
+				array( 'name' => 'approach_process_steps', 'path' => 'process.steps', 'type' => 'blocklist', 'label' => 'Process / Steps', 'default' => 'Register
+Once registered, applicants submit documentation across five weighted categories of readiness through Lasso, an online property data collection database.
+
+Submit your RFI and documentation
+Answer the RFI and upload exhibits covering the scored categories.
+
+Engineering Review
+Your documentation goes to Terracon, the program\'s independent third-party engineering reviewer.
+
+REDI Review
+REDI Reviewers, practicing Site Selectors Guild members, review the Terracon report and have final decision authority on the site\'s score and designation level.
+
+Designation
+The site receives a feedback report, marketing materials and a listing in the REDI Sites database. Sites may use the REDI Sites logo and the logo for their designation level.', 'fields' => array( 'label', 'description' ) ),
 				array( 'name' => 'approach_process_footnote', 'path' => 'process.footnote', 'type' => 'textarea', 'label' => 'Process / Footnote', 'default' => 'Designations are valid for one year. As additional due diligence is completed, a site can be resubmitted and redesignated at a higher level.' ),
 				array( 'name' => 'approach_criteria_eyebrow', 'path' => 'criteria.eyebrow', 'type' => 'text', 'label' => 'Criteria / Eyebrow', 'default' => 'What Is Evaluated' ),
 				array( 'name' => 'approach_criteria_heading', 'path' => 'criteria.heading', 'type' => 'text', 'label' => 'Criteria / Heading', 'default' => 'How Sites Are Scored' ),
@@ -212,6 +226,7 @@ There is no pass or fail. Every site that completes the process receives a desig
 		'contact' => array(
 			'label'  => 'Contact',
 			'slug'   => 'redi-contact',
+			'title'  => 'Contact Page (REDI)',
 			'fields' => array(
 				array( 'name' => 'contact_hero_kicker', 'path' => 'hero.kicker', 'type' => 'text', 'label' => 'Hero / Kicker', 'default' => 'Get In Touch' ),
 				array( 'name' => 'contact_hero_heading', 'path' => 'hero.heading', 'type' => 'text', 'label' => 'Hero / Heading', 'default' => 'Contact' ),
@@ -221,6 +236,7 @@ There is no pass or fail. Every site that completes the process receives a desig
 		'sites' => array(
 			'label'  => 'Sites',
 			'slug'   => 'redi-sites',
+			'title'  => 'Sites Page (REDI)',
 			'fields' => array(
 				array( 'name' => 'sites_hero_kicker', 'path' => 'hero.kicker', 'type' => 'text', 'label' => 'Hero / Kicker', 'default' => 'View Properties' ),
 				array( 'name' => 'sites_hero_heading', 'path' => 'hero.heading', 'type' => 'text', 'label' => 'Hero / Heading', 'default' => 'Sites' ),
@@ -232,6 +248,7 @@ There is no pass or fail. Every site that completes the process receives a desig
 		'updates' => array(
 			'label'  => 'Updates',
 			'slug'   => 'redi-updates',
+			'title'  => 'Updates Page (REDI)',
 			'fields' => array(
 				array( 'name' => 'updates_hero_kicker', 'path' => 'hero.kicker', 'type' => 'text', 'label' => 'Hero / Kicker', 'default' => 'Posts & News' ),
 				array( 'name' => 'updates_hero_heading', 'path' => 'hero.heading', 'type' => 'text', 'label' => 'Hero / Heading', 'default' => 'Latest Updates' ),
@@ -244,9 +261,169 @@ There is no pass or fail. Every site that completes the process receives a desig
 		'legal' => array(
 			'label'  => 'Legal',
 			'slug'   => 'redi-legal',
+			'title'  => 'Legal Page (REDI)',
 			'fields' => array(
 				array( 'name' => 'legal_hero_kicker', 'path' => 'hero.kicker', 'type' => 'text', 'label' => 'Hero / Kicker', 'default' => 'Legalities' ),
 				array( 'name' => 'legal_hero_heading', 'path' => 'hero.heading', 'type' => 'text', 'label' => 'Hero / Heading', 'default' => 'Terms & Conditions' ),
+			),
+		),
+		'advantages' => array(
+			'label'  => 'Why Choose Cards',
+			'slug'   => 'redi-advantages',
+			'title'  => 'Why Choose Cards (REDI)',
+			'fields' => array(
+				array( 'name' => 'advantages', 'path' => '', 'type' => 'blocklist', 'label' => 'Advantages', 'default' => 'Seen by Site Selectors
+Your site and its full supporting documentation sit in the REDI Sites database, where Guild members and their teams evaluate locations.
+
+Found by Everyone Else
+The public viewer shows your site\'s basics and designation level to companies, developers, and brokers. Full documentation stays with Guild members.
+
+Independent Validation
+The standard was built by site selectors and is reviewed annually. Terracon reviews your documentation, then practicing site selectors confirm the score. This is not a self-reported checklist.
+
+One National Standard
+The same criteria in every state, so a Gold site in one market means what a Gold site means in another.
+
+A Clear Roadmap
+Every site gets a feedback report showing where it\'s strong and where gaps remain. That report is a practical plan for your next investment.
+
+Marketing You Can Use
+Designated sites receive marketing materials and the right to display the REDI Sites logo and their designation-level logo.
+
+Ready When a Project Calls
+Assemble your exhibits once, in a standard format, and answer fast when a prospect asks.', 'fields' => array( 'title', 'description' ) ),
+			),
+		),
+		'legalSections' => array(
+			'label'  => 'Legal Sections',
+			'slug'   => 'redi-legal-sections',
+			'title'  => 'Legal Sections (REDI)',
+			'fields' => array(
+				array( 'name' => 'legalsections_0_eyebrow', 'path' => '[0].eyebrow', 'type' => 'text', 'label' => '1 / Eyebrow', 'default' => 'Sitewide' ),
+				array( 'name' => 'legalsections_0_heading', 'path' => '[0].heading', 'type' => 'text', 'label' => '1 / Heading', 'default' => 'Terms of Use' ),
+				array( 'name' => 'legalsections_0_bodyhtml', 'path' => '[0].bodyHtml', 'type' => 'textarea', 'label' => '1 / Body Html', 'default' => '<p>Welcome to REDI Sites. By accessing our website, you agree to comply with and be bound by the following terms and conditions. All content provided is for informational purposes only and does not constitute professional advice. We reserve the right to modify or discontinue any part of the site without prior notice. Users agree not to misuse the site or interfere with its operation. REDI Sites is not liable for any damages arising from the use of our services or information. All intellectual property on this site is owned by REDI Sites and may not be used without permission. By using this site, you consent to these terms and our privacy policy.</p>' ),
+				array( 'name' => 'legalsections_1_eyebrow', 'path' => '[1].eyebrow', 'type' => 'text', 'label' => '2 / Eyebrow', 'default' => 'Sitewide' ),
+				array( 'name' => 'legalsections_1_heading', 'path' => '[1].heading', 'type' => 'text', 'label' => '2 / Heading', 'default' => 'Privacy Policy' ),
+				array( 'name' => 'legalsections_1_bodyhtml', 'path' => '[1].bodyHtml', 'type' => 'textarea', 'label' => '2 / Body Html', 'default' => '<p>At REDI Sites, we prioritize your privacy and are committed to protecting your personal information. This privacy policy explains how we collect, use, and safeguard your data when you use our services.</p><p>We collect information you provide directly, such as contact details and project requirements, to deliver tailored evaluations and support. We also gather data automatically through website interactions to improve user experience.</p><p>Your information is used solely to enhance our services, communicate updates, and comply with legal obligations. We do not share your personal data with third parties without your consent, except as required by law.</p><p>We implement robust security measures to protect your information from unauthorized access or disclosure. You have the right to access, correct, or request deletion of your data at any time.</p><p>By using REDI Sites, you agree to this privacy policy. We may update it periodically, and we encourage you to review it regularly to stay informed about how we protect your privacy.</p>' ),
+				array( 'name' => 'legalsections_2_eyebrow', 'path' => '[2].eyebrow', 'type' => 'text', 'label' => '3 / Eyebrow', 'default' => 'Scoring' ),
+				array( 'name' => 'legalsections_2_heading', 'path' => '[2].heading', 'type' => 'text', 'label' => '3 / Heading', 'default' => 'Terms of Use' ),
+				array( 'name' => 'legalsections_2_bodyhtml', 'path' => '[2].bodyHtml', 'type' => 'textarea', 'label' => '3 / Body Html', 'default' => '<p>By using REDI Sites™ and STRATA Platforms® assets, users agree to represent these brands with complete accuracy and honesty at all times. All scoring, evaluations, and data provided through these platforms must be truthful, precise, and free from any form of misrepresentation or exaggeration. Users are expected to utilize company assets responsibly, strictly adhering to their intended purposes while fully respecting all intellectual property rights associated with these brands. Any unauthorized use, modification, or alteration of materials is strictly prohibited and may result in legal consequences. Furthermore, users acknowledge that by complying with these terms, they contribute to preserving the integrity, reliability, and trustworthiness of REDI Sites™ and STRATA Platforms® services, ensuring a fair and transparent experience for all stakeholders involved.</p>' ),
+				array( 'name' => 'legalsections_3_eyebrow', 'path' => '[3].eyebrow', 'type' => 'text', 'label' => '4 / Eyebrow', 'default' => 'Scoring' ),
+				array( 'name' => 'legalsections_3_heading', 'path' => '[3].heading', 'type' => 'text', 'label' => '4 / Heading', 'default' => 'Branding Guidelines' ),
+				array( 'name' => 'legalsections_3_bodyhtml', 'path' => '[3].bodyHtml', 'type' => 'textarea', 'label' => '4 / Body Html', 'default' => '<p>All files downloaded and provided by REDI Sites™ are intended solely for non-commercial use by external entities and parties. These files, including scoring logos, are proprietary and must not be commercially distributed, replicated, or used by any organizations other than REDI Sites and Strata Platforms.</p><p>The scoring logos themselves are carefully designed visual representations that accurately reflect the score assigned to a commercial property based on its current condition. These logos are generated through rigorous methodologies developed by REDI Sites and Strata Platforms, ensuring that each score is a reliable indicator of property status. The logos serve as a standardized symbol to communicate property evaluations clearly and consistently across various platforms and reports. Usage of these logos is strictly limited to accurately depicting the assigned score without alteration, and must always adhere to the guidelines and terms set forth by REDI Sites and Strata Platforms.</p><p>Additionally, all other files provided - such as data sets, reports, and analytical tools - are protected under the same non-commercial use policy. No entity other than REDI Sites or Strata Platforms is authorized to distribute, replicate, or utilize these files for commercial purposes. This restriction ensures the integrity and exclusivity of the proprietary information and methodologies contained within these materials. Compliance with the Terms of Use outlined above is mandatory for all users, and any unauthorized commercial use or distribution may result in legal action.</p>' ),
+			),
+		),
+		'scoreTiers' => array(
+			'label'  => 'REDI Score Tiers',
+			'slug'   => 'redi-score-tiers',
+			'title'  => 'REDI Score Tiers (REDI)',
+			'fields' => array(
+				array( 'name' => 'scoretiers_0_label', 'path' => '[0].label', 'type' => 'text', 'label' => '1 / Label', 'default' => 'Emerging' ),
+				array( 'name' => 'scoretiers_0_range', 'path' => '[0].range', 'type' => 'text', 'label' => '1 / Range', 'default' => 'Below 6.0' ),
+				array( 'name' => 'scoretiers_0_description', 'path' => '[0].description', 'type' => 'textarea', 'label' => '1 / Description', 'default' => 'These sites are in the early stages of readiness. Some foundational due diligence may be complete, but additional documentation and development steps are needed.' ),
+				array( 'name' => 'scoretiers_1_label', 'path' => '[1].label', 'type' => 'text', 'label' => '2 / Label', 'default' => 'Bronze' ),
+				array( 'name' => 'scoretiers_1_range', 'path' => '[1].range', 'type' => 'text', 'label' => '2 / Range', 'default' => '6.0 - 6.9' ),
+				array( 'name' => 'scoretiers_1_description', 'path' => '[1].description', 'type' => 'textarea', 'label' => '2 / Description', 'default' => 'Sites at this level meet basic readiness standards. Core infrastructure and documentation are in place, but there may still be a few key areas requiring additional work or clarification.' ),
+				array( 'name' => 'scoretiers_2_label', 'path' => '[2].label', 'type' => 'text', 'label' => '3 / Label', 'default' => 'Silver' ),
+				array( 'name' => 'scoretiers_2_range', 'path' => '[2].range', 'type' => 'text', 'label' => '3 / Range', 'default' => '7.0 - 7.9' ),
+				array( 'name' => 'scoretiers_2_description', 'path' => '[2].description', 'type' => 'textarea', 'label' => '3 / Description', 'default' => 'Sites at this level demonstrate a strong overall readiness profile, with many key elements of due diligence in place. There may still be a few areas where additional work could improve the site\'s competitiveness.' ),
+				array( 'name' => 'scoretiers_3_label', 'path' => '[3].label', 'type' => 'text', 'label' => '4 / Label', 'default' => 'Gold' ),
+				array( 'name' => 'scoretiers_3_range', 'path' => '[3].range', 'type' => 'text', 'label' => '4 / Range', 'default' => '8.0 - 8.9' ),
+				array( 'name' => 'scoretiers_3_description', 'path' => '[3].description', 'type' => 'textarea', 'label' => '4 / Description', 'default' => 'Gold sites reflect a high level of preparedness, with nearly all due diligence completed and minimal (if any) barriers to immediate development.' ),
+				array( 'name' => 'scoretiers_4_label', 'path' => '[4].label', 'type' => 'text', 'label' => '5 / Label', 'default' => 'Platinum' ),
+				array( 'name' => 'scoretiers_4_range', 'path' => '[4].range', 'type' => 'text', 'label' => '5 / Range', 'default' => '9.0 - 10.0' ),
+				array( 'name' => 'scoretiers_4_description', 'path' => '[4].description', 'type' => 'textarea', 'label' => '5 / Description', 'default' => 'These are exceptional sites with comprehensive due diligence, excellent infrastructure access, and a high degree of development readiness. Platinum designations are rare and reflect the highest tier of readiness in the program.' ),
+			),
+		),
+		'coreDocuments' => array(
+			'label'  => 'Core Documents',
+			'slug'   => 'redi-core-documents',
+			'title'  => 'Core Documents (REDI)',
+			'fields' => array(
+				array( 'name' => 'coredocuments', 'path' => '', 'type' => 'blocklist', 'label' => 'Core Documents', 'default' => 'Ownership & Entitlements
+Deed showing current owner, plus a listing/option agreement or owner letter confirming the site is for sale or lease; stated price or terms
+
+Survey
+ALTA or boundary survey, or at minimum a legal description
+
+Zoning
+Current zoning and land use map, and how the intended use fits
+
+Utility Will-Serve Letters
+Water, wastewater, electric, natural gas, and fiber: provider, distance, capacity, who pays, and timeline to serve
+
+Phase I ESA
+Ideally less than 5 years old
+
+Wetlands
+Wetland delineation report and, if wetlands are present, a USACE Jurisdictional Determination
+
+Floodplain
+FEMA FIRM panel map with the site clearly outlined
+
+Geotechnical
+Geotechnical report or desktop subsurface study
+
+Cultural Resources & T&E Species
+SHPO clearance letter and a threatened and endangered species assessment
+
+Access
+Map showing the site, route to the nearest interstate interchange, and ingress/egress points', 'fields' => array( 'area', 'submit' ) ),
+			),
+		),
+		'scoringCriteria' => array(
+			'label'  => 'Scoring Criteria',
+			'slug'   => 'redi-scoring-criteria',
+			'title'  => 'Scoring Criteria (REDI)',
+			'fields' => array(
+				array( 'name' => 'scoringcriteria_weights_0_label', 'path' => 'weights[0].label', 'type' => 'text', 'label' => 'Weights 1 / Label', 'default' => 'Utilities' ),
+				array( 'name' => 'scoringcriteria_weights_1_label', 'path' => 'weights[1].label', 'type' => 'text', 'label' => 'Weights 2 / Label', 'default' => 'Ownership & Entitlements' ),
+				array( 'name' => 'scoringcriteria_weights_2_label', 'path' => 'weights[2].label', 'type' => 'text', 'label' => 'Weights 3 / Label', 'default' => 'Environmental' ),
+				array( 'name' => 'scoringcriteria_weights_3_label', 'path' => 'weights[3].label', 'type' => 'text', 'label' => 'Weights 4 / Label', 'default' => 'Ease of Development' ),
+				array( 'name' => 'scoringcriteria_weights_4_label', 'path' => 'weights[4].label', 'type' => 'text', 'label' => 'Weights 5 / Label', 'default' => 'Logistics' ),
+				array( 'name' => 'scoringcriteria_primarycriteria', 'path' => 'primaryCriteria', 'type' => 'list', 'label' => 'Primary Criteria', 'default' => 'Ownership and Entitlements
+
+Utilities
+
+Ease of Development
+
+Environmental
+
+Logistics' ),
+				array( 'name' => 'scoringcriteria_eligibility', 'path' => 'eligibility', 'type' => 'list', 'label' => 'Eligibility', 'default' => 'Located in the US
+
+At least 5 acres
+
+Available for sale or lease' ),
+			),
+		),
+		'siteSettings' => array(
+			'label'  => 'Site Settings',
+			'slug'   => 'redi-site-settings',
+			'title'  => 'Site Settings (REDI)',
+			'fields' => array(
+				array( 'name' => 'sitesettings_sitename', 'path' => 'siteName', 'type' => 'text', 'label' => 'Site Name', 'default' => 'REDI Sites' ),
+				array( 'name' => 'sitesettings_tagline', 'path' => 'tagline', 'type' => 'text', 'label' => 'Tagline', 'default' => 'Readiness Evaluation for Development and Investment' ),
+				array( 'name' => 'sitesettings_primarynav_0_label', 'path' => 'primaryNav[0].label', 'type' => 'text', 'label' => 'Primary Nav 1 / Label', 'default' => 'Home' ),
+				array( 'name' => 'sitesettings_primarynav_1_label', 'path' => 'primaryNav[1].label', 'type' => 'text', 'label' => 'Primary Nav 2 / Label', 'default' => 'About Us' ),
+				array( 'name' => 'sitesettings_primarynav_2_label', 'path' => 'primaryNav[2].label', 'type' => 'text', 'label' => 'Primary Nav 3 / Label', 'default' => 'Approach' ),
+				array( 'name' => 'sitesettings_primarynav_3_label', 'path' => 'primaryNav[3].label', 'type' => 'text', 'label' => 'Primary Nav 4 / Label', 'default' => 'Sites' ),
+				array( 'name' => 'sitesettings_primarynav_4_label', 'path' => 'primaryNav[4].label', 'type' => 'text', 'label' => 'Primary Nav 5 / Label', 'default' => 'Latest' ),
+				array( 'name' => 'sitesettings_primarynav_5_label', 'path' => 'primaryNav[5].label', 'type' => 'text', 'label' => 'Primary Nav 6 / Label', 'default' => 'Contact' ),
+				array( 'name' => 'sitesettings_ctanav_signin_label', 'path' => 'ctaNav.signIn.label', 'type' => 'text', 'label' => 'CTA Nav / Sign in / Label', 'default' => 'Sign In' ),
+				array( 'name' => 'sitesettings_ctanav_register_label', 'path' => 'ctaNav.register.label', 'type' => 'text', 'label' => 'CTA Nav / Register / Label', 'default' => 'Register' ),
+				array( 'name' => 'sitesettings_footer_blurb', 'path' => 'footer.blurb', 'type' => 'text', 'label' => 'Footer / Blurb', 'default' => 'Consistency. Credibility. Visibility.' ),
+				array( 'name' => 'sitesettings_footer_sitemap_0_label', 'path' => 'footer.sitemap[0].label', 'type' => 'text', 'label' => 'Footer / Sitemap 1 / Label', 'default' => 'Home' ),
+				array( 'name' => 'sitesettings_footer_sitemap_1_label', 'path' => 'footer.sitemap[1].label', 'type' => 'text', 'label' => 'Footer / Sitemap 2 / Label', 'default' => 'About Us' ),
+				array( 'name' => 'sitesettings_footer_sitemap_2_label', 'path' => 'footer.sitemap[2].label', 'type' => 'text', 'label' => 'Footer / Sitemap 3 / Label', 'default' => 'REDI Scores' ),
+				array( 'name' => 'sitesettings_footer_sitemap_3_label', 'path' => 'footer.sitemap[3].label', 'type' => 'text', 'label' => 'Footer / Sitemap 4 / Label', 'default' => 'Updates' ),
+				array( 'name' => 'sitesettings_footer_sitemap_4_label', 'path' => 'footer.sitemap[4].label', 'type' => 'text', 'label' => 'Footer / Sitemap 5 / Label', 'default' => 'Listings' ),
+				array( 'name' => 'sitesettings_footer_sitemap_5_label', 'path' => 'footer.sitemap[5].label', 'type' => 'text', 'label' => 'Footer / Sitemap 6 / Label', 'default' => 'Contact' ),
+				array( 'name' => 'sitesettings_footer_sitemap_6_label', 'path' => 'footer.sitemap[6].label', 'type' => 'text', 'label' => 'Footer / Sitemap 7 / Label', 'default' => 'Terms & Conditions' ),
+				array( 'name' => 'sitesettings_footer_contact_email', 'path' => 'footer.contact.email', 'type' => 'text', 'label' => 'Footer / Contact / Email', 'default' => 'info@redisites.com' ),
+				array( 'name' => 'sitesettings_footer_contact_address', 'path' => 'footer.contact.address', 'type' => 'text', 'label' => 'Footer / Contact / Address', 'default' => 'PO Box 18, Fayetteville, AR 72702' ),
+				array( 'name' => 'sitesettings_footer_social_linkedin', 'path' => 'footer.social.linkedin', 'type' => 'text', 'label' => 'Footer / Social / Linkedin', 'default' => 'https://www.linkedin.com/company/redi-sites' ),
+				array( 'name' => 'sitesettings_footer_copyright', 'path' => 'footer.copyright', 'type' => 'text', 'label' => 'Footer / Copyright', 'default' => '© {year} Site Selectors Guild. All rights reserved.' ),
 			),
 		),
 	);
@@ -261,7 +438,7 @@ const REDI_PAGES_VERSION_OPTION = 'redi_page_editor_version';
  * be missed is a regenerated plugin that adds a page. A hand-maintained
  * version number would be forgotten exactly then.
  */
-const REDI_PAGES_VERSION        = '2.0.1+b6e19699';
+const REDI_PAGES_VERSION        = '2.0.1+a895c576';
 
 /* -------------------------------------------------------------------------
  * 1. The pages
@@ -286,7 +463,7 @@ function redi_pages_activate() {
 		} else {
 			$id = wp_insert_post(
 				array(
-					'post_title'   => $page['label'] . ' Page (REDI)',
+					'post_title'   => $page['title'],
 					'post_name'    => $page['slug'],
 					'post_type'    => 'page',
 					'post_status'  => 'publish',
@@ -411,17 +588,38 @@ add_action(
 					);
 				}
 
-				$is_list = 'list' === $field['type'];
+				$is_list  = 'list' === $field['type'];
+				$is_block = 'blocklist' === $field['type'];
+
+				if ( $is_block ) {
+					// Rows are entered as blocks so they can be added and removed,
+					// which ACF free cannot do with a Repeater. Spell the format
+					// out in the instructions - it is the only place it appears.
+					$labels = array_map(
+						function ( $name ) {
+							return ucfirst( str_replace( '_', ' ', $name ) );
+						},
+						$field['fields']
+					);
+					$instructions = 'One per block, separated by a blank line. Inside a block: '
+						. ( count( $labels ) > 1
+							? 'first line is the ' . strtolower( $labels[0] ) . ', the rest is the ' . strtolower( $labels[1] ) . '.'
+							: 'the ' . strtolower( $labels[0] ) . '.' )
+						. ' Add or remove blocks to add or remove rows. Leave the whole box empty to keep what is on the site now.';
+				} elseif ( $is_list ) {
+					$instructions = 'One item per block, separated by a blank line. Leave empty to keep what is on the site now.';
+				} else {
+					$instructions = 'Leave empty to keep what is on the site now.';
+				}
+
 				$fields[] = array(
 					'key'          => 'field_' . $field['name'],
 					'label'        => count( $parts ) > 1 ? implode( ' / ', array_slice( $parts, 1 ) ) : $field['label'],
 					'name'         => $field['name'],
-					'type'         => $is_list || 'textarea' === $field['type'] ? 'textarea' : 'text',
-					'rows'         => $is_list ? 8 : 3,
+					'type'         => $is_list || $is_block || 'textarea' === $field['type'] ? 'textarea' : 'text',
+					'rows'         => $is_block ? 14 : ( $is_list ? 8 : 3 ),
 					'new_lines'    => '',
-					'instructions' => $is_list
-						? 'One item per block, separated by a blank line. Leave empty to keep what is on the site now.'
-						: 'Leave empty to keep what is on the site now.',
+					'instructions' => $instructions,
 				);
 			}
 
@@ -528,15 +726,45 @@ add_action(
 								continue; // untouched: let the site keep its own copy
 							}
 
+							$target = $key . ( '' !== $field['path'] ? '.' . $field['path'] : '' );
+
 							if ( 'list' === $field['type'] ) {
 								$items = preg_split( '/\R\s*\R/', $value );
 								$items = array_values( array_filter( array_map( 'trim', $items ), 'strlen' ) );
 								if ( ! $items ) {
 									continue;
 								}
-								redi_pages_set_path( $out, $key . '.' . $field['path'], $items );
+								redi_pages_set_path( $out, $target, $items );
+							} elseif ( 'blocklist' === $field['type'] ) {
+								// A block per row; inside a block, the first line is the
+								// first field and everything after it is the second.
+								$rows = array();
+								foreach ( preg_split( '/\R\s*\R/', $value ) as $block ) {
+									$block = trim( $block );
+									if ( '' === $block ) {
+										continue;
+									}
+									$lines = preg_split( '/\R/', $block );
+									$row   = array();
+									if ( count( $field['fields'] ) > 1 ) {
+										$row[ $field['fields'][0] ] = trim( array_shift( $lines ) );
+										$row[ $field['fields'][1] ] = trim( implode( ' ', array_map( 'trim', $lines ) ) );
+									} else {
+										$row[ $field['fields'][0] ] = trim( implode( ' ', array_map( 'trim', $lines ) ) );
+									}
+									// A row whose first field is blank is a stray blank
+									// line, not a row the editor meant to create.
+									if ( '' === reset( $row ) ) {
+										continue;
+									}
+									$rows[] = $row;
+								}
+								if ( ! $rows ) {
+									continue;
+								}
+								redi_pages_set_path( $out, $target, $rows );
 							} else {
-								redi_pages_set_path( $out, $key . '.' . $field['path'], $value );
+								redi_pages_set_path( $out, $target, $value );
 							}
 						}
 					}
