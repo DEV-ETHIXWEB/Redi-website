@@ -25,8 +25,20 @@ export interface Props {
   preloadImages?: string[];
 }
 
-const { structuredData = [], preloadImages = [], ...seoProps } = Astro.props;
+const { structuredData = [], preloadImages = [], ...rest } = Astro.props;
 const settings = await getSiteSettings();
+
+/*
+  Last line of defence on the description. A caller passing an empty or
+  whitespace string - which is what a blank CMS field produces - would otherwise
+  render `<meta name="description" content>` on every page that uses it, and an
+  empty description is worse than a generic one. The optional `description` in
+  Props is not enough: `undefined` defaults correctly, `''` does not.
+*/
+const seoProps = {
+  ...rest,
+  description: rest.description?.trim() || settings.tagline,
+};
 
 const organizationLd = {
   '@context': 'https://schema.org',

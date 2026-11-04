@@ -47,11 +47,29 @@ const breadcrumbLd = {
     },
   ],
 };
+/*
+  An empty WordPress excerpt used to ship `<meta name="description" content>` -
+  empty, along with og:description and twitter:description. Seven of the ten
+  posts are external press mentions with no excerpt and no body, so this was
+  most of the article pages, not an edge case.
+
+  Falls back through what the post actually has: the excerpt, then the opening
+  of the body, then the headline with its source. Blank is never passed on.
+*/
+const metaDescription =
+  post.excerpt?.trim() ||
+  post.contentHtml
+    ?.replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 160)
+    .trim() ||
+  [post.title, post.source].filter(Boolean).join(' - ');
 ---
 
 <BaseLayout
   title={`${post.title} - REDI Sites`}
-  description={post.excerpt}
+  description={metaDescription}
   image={post.featuredImage.url}
   type="article"
   publishedTime={post.date}
