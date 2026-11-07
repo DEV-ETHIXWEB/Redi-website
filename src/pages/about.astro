@@ -47,14 +47,20 @@ const breadcrumbLd = {
     heading={about.mission.heading}
     paragraphs={about.mission.paragraphs}
   />
+  {
+    /* The Guild group photo is 3:2. Cropped to ProseSection's usual 1026x550
+      it took the crop out of people's heads at the top of the staircase, so
+      this one section renders at the photo's own ratio instead. */
+  }
   <ProseSection
     eyebrow={about.businessModel.eyebrow}
     heading={about.businessModel.heading}
     paragraphs={about.businessModel.paragraphs}
     image={{
       url: '/images/sections/business-model.webp',
-      alt: 'High-rise construction site at sunset with tower cranes',
+      alt: 'Members of the Site Selectors Guild gathered on a staircase at a Guild meeting',
     }}
+    imageAspect={{ width: 1026, height: 684 }}
   />
   <GuildMission copy={about.guildMission} />
   <ProseSection

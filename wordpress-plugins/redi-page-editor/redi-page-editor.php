@@ -67,7 +67,6 @@ function redi_pages_manifest() {
 REDI Sites is the first national site readiness designation program in the United States, developed in affiliation with the Site Selectors Guild. Every site that completes the process receives a designation reflecting its current level of investment readiness, telling site selectors exactly where it stands, and telling you what to do next.' ),
 				array( 'name' => 'home_hero_ctaprimary_label', 'path' => 'hero.ctaPrimary.label', 'type' => 'text', 'label' => 'Hero / CTA Primary / Label', 'default' => 'Explore Sites' ),
 				array( 'name' => 'home_hero_ctasecondary_label', 'path' => 'hero.ctaSecondary.label', 'type' => 'text', 'label' => 'Hero / CTA Secondary / Label', 'default' => 'Register Your Site' ),
-				array( 'name' => 'home_hero_mapctalabel', 'path' => 'hero.mapCtaLabel', 'type' => 'text', 'label' => 'Hero / Map CTA Label', 'default' => 'View all sites' ),
 				array( 'name' => 'home_featured_eyebrow', 'path' => 'featured.eyebrow', 'type' => 'text', 'label' => 'Featured / Eyebrow', 'default' => 'Available Now' ),
 				array( 'name' => 'home_featured_heading', 'path' => 'featured.heading', 'type' => 'text', 'label' => 'Featured / Heading', 'default' => 'Featured Sites' ),
 				array( 'name' => 'home_featured_body', 'path' => 'featured.body', 'type' => 'text', 'label' => 'Featured / Body', 'default' => 'Our comprehensive approach to site selection ensures maximum returns for our investment partners.' ),
@@ -438,7 +437,7 @@ const REDI_PAGES_VERSION_OPTION = 'redi_page_editor_version';
  * be missed is a regenerated plugin that adds a page. A hand-maintained
  * version number would be forgotten exactly then.
  */
-const REDI_PAGES_VERSION        = '2.0.1+a895c576';
+const REDI_PAGES_VERSION        = '2.0.1+cfced78d';
 
 /* -------------------------------------------------------------------------
  * 1. The pages

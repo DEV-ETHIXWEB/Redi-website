@@ -10,6 +10,22 @@ export interface Props {
 }
 
 const { copy } = Astro.props;
+
+/*
+  The interactive US map that sat beside the hero copy is hidden at the
+  client's request (2026-11-08): its markers represented sites REDI does not
+  have yet, and showing invented coverage on the home page misrepresents the
+  programme. Their instruction was to leave the space blank for now.
+
+  Hidden behind a flag rather than deleted, because this is explicitly "for
+  now" - flip it back to `true` once there are real designated sites to plot,
+  and the map, its frame and the provider credit all return. `HeroMap` and
+  src/lib/map-provider.ts are untouched.
+
+  With the map gone the hero is one column, so the copy is capped rather than
+  stretched across the full width of a large screen.
+*/
+const SHOW_HERO_MAP = false;
 ---
 
 <section
@@ -30,8 +46,10 @@ const { copy } = Astro.props;
   </div>
 
   <div class="container-page">
-    <div class="grid items-center gap-12 lg:grid-cols-[1fr_611px] lg:gap-16">
-      <div>
+    <div
+      class={`grid items-center gap-12 ${SHOW_HERO_MAP ? 'lg:grid-cols-[1fr_611px] lg:gap-16' : ''}`}
+    >
+      <div class={SHOW_HERO_MAP ? '' : 'max-w-3xl'}>
         {
           /* The "Site Selectors Guild" badge that sat here was removed at the
             client's request (2026-10-16); the affiliation is still stated in
@@ -67,43 +85,41 @@ const { copy } = Astro.props;
         </div>
       </div>
 
-      <div class="w-full">
-        <div
-          class="relative aspect-[800/459] rounded-2xl border border-white/25 bg-white/[0.06] p-2 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.55),0_0_60px_-12px_rgba(44,195,236,0.45)] backdrop-blur-xl"
-        >
-          <div
-            class="pointer-events-none absolute inset-0 rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.5),inset_0_0_30px_-10px_rgba(255,255,255,0.18)]"
-          >
-          </div>
-          <div class="relative h-full w-full overflow-hidden rounded-xl ring-1 ring-white/15">
-            <HeroMap client:visible />
-          </div>
-        </div>
-        {
-          /*
+      {
+        SHOW_HERO_MAP && (
+          <div class="w-full">
+            <div class="relative aspect-[800/459] rounded-2xl border border-white/25 bg-white/[0.06] p-2 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.55),0_0_60px_-12px_rgba(44,195,236,0.45)] backdrop-blur-xl">
+              <div class="pointer-events-none absolute inset-0 rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.5),inset_0_0_30px_-10px_rgba(255,255,255,0.18)]" />
+              <div class="relative h-full w-full overflow-hidden rounded-xl ring-1 ring-white/15">
+                <HeroMap client:visible />
+              </div>
+            </div>
+            {/*
             The provider credit is code-owned, not CMS copy — it carries a
             hyperlink, which the flat `mapCaption` string it replaced could
             not. See src/lib/map-provider.ts.
-          */
-        }
-        <p class="mt-3 text-right text-sm text-white/60">
-          Powered by{' '}
-          <a
-            href={MAP_PROVIDER_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-cyan-300 underline underline-offset-4 transition-colors hover:text-cyan-200"
-          >
-            {MAP_PROVIDER_NAME}
-          </a> -
-          <a
-            href={copy.ctaPrimary.href}
-            class="text-cyan-300 underline underline-offset-4 transition-colors hover:text-cyan-200"
-          >
-            {copy.mapCtaLabel}
-          </a>
-        </p>
-      </div>
+          */}
+            <p class="mt-3 text-right text-sm text-white/60">
+              Powered by{' '}
+              <a
+                href={MAP_PROVIDER_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-cyan-300 underline underline-offset-4 transition-colors hover:text-cyan-200"
+              >
+                {MAP_PROVIDER_NAME}
+              </a>{' '}
+              -
+              <a
+                href={copy.ctaPrimary.href}
+                class="text-cyan-300 underline underline-offset-4 transition-colors hover:text-cyan-200"
+              >
+                {copy.mapCtaLabel}
+              </a>
+            </p>
+          </div>
+        )
+      }
     </div>
   </div>
 </section>

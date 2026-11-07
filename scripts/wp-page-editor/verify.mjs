@@ -19,7 +19,14 @@ import { readFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import { buildManifest, isSkippedPath, SKIP_PATHS, SKIP_KEYS, SCREENS } from './manifest.mjs';
+import {
+  buildManifest,
+  isSkippedPath,
+  SKIP_PATHS,
+  GATED_PATHS,
+  SKIP_KEYS,
+  SCREENS,
+} from './manifest.mjs';
 import { overlay } from '../../src/services/wordpress/page-copy-overlay.ts';
 
 const root = fileURLToPath(new URL('../..', import.meta.url));
@@ -260,6 +267,22 @@ assert(
   `${SKIP_PATHS.size} excluded path(s) confirmed still unrendered`,
   'copy excluded as unrendered is now referenced in src - it needs a field again:\n' +
     revived.map((r) => `          ${r}`).join('\n'),
+);
+
+// Fields excluded because their component renders them only behind a flag
+// that is off. The flag being flipped back on is exactly when they need to
+// return, so the flag is read from the source rather than trusted.
+const stillGated = [];
+for (const [fieldPath, { gate, file }] of GATED_PATHS) {
+  const src = readFileSync(path.join(root, file), 'utf8');
+  const off = new RegExp(`const\\s+${gate}\\s*=\\s*false`).test(src);
+  if (!off) stillGated.push(`${fieldPath} (${gate} in ${file} is no longer false)`);
+}
+assert(
+  stillGated.length === 0,
+  `${GATED_PATHS.size} gated path(s) confirmed still switched off`,
+  `a gate was turned back on - these fields need to be editable again:\n` +
+    stillGated.map((g) => `          ${g}`).join('\n'),
 );
 
 /* ---- 6. The plugin's own PHP must expand paths the same way ------------- */

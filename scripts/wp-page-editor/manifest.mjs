@@ -44,6 +44,22 @@ const SKIP_PATHS = new Set([
 ]);
 
 /**
+ * Copy that a component still references but renders only behind a flag that
+ * is currently off. Excluded for the same reason as SKIP_PATHS - a field that
+ * changes nothing looks like a broken CMS - but tracked separately because the
+ * evidence is different: the text IS in the source, so the dead-copy check
+ * cannot prove it by absence. It asserts the flag is still off instead.
+ *
+ * Flip the flag back on and the field returns on the next regenerate.
+ */
+const GATED_PATHS = new Map([
+  [
+    'home.hero.mapCtaLabel',
+    { gate: 'SHOW_HERO_MAP', file: 'src/components/sections/HomeHero.astro' },
+  ],
+]);
+
+/**
  * Lists whose LENGTH is structure rather than copy, so rows cannot be added or
  * removed from wp-admin. Their text is still fully editable.
  *
@@ -110,6 +126,7 @@ function humanise(segment) {
 /** True when a path is excluded outright, or sits under an excluded section. */
 export function isSkippedPath(screenKey, leafPath) {
   const full = leafPath ? `${screenKey}.${leafPath}` : screenKey;
+  if (GATED_PATHS.has(full)) return true;
   for (const skip of SKIP_PATHS) {
     if (full === skip || full.startsWith(`${skip}.`) || full.startsWith(`${skip}[`)) return true;
   }
@@ -220,4 +237,4 @@ export function buildManifest(seeds) {
   return screens;
 }
 
-export { SKIP_PATHS, SKIP_KEYS, FIXED_LENGTH, SCREENS };
+export { SKIP_PATHS, GATED_PATHS, SKIP_KEYS, FIXED_LENGTH, SCREENS };

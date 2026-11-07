@@ -13,6 +13,13 @@ export interface Props {
   paragraphs: string[];
   image?: { url: string; alt: string };
   imageSide?: 'left' | 'right';
+  /**
+   * Intrinsic ratio of the image box. The default is the wide 1026x550 crop
+   * most section images use; pass the photo's own ratio when cropping to that
+   * would cut the subject - a group photo being the obvious case, where
+   * `object-cover` would take the crop out of people's heads.
+   */
+  imageAspect?: { width: number; height: number };
   headingAlign?: 'left' | 'center';
   class?: string;
 }
@@ -23,6 +30,7 @@ const {
   paragraphs,
   image,
   imageSide = 'right',
+  imageAspect = { width: 1026, height: 550 },
   headingAlign = 'left',
   class: className,
 } = Astro.props;
@@ -55,8 +63,8 @@ const {
               srcset={heroSrcSet(image.url)}
               sizes="(min-width: 1280px) 1232px, 100vw"
               alt={image.alt}
-              width="1026"
-              height="550"
+              width={imageAspect.width}
+              height={imageAspect.height}
               loading="lazy"
               decoding="async"
               class="w-full object-cover"
