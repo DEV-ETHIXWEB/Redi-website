@@ -8,6 +8,7 @@ const [criteria, documents, copy] = await Promise.all([
   getPageCopy(),
 ]);
 const c = copy.approach.criteria;
+const fees = copy.approach.fees;
 const SCORING_SCALE_PDF = '/downloads/redi-scoring-scale.pdf';
 ---
 
@@ -113,6 +114,81 @@ const SCORING_SCALE_PDF = '/downloads/redi-scoring-scale.pdf';
       <Button variant="primary" icon="download" class="mt-6" href={SCORING_SCALE_PDF} download>
         {c.downloadLabel}
       </Button>
+    </div>
+
+    {
+      /*
+        Fees, added at the client's request (2026-11-11) directly under the
+        scoring-scale card.
+
+        Their source table repeated the $450 application fee on all seven
+        rows; they asked for it stated once instead, so the three flat charges
+        sit above and the table carries only what actually varies - acreage
+        against designation fee. Same table styling as the core documents
+        above it, and a real <table> rather than an image of one, so it is
+        readable on a phone and to a screen reader.
+      */
+    }
+    <div class="mt-16">
+      <h3 class="font-heading text-ink-900 text-xl font-bold tracking-tight sm:text-2xl">
+        {fees.heading}
+      </h3>
+      <p class="text-ink-600 mt-3 max-w-[760px] text-[15px] leading-relaxed">{fees.intro}</p>
+
+      <dl class="mt-6 grid gap-4 sm:grid-cols-3">
+        {
+          fees.summary.map((item) => (
+            <div class="shadow-card rounded-xl bg-white p-5">
+              <dt class="font-heading text-ink-700 text-xs font-bold tracking-wide uppercase">
+                {item.label}
+              </dt>
+              <dd class="font-heading text-ink-900 mt-1 text-2xl font-bold tracking-tight">
+                {item.value}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <div
+        class="shadow-card mt-6 overflow-x-auto rounded-xl bg-white"
+        role="region"
+        aria-label={fees.tableLabel}
+        tabindex="0"
+      >
+        <table class="w-full min-w-[420px] text-left text-sm">
+          <caption class="sr-only">{fees.tableLabel}</caption>
+          <thead>
+            <tr class="border-steel-300 border-b">
+              <th
+                scope="col"
+                class="font-heading text-ink-700 px-5 py-3 text-xs font-bold tracking-wide uppercase"
+                >{fees.acreageLabel}</th
+              >
+              <th
+                scope="col"
+                class="font-heading text-ink-700 px-5 py-3 text-xs font-bold tracking-wide uppercase"
+                >{fees.feeLabel}</th
+              >
+            </tr>
+          </thead>
+          <tbody>
+            {
+              fees.rows.map((row, index) => (
+                <tr class={index < fees.rows.length - 1 ? 'border-steel-200 border-b' : ''}>
+                  <th
+                    scope="row"
+                    class="text-ink-900 px-5 py-3.5 text-left align-top font-semibold whitespace-nowrap"
+                  >
+                    {row.acreage}
+                  </th>
+                  <td class="text-ink-600 px-5 py-3.5 align-top whitespace-nowrap">{row.fee}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </section>

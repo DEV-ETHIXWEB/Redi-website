@@ -65,9 +65,14 @@ const SHOW_HERO_MAP = false;
           {copy.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
         </div>
         <div class="mt-9 inline-grid gap-4 sm:flex sm:flex-row sm:flex-wrap">
+          {
+            /* Dark navy rather than the cyan `primary`, at the client's request
+              (2026-11-11). Only this hero button changed - `primary` stays cyan
+              everywhere else, so this is a one-off, not a new house style. */
+          }
           <Button
             href={copy.ctaPrimary.href}
-            variant="primary"
+            variant="dark"
             size="lg"
             icon="arrow-right"
             class="w-full sm:w-auto"

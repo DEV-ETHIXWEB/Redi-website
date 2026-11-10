@@ -157,7 +157,7 @@
       "body": "A site is rarely eliminated for being a bad site. It is eliminated when the information a site selector needs is missing, unclear, or unverified. Here is how REDI Sites evaluates that and what your site needs to participate. REDI Sites is industry- and use-agnostic. The evaluation focuses on the foundational factors that influence whether a site can advance with greater speed, certainty, and fewer surprises, regardless of the project ultimately considering it.",
       "image": {
         "url": "/images/hero/approach-hero-inset.webp",
-        "alt": "Historic rail depot along active tracks, badged with a REDI Sites Platinum rating"
+        "alt": "Aerial view of a modern distribution centre beside a motorway interchange, with loading docks and a line of waiting trailers"
       }
     },
     "methodology": {
@@ -227,6 +227,57 @@
       "documentsLabel": "Do You Have the Core Documents?",
       "documentsIntro": "These are the documents that most often make the biggest difference in a site's designation.",
       "documentsFootnote": "Missing a few items? That is normal. Categories without documentation can be skipped, and you can level up later through redesignation."
+    },
+    "fees": {
+      "heading": "Fees at a Glance",
+      "intro": "A registration fee is billed for each site. Once the site RFI is submitted, the designation fee is billed based on site size.",
+      "summary": [
+        {
+          "label": "Registration",
+          "value": "$450 per site"
+        },
+        {
+          "label": "Listing after year one",
+          "value": "$250 per year"
+        },
+        {
+          "label": "Redesignation",
+          "value": "$1,250"
+        }
+      ],
+      "tableLabel": "Designation fee by site size",
+      "acreageLabel": "Size (Acres)",
+      "feeLabel": "Designation Fee",
+      "rows": [
+        {
+          "acreage": "5 – 49",
+          "fee": "$3,000"
+        },
+        {
+          "acreage": "50 – 99",
+          "fee": "$3,250"
+        },
+        {
+          "acreage": "100 – 249",
+          "fee": "$3,500"
+        },
+        {
+          "acreage": "250 – 499",
+          "fee": "$3,750"
+        },
+        {
+          "acreage": "500 – 999",
+          "fee": "$4,250"
+        },
+        {
+          "acreage": "1,000 – 1,999",
+          "fee": "$5,000"
+        },
+        {
+          "acreage": "2,000 +",
+          "fee": "$6,000"
+        }
+      ]
     }
   },
   "contact": {

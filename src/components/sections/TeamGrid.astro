@@ -11,6 +11,17 @@ export interface Props {
 
 const { eyebrow, heading, members } = Astro.props;
 
+/*
+  With three or more cards the grid is three across. Our Team has two, which
+  left them in the first two columns of a three-column row with a gap on the
+  right - the client asked for them centred (2026-11-11).
+
+  Rather than special-casing two, any row that cannot fill three columns keeps
+  the same card width and centres itself. 814px is two 395px cards plus the
+  24px gap, which is exactly what a third of the container comes to, so the
+  cards stay the size they are beside Our Board's six.
+*/
+
 // WordPress can legitimately return zero team members. Skip the whole
 // section rather than show a heading over an empty grid.
 const hasMembers = members.length > 0;
@@ -22,7 +33,12 @@ const hasMembers = members.length > 0;
       <div class="container-page">
         <SectionHeading eyebrow={eyebrow} heading={heading} align="center" />
 
-        <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" role="list">
+        <ul
+          class={`mt-12 grid gap-6 sm:grid-cols-2 ${
+            members.length >= 3 ? 'lg:grid-cols-3' : 'mx-auto lg:max-w-[814px]'
+          }`}
+          role="list"
+        >
           {members.map((member, index) => (
             <li class="reveal" style={`--reveal-delay: ${index * 70}ms`}>
               <TeamCard member={member} />

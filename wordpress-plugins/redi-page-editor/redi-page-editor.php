@@ -220,6 +220,39 @@ The site receives a feedback report, marketing materials and a listing in the RE
 				array( 'name' => 'approach_criteria_documentslabel', 'path' => 'criteria.documentsLabel', 'type' => 'text', 'label' => 'Criteria / Documents Label', 'default' => 'Do You Have the Core Documents?' ),
 				array( 'name' => 'approach_criteria_documentsintro', 'path' => 'criteria.documentsIntro', 'type' => 'text', 'label' => 'Criteria / Documents Intro', 'default' => 'These are the documents that most often make the biggest difference in a site\'s designation.' ),
 				array( 'name' => 'approach_criteria_documentsfootnote', 'path' => 'criteria.documentsFootnote', 'type' => 'textarea', 'label' => 'Criteria / Documents Footnote', 'default' => 'Missing a few items? That is normal. Categories without documentation can be skipped, and you can level up later through redesignation.' ),
+				array( 'name' => 'approach_fees_heading', 'path' => 'fees.heading', 'type' => 'text', 'label' => 'Fees / Heading', 'default' => 'Fees at a Glance' ),
+				array( 'name' => 'approach_fees_intro', 'path' => 'fees.intro', 'type' => 'textarea', 'label' => 'Fees / Intro', 'default' => 'A registration fee is billed for each site. Once the site RFI is submitted, the designation fee is billed based on site size.' ),
+				array( 'name' => 'approach_fees_summary', 'path' => 'fees.summary', 'type' => 'blocklist', 'label' => 'Fees / Summary', 'default' => 'Registration
+$450 per site
+
+Listing after year one
+$250 per year
+
+Redesignation
+$1,250', 'fields' => array( 'label', 'value' ) ),
+				array( 'name' => 'approach_fees_tablelabel', 'path' => 'fees.tableLabel', 'type' => 'text', 'label' => 'Fees / Table Label', 'default' => 'Designation fee by site size' ),
+				array( 'name' => 'approach_fees_acreagelabel', 'path' => 'fees.acreageLabel', 'type' => 'text', 'label' => 'Fees / Acreage Label', 'default' => 'Size (Acres)' ),
+				array( 'name' => 'approach_fees_feelabel', 'path' => 'fees.feeLabel', 'type' => 'text', 'label' => 'Fees / Fee Label', 'default' => 'Designation Fee' ),
+				array( 'name' => 'approach_fees_rows', 'path' => 'fees.rows', 'type' => 'blocklist', 'label' => 'Fees / Rows', 'default' => '5 – 49
+$3,000
+
+50 – 99
+$3,250
+
+100 – 249
+$3,500
+
+250 – 499
+$3,750
+
+500 – 999
+$4,250
+
+1,000 – 1,999
+$5,000
+
+2,000 +
+$6,000', 'fields' => array( 'acreage', 'fee' ) ),
 			),
 		),
 		'contact' => array(
@@ -437,7 +470,7 @@ const REDI_PAGES_VERSION_OPTION = 'redi_page_editor_version';
  * be missed is a regenerated plugin that adds a page. A hand-maintained
  * version number would be forgotten exactly then.
  */
-const REDI_PAGES_VERSION        = '2.0.1+cfced78d';
+const REDI_PAGES_VERSION        = '2.0.1+fbabeabc';
 
 /* -------------------------------------------------------------------------
  * 1. The pages
